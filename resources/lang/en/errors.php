@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'INVALID_API_KEY' => 'Invalid API key',
+    'EMAIL_EXISTS' => 'The email has already been taken',
+    'LOGIN_FAILED' => 'Invalid credentials',
+    'UNAUTHORIZED' => 'Unauthorized',
+    'FORBIDDEN' => 'Forbidden',
+    'VALIDATION_ERROR' => 'Validation error',
+    'NOT_FOUND' => 'Resource not found',
+    'SEAT_ALREADY_BOOKED' => 'Seat already booked',
+    'SHOWTIME_NOT_FOUND' => 'Showtime not found',
+    'VOUCHER_INVALID' => 'Invalid or expired voucher',
+    'VOUCHER_NOT_FOUND' => 'Voucher not found',
+    'VOUCHER_USAGE_LIMIT_EXCEEDED' => 'Voucher usage limit exceeded',
+    'VOUCHER_NOT_APPLICABLE' => 'Voucher not applicable',
+    'SEAT_NOT_FOUND' => 'Seat not found',
+    'SEAT_INVALID_ROOM' => 'Seat does not belong to showtime room',
+    'SEAT_INACTIVE' => 'Seat is inactive or under maintenance',
+    'SHOWTIME_INVALID_STATUS' => 'Showtime is not available for booking',
+    'USER_CREATION_FAILED' => 'Failed to create user',
+    'LOGOUT_FAILED' => 'Logout failed',
+    'TOKEN_REFRESH_FAILED' => 'Token refresh failed',
+    'BOOKING_CREATION_FAILED' => 'Failed to create booking',
+    'BOOKING_CANCEL_FAILED' => 'Failed to cancel booking',
+];
+
