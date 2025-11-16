@@ -24,5 +24,10 @@ return [
     'BOOKINGS_FETCHED_SUCCESS' => 'Bookings fetched successfully',
     'BOOKING_FETCHED_SUCCESS' => 'Booking fetched successfully',
     'TOKEN_REFRESHED_SUCCESS' => 'Token refreshed successfully',
+    'OTP_SENT_SUCCESS' => 'OTP code has been sent to your email',
+    'OTP_VERIFIED_SUCCESS' => 'OTP code verified successfully',
+    'EMAIL_VERIFIED_SUCCESS' => 'Email address verified successfully',
+    'PASSWORD_RESET_SUCCESS' => 'Password reset successfully',
+    'OTP_RESENT_SUCCESS' => 'OTP code has been resent to your email',
 ];
 

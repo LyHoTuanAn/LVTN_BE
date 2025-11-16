@@ -23,5 +23,13 @@ return [
     'TOKEN_REFRESH_FAILED' => 'Làm mới token thất bại',
     'BOOKING_CREATION_FAILED' => 'Tạo đặt vé thất bại',
     'BOOKING_CANCEL_FAILED' => 'Hủy đặt vé thất bại',
+    'OTP_INVALID' => 'Mã OTP không hợp lệ',
+    'OTP_EXPIRED' => 'Mã OTP đã hết hạn',
+    'OTP_ALREADY_VERIFIED' => 'Mã OTP đã được xác minh',
+    'OTP_NOT_FOUND' => 'Không tìm thấy mã OTP',
+    'EMAIL_NOT_VERIFIED' => 'Email chưa được xác minh',
+    'RATE_LIMIT_EXCEEDED' => 'Vui lòng đợi 60 giây trước khi yêu cầu mã OTP mới',
+    'PASSWORD_RESET_FAILED' => 'Đặt lại mật khẩu thất bại',
+    'EMAIL_NOT_FOUND' => 'Email không tồn tại',
 ];
 

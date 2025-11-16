@@ -7,43 +7,28 @@ use Illuminate\Support\Facades\File;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+
     public function register(): void
     {
-        //
+
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        // Load admin translations from JSON to Laravel translation system
-        $this->loadAdminTranslations();
+        $this->loadJsonTranslationsFromSubdirectories();
     }
 
-    /**
-     * Load admin translations from JSON file to Laravel translation system
-     */
-    protected function loadAdminTranslations(): void
+    protected function loadJsonTranslationsFromSubdirectories(): void
     {
-        $jsonPath = resource_path('lang/translations.json');
+        $locales = ['en', 'vi'];
         
-        if (!File::exists($jsonPath)) {
-            return;
-        }
-
-        $translations = json_decode(File::get($jsonPath), true) ?? [];
-        
-        // Load translations into Laravel's translation system
-        // Use '*' namespace and format key as '*.key' to allow __('key') directly
-        foreach ($translations as $en => $vi) {
-            // Set for Vietnamese locale
-            app('translator')->addLines(['*.' . $en => $vi], 'vi', '*');
-            // Set for English locale (return original)
-            app('translator')->addLines(['*.' . $en => $en], 'en', '*');
+        foreach ($locales as $locale) {
+            $jsonPath = resource_path("lang/{$locale}/{$locale}.json");
+            
+            if (File::exists($jsonPath)) {
+                // Add JSON path to Laravel's translation loader
+                app('translator')->getLoader()->addJsonPath(dirname($jsonPath));
+            }
         }
     }
 }

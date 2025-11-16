@@ -24,5 +24,10 @@ return [
     'BOOKINGS_FETCHED_SUCCESS' => 'Lấy danh sách đặt vé thành công',
     'BOOKING_FETCHED_SUCCESS' => 'Lấy thông tin đặt vé thành công',
     'TOKEN_REFRESHED_SUCCESS' => 'Làm mới token thành công',
+    'OTP_SENT_SUCCESS' => 'Mã OTP đã được gửi đến email của bạn',
+    'OTP_VERIFIED_SUCCESS' => 'Xác minh mã OTP thành công',
+    'EMAIL_VERIFIED_SUCCESS' => 'Xác minh email thành công',
+    'PASSWORD_RESET_SUCCESS' => 'Đặt lại mật khẩu thành công',
+    'OTP_RESENT_SUCCESS' => 'Mã OTP đã được gửi lại đến email của bạn',
 ];
 

@@ -11,7 +11,7 @@ return [
     |
     */
 
-    'key' => env('API_KEY', 'your-api-key-here'),
+    'key' => env('API_KEY_HEADER', env('JWT_SECRET', 'your-api-key-here')),
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     |
     */
 
-    'header_name' => env('API_KEY_HEADER', 'X-Api-Key'),
+    'header_name' => 'X-Api-Key',
 ];
 
 

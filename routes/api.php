@@ -12,17 +12,22 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 |
-| All API routes must have middleware: api.key and language
-| Order: ApiKeyMiddleware → LanguageMiddleware → JWT → Role → Permission
+| All API routes must have middleware: language and api.key
+| Order: LanguageMiddleware → ApiKeyMiddleware → JWT → Role → Permission
 |
 */
 
 // Public routes (no auth required)
-Route::middleware(['api.key', 'language'])->group(function () {
+Route::middleware(['language', 'api.key'])->group(function () {
     // Auth routes
     Route::prefix('auth')->group(function () {
         Route::post('/register', [AuthController::class, 'register']);
         Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
+        Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+        Route::post('/verify-password-reset-otp', [AuthController::class, 'verifyPasswordResetOtp']);
+        Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     });
 
     // Public movie routes
@@ -39,7 +44,7 @@ Route::middleware(['api.key', 'language'])->group(function () {
 });
 
 // Protected routes (require authentication)
-Route::middleware(['api.key', 'language', 'auth:api'])->group(function () {
+Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
     // Auth routes
     Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);

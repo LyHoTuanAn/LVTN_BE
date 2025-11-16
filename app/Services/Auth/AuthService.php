@@ -9,12 +9,20 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
+    protected OtpService $otpService;
+
+    public function __construct(OtpService $otpService)
+    {
+        $this->otpService = $otpService;
+    }
+
     /**
      * Register a new user
      */
     public function register(array $data): User
     {
         $data['password'] = Hash::make($data['password']);
+        $data['email_verified_at'] = null; // User needs to verify email
         
         // Default role is customer
         if (!isset($data['role_id'])) {
@@ -22,7 +30,13 @@ class AuthService
             $data['role_id'] = $customerRole?->id;
         }
 
-        return User::create($data);
+        $user = User::create($data);
+
+        // Generate and send OTP with current locale
+        $locale = app()->getLocale();
+        $this->otpService->generateOtp($user->email, 'register', $user->id, $locale);
+
+        return $user;
     }
 
     /**
@@ -36,6 +50,15 @@ class AuthService
             return null;
         }
 
+        // Check if email is verified
+        if (!$this->checkEmailVerified($user)) {
+            return [
+                'user' => $user,
+                'requires_verification' => true,
+                'message' => __('errors.EMAIL_NOT_VERIFIED'),
+            ];
+        }
+
         $token = JWTAuth::fromUser($user);
 
         return [
@@ -44,6 +67,33 @@ class AuthService
             'token_type' => 'bearer',
             'expires_in' => config('jwt.ttl') * 60,
         ];
+    }
+
+    /**
+     * Verify email OTP and set email_verified_at
+     */
+    public function verifyEmailOtp(string $email, string $otpCode): bool
+    {
+        if (!$this->otpService->verifyOtp($email, $otpCode, 'register')) {
+            return false;
+        }
+
+        // Set email_verified_at
+        $user = User::where('email', $email)->first();
+        if ($user) {
+            $user->update(['email_verified_at' => now()]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if user email is verified
+     */
+    public function checkEmailVerified(User $user): bool
+    {
+        // All users must verify email (no exceptions)
+        return $user->email_verified_at !== null;
     }
 
     /**

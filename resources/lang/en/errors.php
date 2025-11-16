@@ -23,5 +23,13 @@ return [
     'TOKEN_REFRESH_FAILED' => 'Token refresh failed',
     'BOOKING_CREATION_FAILED' => 'Failed to create booking',
     'BOOKING_CANCEL_FAILED' => 'Failed to cancel booking',
+    'OTP_INVALID' => 'Invalid OTP code',
+    'OTP_EXPIRED' => 'OTP code has expired',
+    'OTP_ALREADY_VERIFIED' => 'OTP code has already been verified',
+    'OTP_NOT_FOUND' => 'OTP code not found',
+    'EMAIL_NOT_VERIFIED' => 'Email address has not been verified',
+    'RATE_LIMIT_EXCEEDED' => 'Please wait 60 seconds before requesting a new OTP',
+    'PASSWORD_RESET_FAILED' => 'Failed to reset password',
+    'EMAIL_NOT_FOUND' => 'Email address not found',
 ];
 
