@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Authentication Flow - API Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #4a9eff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4a9eff;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #6bc46b;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #252525;
+            border-left: 4px solid #6bc46b;
+            border-radius: 6px;
+        }
+
+        h3 {
+            color: #ffa94d;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-left: 3px solid #ffa94d;
+            border-radius: 4px;
+        }
+
+        h4 {
+            color: #9d9dff;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .section-box {
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-box {
+            background: #1e3a5f;
+            border-left: 4px solid #4a9eff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #5a3a1e;
+            border-left: 4px solid #ffa94d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .success-box {
+            background: #1e3a2e;
+            border-left: 4px solid #6bc46b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        code {
+            background: #2a2a2a;
+            color: #ff6b9d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        pre code {
+            background: transparent;
+            color: #e0e0e0;
+            padding: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #222222;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            background: #2a2a2a;
+            color: #4a9eff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #4a9eff;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #333333;
+            color: #d0d0d0;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #d0d0d0;
+        }
+
+        blockquote {
+            border-left: 4px solid #6bc46b;
+            padding: 15px 20px;
+            margin: 20px 0;
+            background: #1e3a2e;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #333333;
+            margin: 40px 0;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .method-post {
+            background: #4a9eff;
+            color: #fff;
+        }
+
+        .method-get {
+            background: #6bc46b;
+            color: #fff;
+        }
+
+        .method-put {
+            background: #ffa94d;
+            color: #fff;
+        }
+
+        .method-delete {
+            background: #ff6b9d;
+            color: #fff;
+        }
+
+        .required {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        .optional {
+            color: #9d9dff;
+        }
+
+        .url-box {
+            background: #1a1a1a;
+            border: 1px solid #4a9eff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #4a9eff;
+            font-size: 1.1em;
+        }
+
+        .json-block {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .json-key {
+            color: #4a9eff;
+        }
+
+        .json-string {
+            color: #6bc46b;
+        }
+
+        .json-number {
+            color: #ffa94d;
+        }
+
+        .json-boolean {
+            color: #ff6b9d;
+        }
+
+        .json-null {
+            color: #9d9dff;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Authentication Flow</h1>
+        
+        <div class="section-box">
+            <p>Tài liệu này mô tả các API endpoints cho flow xác thực với OTP (One-Time Password) qua email.</p>
+        </div>
+
+        <h2>Tổng Quan Flow</h2>
+
+        <div class="section-box">
+            <h3>1. Register Flow</h3>
+            <ol>
+                <li>User đăng ký → Nhận OTP qua email</li>
+                <li>User verify OTP → Email được xác minh</li>
+                <li>User có thể đăng nhập</li>
+            </ol>
+
+            <h3>2. Login Flow</h3>
+            <ol>
+                <li>User đăng nhập với email/password</li>
+                <li>Nếu email chưa verify → Yêu cầu verify OTP</li>
+                <li>Nếu email đã verify → Nhận JWT token</li>
+            </ol>
+
+            <h3>3. Forgot Password Flow</h3>
+            <ol>
+                <li>User yêu cầu đặt lại mật khẩu → Nhận OTP qua email</li>
+                <li>User verify OTP → Xác minh thành công</li>
+                <li>User đặt lại mật khẩu mới</li>
+            </ol>
+        </div>
+
+        <hr>
+
+        <h2>1. Register (Đăng Ký)</h2>
+
+        <div class="section-box">
+            <h3>URL</h3>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/auth/register
+            </div>
+
+            <h3>Method</h3>
+            <p><span class="method-badge method-post">POST</span></p>
+
+            <h3>Headers</h3>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <h3>Body</h3>
+            <pre><code>{
+  "name": "Nguyễn Văn A",
+  "email": "nguyenvana@example.com",
+  "password": "password123",
+  "phone": "0123456789",
+  "address": "123 Đường ABC, Quận 1, TP.HCM"
+}</code></pre>
+
+            <h3>Request Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Tên người dùng (tối đa 100 ký tự)</td>
+                    </tr>
+                    <tr>
+                        <td><code>email</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Email đăng ký (phải unique)</td>
+                    </tr>
+                    <tr>
+                        <td><code>password</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mật khẩu (tối thiểu 8 ký tự)</td>
+                    </tr>
+                    <tr>
+                        <td><code>phone</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Số điện thoại (tối đa 20 ký tự)</td>
+                    </tr>
+                    <tr>
+                        <td><code>address</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Địa chỉ (tối đa 255 ký tự)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Success</h3>
+            <pre><code>{
+  "success": true,
+  "code": "OTP_SENT_SUCCESS",
+  "message": "Mã OTP đã được gửi đến email của bạn",
+  "data": {
+    "id": 10,
+    "name": "Nguyễn Văn A",
+    "email": "nguyenvana@example.com",
+    "phone": "0123456789",
+    "address": "123 Đường ABC, Quận 1, TP.HCM",
+    "email_verified_at": null,
+    "role": {
+      "id": 3,
+      "name": "Customer",
+      "slug": "customer"
+    },
+    "created_at": "2024-01-15 10:30:00"
+  }
+}</code></pre>
+
+            <h3>Response Error</h3>
+            <pre><code>{
+  "success": false,
+  "code": "VALIDATION_ERROR",
+  "message": "Dữ liệu không hợp lệ",
+  "errors": {
+    "email": "The email has already been taken",
+    "password": "The password must be at least 8 characters."
+  }
+}</code></pre>
+
+            <h3>Success Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OTP_SENT_SUCCESS</code></td>
+                        <td>201</td>
+                        <td>Đăng ký thành công, OTP đã được gửi</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Error Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>EMAIL_EXISTS</code></td>
+                        <td>422</td>
+                        <td>Email đã được sử dụng</td>
+                    </tr>
+                    <tr>
+                        <td><code>USER_CREATION_FAILED</code></td>
+                        <td>500</td>
+                        <td>Lỗi khi tạo user</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <h2>2. Verify OTP (Xác Minh OTP)</h2>
+
+        <div class="section-box">
+            <h3>URL</h3>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/auth/verify-otp
+            </div>
+
+            <h3>Method</h3>
+            <p><span class="method-badge method-post">POST</span></p>
+
+            <h3>Headers</h3>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <h3>Body</h3>
+            <pre><code>{
+  "email": "nguyenvana@example.com",
+  "otp_code": "123456",
+  "type": "register"
+}</code></pre>
+
+            <h3>Request Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>email</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Email đã đăng ký</td>
+                    </tr>
+                    <tr>
+                        <td><code>otp_code</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mã OTP 6 chữ số (0-9)</td>
+                    </tr>
+                    <tr>
+                        <td><code>type</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Loại OTP: <code>register</code> hoặc <code>forgot_password</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>Ghi chú:</strong><br>
+                - <code>type = register</code>: xác minh email cho tài khoản mới.<br>
+                - <code>type = forgot_password</code>: xác minh OTP cho flow đặt lại mật khẩu.
+            </div>
+
+            <h3>Response Success</h3>
+            <pre><code>{
+  "success": true,
+  "code": "OTP_VERIFIED_SUCCESS",
+  "message": "Xác minh mã OTP thành công",
+  "data": null
+}</code></pre>
+
+            <h4>Response Success (Forgot Password)</h4>
+            <pre><code>{
+  "success": true,
+  "code": "OTP_VERIFIED_SUCCESS",
+  "message": "Xác minh mã OTP thành công",
+  "data": {
+    "reset_token": "C6d1L9...xYZ12",
+    "expires_in": 600
+  }
+}</code></pre>
+
+            <div class="info-box">
+                <code>reset_token</code> có hiệu lực 10 phút. Token này phải được gửi trong API <code>reset-password</code>.
+            </div>
+
+            <h3>Response Error</h3>
+            <pre><code>{
+  "success": false,
+  "code": "RESET_TOKEN_INVALID",
+  "message": "Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn",
+  "errors": {
+    "reset_token": "Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn"
+  }
+}</code></pre>
+
+            <h3>Success Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OTP_VERIFIED_SUCCESS</code></td>
+                        <td>200</td>
+                        <td>Xác minh OTP thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Error Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OTP_INVALID</code></td>
+                        <td>400</td>
+                        <td>Mã OTP không hợp lệ hoặc không khớp</td>
+                    </tr>
+                    <tr>
+                        <td><code>OTP_EXPIRED</code></td>
+                        <td>400</td>
+                        <td>Mã OTP đã hết hạn (5 phút)</td>
+                    </tr>
+                    <tr>
+                        <td><code>OTP_ALREADY_VERIFIED</code></td>
+                        <td>400</td>
+                        <td>Mã OTP đã được xác minh</td>
+                    </tr>
+                    <tr>
+                        <td><code>OTP_NOT_FOUND</code></td>
+                        <td>404</td>
+                        <td>Không tìm thấy mã OTP</td>
+                    </tr>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <h2>3. Resend OTP (Gửi Lại OTP)</h2>
+
+        <div class="section-box">
+            <h3>URL</h3>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/auth/resend-otp
+            </div>
+
+            <h3>Method</h3>
+            <p><span class="method-badge method-post">POST</span></p>
+
+            <h3>Headers</h3>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <h3>Body</h3>
+            <pre><code>{
+  "email": "nguyenvana@example.com",
+  "type": "register"
+}</code></pre>
+
+            <h3>Request Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>email</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Email cần gửi lại OTP</td>
+                    </tr>
+                    <tr>
+                        <td><code>type</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Loại OTP: <code>register</code> hoặc <code>forgot_password</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Success</h3>
+            <pre><code>{
+  "success": true,
+  "code": "OTP_RESENT_SUCCESS",
+  "message": "Mã OTP đã được gửi lại đến email của bạn",
+  "data": null
+}</code></pre>
+
+            <h3>Response Error</h3>
+            <pre><code>{
+  "success": false,
+  "code": "RATE_LIMIT_EXCEEDED",
+  "message": "Vui lòng đợi 60 giây trước khi yêu cầu mã OTP mới",
+  "errors": {
+    "email": "Vui lòng đợi 60 giây trước khi yêu cầu mã OTP mới"
+  }
+}</code></pre>
+
+            <h3>Success Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OTP_RESENT_SUCCESS</code></td>
+                        <td>200</td>
+                        <td>Gửi lại OTP thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Error Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>RATE_LIMIT_EXCEEDED</code></td>
+                        <td>429</td>
+                        <td>Chưa đủ 60 giây kể từ lần gửi OTP trước</td>
+                    </tr>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Notes</h3>
+            <ul>
+                <li>Rate limiting: Phải đợi ít nhất 60 giây giữa các lần gửi lại OTP</li>
+                <li>OTP cũ sẽ tự động bị vô hiệu hóa khi tạo OTP mới</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>4. Login (Đăng Nhập)</h2>
+
+        <div class="section-box">
+            <h3>URL</h3>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/auth/login
+            </div>
+
+            <h3>Method</h3>
+            <p><span class="method-badge method-post">POST</span></p>
+
+            <h3>Headers</h3>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <h3>Body</h3>
+            <pre><code>{
+  "email": "nguyenvana@example.com",
+  "password": "password123"
+}</code></pre>
+
+            <h3>Request Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>email</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Email đăng nhập</td>
+                    </tr>
+                    <tr>
+                        <td><code>password</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mật khẩu</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Success</h3>
+            <pre><code>{
+  "success": true,
+  "code": "LOGIN_SUCCESS",
+  "message": "Đăng nhập thành công",
+  "data": {
+    "user": {
+      "id": 10,
+      "name": "Nguyễn Văn A",
+      "email": "nguyenvana@example.com",
+      "email_verified_at": "2024-01-15 10:35:00",
+      "role": {
+        "id": 3,
+        "name": "Customer",
+        "slug": "customer"
+      }
+    },
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    "refresh_token": "C6d1L9xYZ12abc123...",
+    "token_type": "bearer",
+    "expires_in": 3600
+  }
+}</code></pre>
+
+            <h3>Response Fields</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>success</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Boolean</td>
+                        <td>Trạng thái thành công (<code>true</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mã response (<code>LOGIN_SUCCESS</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thông báo theo ngôn ngữ client yêu cầu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Dữ liệu đăng nhập</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.user</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Thông tin user</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.access_token</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>JWT access token (hết hạn sau 1 giờ)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.refresh_token</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Refresh token (hết hạn sau 30 ngày)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.token_type</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Loại token (<code>bearer</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.expires_in</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>Thời gian hết hạn access token (giây) - 3600 (1 giờ)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Error - Email Chưa Verify</h3>
+            <pre><code>{
+  "success": false,
+  "code": "EMAIL_NOT_VERIFIED",
+  "message": "Email chưa được xác minh",
+  "errors": {
+    "email": "Email chưa được xác minh"
+  }
+}</code></pre>
+
+            <h3>Response Error - Sai Thông Tin</h3>
+            <pre><code>{
+  "success": false,
+  "code": "LOGIN_FAILED",
+  "message": "Thông tin đăng nhập không chính xác",
+  "errors": {
+    "credentials": "Thông tin đăng nhập không chính xác"
+  }
+}</code></pre>
+
+            <h3>Success Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>LOGIN_SUCCESS</code></td>
+                        <td>200</td>
+                        <td>Đăng nhập thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Error Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>LOGIN_FAILED</code></td>
+                        <td>401</td>
+                        <td>Email hoặc mật khẩu không chính xác</td>
+                    </tr>
+                    <tr>
+                        <td><code>EMAIL_NOT_VERIFIED</code></td>
+                        <td>403</td>
+                        <td>Email chưa được xác minh (cần verify OTP)</td>
+                    </tr>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Notes</h3>
+            <ul>
+                <li>Nếu email chưa verify, user cần verify OTP trước khi đăng nhập</li>
+                <li>Tất cả user (customer, admin, partner) đều phải verify email - không có ngoại lệ</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>5. Forgot Password (Quên Mật Khẩu)</h2>
+
+        <div class="section-box">
+            <h3>URL</h3>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/auth/forgot-password
+            </div>
+
+            <h3>Method</h3>
+            <p><span class="method-badge method-post">POST</span></p>
+
+            <h3>Headers</h3>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <h3>Body</h3>
+            <pre><code>{
+  "email": "nguyenvana@example.com"
+}</code></pre>
+
+            <h3>Request Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>email</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Email cần đặt lại mật khẩu</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Success</h3>
+            <pre><code>{
+  "success": true,
+  "code": "OTP_SENT_SUCCESS",
+  "message": "Mã OTP đã được gửi đến email của bạn",
+  "data": {
+    "email": "nguyenvana@example.com",
+    "otp_sent": true
+  }
+}</code></pre>
+
+            <h3>Response Error</h3>
+            
+            <h4>Email Not Found</h4>
+            <pre><code>{
+  "success": false,
+  "code": "EMAIL_NOT_FOUND",
+  "message": "Email không tồn tại",
+  "errors": {
+    "email": "Email không tồn tại"
+  }
+}</code></pre>
+
+            <h4>Validation Error</h4>
+            <pre><code>{
+  "success": false,
+  "code": "VALIDATION_ERROR",
+  "message": "Dữ liệu không hợp lệ",
+  "errors": {
+    "email": "The email field is required."
+  }
+}</code></pre>
+
+            <h3>Response Fields</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>success</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Boolean</td>
+                        <td>Trạng thái thành công (<code>true</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mã response (<code>OTP_SENT_SUCCESS</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thông báo theo ngôn ngữ client yêu cầu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Dữ liệu trả về</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.email</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Email đã gửi OTP</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.otp_sent</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Boolean</td>
+                        <td>OTP đã được gửi (<code>true</code>)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Success Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OTP_SENT_SUCCESS</code></td>
+                        <td>200</td>
+                        <td>OTP đã được gửi đến email</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Error Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>EMAIL_NOT_FOUND</code></td>
+                        <td>404</td>
+                        <td>Email không tồn tại trong hệ thống</td>
+                    </tr>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>PASSWORD_RESET_FAILED</code></td>
+                        <td>500</td>
+                        <td>Lỗi khi gửi OTP</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Notes</h3>
+            <ul>
+                <li>API sẽ trả về lỗi <code>EMAIL_NOT_FOUND</code> nếu email không tồn tại trong hệ thống</li>
+                <li>OTP sẽ được gửi qua email nếu email tồn tại</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>6. Reset Password (Đặt Lại Mật Khẩu)</h2>
+
+        <div class="section-box">
+            <h3>URL</h3>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/auth/reset-password
+            </div>
+
+            <h3>Method</h3>
+            <p><span class="method-badge method-post">POST</span></p>
+
+            <h3>Headers</h3>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <h3>Body</h3>
+            <pre><code>{
+  "email": "nguyenvana@example.com",
+  "reset_token": "C6d1L9...xYZ12",
+  "password": "newpassword123",
+  "password_confirmation": "newpassword123"
+}</code></pre>
+
+            <h3>Request Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>email</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Email cần đặt lại mật khẩu</td>
+                    </tr>
+                    <tr>
+                        <td><code>reset_token</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Token nhận được sau khi verify OTP (10 phút)</td>
+                    </tr>
+                    <tr>
+                        <td><code>password</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mật khẩu mới (tối thiểu 8 ký tự)</td>
+                    </tr>
+                    <tr>
+                        <td><code>password_confirmation</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Xác nhận mật khẩu mới (phải khớp với password)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Success</h3>
+            <pre><code>{
+  "success": true,
+  "code": "PASSWORD_RESET_SUCCESS",
+  "message": "Đặt lại mật khẩu thành công",
+  "data": {
+    "id": 10,
+    "name": "Nguyễn Văn A",
+    "email": "nguyenvana@example.com",
+    "role": {
+      "id": 3,
+      "name": "Customer",
+      "slug": "customer"
+    }
+  }
+}</code></pre>
+
+            <h3>Response Error</h3>
+            <pre><code>{
+  "success": false,
+  "code": "RESET_TOKEN_INVALID",
+  "message": "Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn",
+  "errors": {
+    "reset_token": "Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn"
+  }
+}</code></pre>
+
+            <h3>Success Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>PASSWORD_RESET_SUCCESS</code></td>
+                        <td>200</td>
+                        <td>Đặt lại mật khẩu thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Error Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>RESET_TOKEN_INVALID</code></td>
+                        <td>400</td>
+                        <td>Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn</td>
+                    </tr>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>PASSWORD_RESET_FAILED</code></td>
+                        <td>500</td>
+                        <td>Lỗi khi đặt lại mật khẩu</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Notes</h3>
+            <ul>
+                <li>OTP phải được verify trước khi đặt lại mật khẩu</li>
+                <li>Sau khi đặt lại mật khẩu thành công, user có thể đăng nhập với mật khẩu mới</li>
+            </ul>
+        </div>
+
+        <hr>
+
+        <h2>7. Refresh Token (Làm Mới Access Token)</h2>
+
+        <div class="section-box">
+            <h3>URL</h3>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/auth/refresh
+            </div>
+
+            <h3>Method</h3>
+            <p><span class="method-badge method-post">POST</span></p>
+
+            <h3>Headers</h3>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>Lưu ý:</strong> Endpoint này là <strong>public route</strong>, không cần <code>Authorization</code> header. Sử dụng <code>refresh_token</code> từ body.
+            </div>
+
+            <h3>Body</h3>
+            <pre><code>{
+  "refresh_token": "C6d1L9xYZ12abc123..."
+}</code></pre>
+
+            <h3>Request Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>refresh_token</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>JWT refresh token nhận được khi login</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Success</h3>
+            <pre><code>{
+  "success": true,
+  "code": "TOKEN_REFRESHED_SUCCESS",
+  "message": "Làm mới token thành công",
+  "data": {
+    "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
+    "token_type": "bearer",
+    "expires_in": 3600
+  }
+}</code></pre>
+
+            <h3>Response Fields</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>success</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Boolean</td>
+                        <td>Trạng thái thành công (<code>true</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mã response (<code>TOKEN_REFRESHED_SUCCESS</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thông báo theo ngôn ngữ client yêu cầu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Dữ liệu access token mới</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.access_token</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>JWT access token mới (hết hạn sau 1 giờ)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.token_type</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Loại token (<code>bearer</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.expires_in</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>Thời gian hết hạn (giây) - 3600 (1 giờ)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Error</h3>
+            
+            <h4>Token Invalid or Expired</h4>
+            <pre><code>{
+  "success": false,
+  "code": "TOKEN_REFRESH_FAILED",
+  "message": "Làm mới token thất bại",
+  "errors": {
+    "error": "Token has expired and can no longer be refreshed"
+  }
+}</code></pre>
+
+            <h4>Unauthorized</h4>
+            <pre><code>{
+  "success": false,
+  "code": "UNAUTHORIZED",
+  "message": "Chưa đăng nhập",
+  "errors": {
+    "error": "Token not provided"
+  }
+}</code></pre>
+
+            <h3>Success Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>TOKEN_REFRESHED_SUCCESS</code></td>
+                        <td>200</td>
+                        <td>Làm mới token thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Error Codes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>TOKEN_REFRESH_FAILED</code></td>
+                        <td>401</td>
+                        <td>Token không thể làm mới (đã hết hạn quá lâu hoặc không hợp lệ)</td>
+                    </tr>
+                    <tr>
+                        <td><code>UNAUTHORIZED</code></td>
+                        <td>401</td>
+                        <td>Chưa đăng nhập hoặc token không hợp lệ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Notes</h3>
+            <ul>
+                <li><strong>Access Token Expiration</strong>: Access token có thời gian hết hạn là <strong>1 giờ (3600 giây)</strong></li>
+                <li><strong>Refresh Token Expiration</strong>: Refresh token có thời gian hết hạn là <strong>30 ngày</strong></li>
+                <li><strong>Refresh Token Usage</strong>: Khi access token hết hạn, client sử dụng <code>refresh_token</code> để lấy <code>access_token</code> mới mà <strong>không cần đăng nhập lại</strong></li>
+                <li><strong>Refresh Token Security</strong>: Refresh token là JWT token, được lưu JTI (JWT ID) trong database để có thể revoke khi cần</li>
+                <li><strong>Sau khi refresh</strong>: Access token mới được tạo, refresh token vẫn giữ nguyên (có thể sử dụng lại)</li>
+                <li><strong>Best Practice</strong>:
+                    <ul>
+                        <li>Client nên tự động refresh access token trước khi hết hạn (ví dụ: refresh khi còn 5 phút)</li>
+                        <li>Lưu trữ refresh token an toàn (ví dụ: secure storage trên mobile, httpOnly cookie trên web)</li>
+                        <li>Khi logout, nên gửi <code>refresh_token</code> để xóa khỏi database</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3>Flow Xử Lý Token Hết Hạn</h3>
+            <pre><code>1. Client gọi API với access_token đã hết hạn
+   → Server trả về 401 Unauthorized
+
+2. Client tự động gọi POST /api/auth/refresh với refresh_token
+   → Nếu refresh_token còn hợp lệ: Nhận access_token mới
+   → Nếu refresh_token đã hết hạn: Phải đăng nhập lại
+
+3. Client sử dụng access_token mới để retry request ban đầu</code></pre>
+        </div>
+
+        <hr>
+
+        <h2>Flow Diagram</h2>
+
+        <div class="section-box">
+            <pre><code>Register Flow:
+User → POST /api/auth/register → OTP sent to email
+User → POST /api/auth/verify-otp (type: register) → Email verified
+User → POST /api/auth/login → Receive access_token + refresh_token
+
+Login Flow (Email not verified):
+User → POST /api/auth/login → Error: EMAIL_NOT_VERIFIED
+User → POST /api/auth/resend-otp (type: register) → OTP resent
+User → POST /api/auth/verify-otp (type: register) → Email verified
+User → POST /api/auth/login → Receive access_token + refresh_token
+
+Token Refresh Flow:
+User → API call with expired access_token → 401 Unauthorized
+User → POST /api/auth/refresh (with refresh_token) → New access_token received
+User → Retry original API call with new access_token → Success
+
+Logout Flow:
+User → POST /api/auth/logout (with refresh_token) → Access token invalidated + Refresh token deleted
+
+Forgot Password Flow:
+User → POST /api/auth/forgot-password → OTP sent to email
+User → POST /api/auth/verify-otp (type: forgot_password) → Receive reset_token
+User → POST /api/auth/reset-password (with reset_token) → Password reset successfully</code></pre>
+        </div>
+
+        <hr>
+
+        <h2>Lưu Ý Quan Trọng</h2>
+
+        <div class="section-box">
+            <ol>
+                <li><strong>OTP Expiration</strong>: OTP hết hạn sau 5 phút</li>
+                <li><strong>Rate Limiting</strong>: Phải đợi 60 giây giữa các lần gửi lại OTP</li>
+                <li><strong>OTP Format</strong>: 6 chữ số (0-9)</li>
+                <li><strong>Email Verification</strong>: Bắt buộc cho tất cả user (customer, admin, partner) - không có ngoại lệ</li>
+                <li><strong>Forgot Password</strong>: API forgot-password sẽ trả về lỗi <code>EMAIL_NOT_FOUND</code> nếu email không tồn tại trong hệ thống</li>
+                <li><strong>Reset Token</strong>: Sau khi verify OTP (type: forgot_password), client phải sử dụng <code>reset_token</code> (hết hạn sau 10 phút) để gọi API <code>reset-password</code></li>
+                <li><strong>Access Token & Refresh Token Pattern</strong>:
+                    <ul>
+                        <li><strong>Access Token</strong>: JWT token ngắn hạn, hết hạn sau <strong>1 giờ (3600 giây)</strong>. Dùng để truy cập các API protected</li>
+                        <li><strong>Refresh Token</strong>: Token dài hạn, hết hạn sau <strong>30 ngày</strong>. Dùng để refresh access token mà không cần đăng nhập lại</li>
+                        <li>Khi login thành công, client nhận cả <code>access_token</code> và <code>refresh_token</code></li>
+                    </ul>
+                </li>
+                <li><strong>Refresh Token Flow</strong>: Khi access token hết hạn, client gọi API <code>/api/auth/refresh</code> với <code>refresh_token</code> để nhận <code>access_token</code> mới</li>
+                <li><strong>Token Security</strong>: Refresh token là JWT token, JTI (JWT ID) được lưu trong database để có thể revoke. Khi logout, nên gửi <code>refresh_token</code> để xóa JTI khỏi database</li>
+                <li><strong>Token Refresh Best Practice</strong>: Client nên tự động refresh access token trước khi hết hạn (ví dụ: refresh khi còn 5 phút) để tránh gián đoạn trải nghiệm người dùng</li>
+            </ol>
+        </div>
+
+    </div>
+</body>
+</html>
