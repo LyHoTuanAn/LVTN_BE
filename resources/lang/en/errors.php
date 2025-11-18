@@ -31,5 +31,6 @@ return [
     'RATE_LIMIT_EXCEEDED' => 'Please wait 60 seconds before requesting a new OTP',
     'PASSWORD_RESET_FAILED' => 'Failed to reset password',
     'EMAIL_NOT_FOUND' => 'Email address not found',
+    'RESET_TOKEN_INVALID' => 'Invalid or expired reset token',
 ];
 

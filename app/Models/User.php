@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -21,6 +22,7 @@ class User extends Authenticatable implements JWTSubject
         'avatar_id',
         'phone',
         'address',
+        'email_verified_at',
     ];
 
     protected $hidden = [
@@ -98,6 +100,14 @@ class User extends Authenticatable implements JWTSubject
     public function favoriteMovies(): BelongsToMany
     {
         return $this->belongsToMany(Movie::class, 'favorite_movies');
+    }
+
+    /**
+     * Get all refresh tokens for this user
+     */
+    public function refreshTokens(): HasMany
+    {
+        return $this->hasMany(RefreshToken::class);
     }
 
     /**

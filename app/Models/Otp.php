@@ -13,14 +13,12 @@ class Otp extends Model
         'otp_code',
         'type',
         'expires_at',
-        'verified_at',
     ];
 
     protected function casts(): array
     {
         return [
             'expires_at' => 'datetime',
-            'verified_at' => 'datetime',
         ];
     }
 
@@ -38,14 +36,6 @@ class Otp extends Model
     public function scopeValid($query)
     {
         return $query->where('expires_at', '>', now());
-    }
-
-    /**
-     * Scope a query to only include unverified OTPs
-     */
-    public function scopeUnverified($query)
-    {
-        return $query->whereNull('verified_at');
     }
 
     /**

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RefreshTokenRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ResendOtpRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
@@ -96,7 +97,8 @@ class AuthController extends Controller
             'LOGIN_SUCCESS',
             [
                 'user' => new UserResource($user),
-                'token' => $result['token'],
+                'access_token' => $result['access_token'],
+                'refresh_token' => $result['refresh_token'],
                 'token_type' => $result['token_type'],
                 'expires_in' => $result['expires_in'],
             ]
@@ -106,10 +108,11 @@ class AuthController extends Controller
     /**
      * Logout user
      */
-    public function logout()
+    public function logout(Request $request)
     {
         try {
-            $this->authService->logout();
+            $refreshToken = $request->input('refresh_token');
+            $this->authService->logout($refreshToken);
             return $this->successResponse('LOGOUT_SUCCESS');
         } catch (\Exception $e) {
             return $this->errorResponse(
@@ -122,21 +125,32 @@ class AuthController extends Controller
     }
 
     /**
-     * Refresh token
+     * Refresh access token using refresh token
      */
-    public function refresh()
+    public function refresh(RefreshTokenRequest $request)
     {
         try {
-            $result = $this->authService->refreshToken();
+            $result = $this->authService->refreshAccessToken($request->refresh_token);
+
+            if (!$result) {
+                return $this->errorResponse(
+                    'TOKEN_REFRESH_FAILED',
+                    ['refresh_token' => __('errors.TOKEN_REFRESH_FAILED')],
+                    __('errors.TOKEN_REFRESH_FAILED'),
+                    401
+                );
+            }
+
             return $this->successResponse(
                 'TOKEN_REFRESHED_SUCCESS',
-                $result
+                $result,
+                __('success.TOKEN_REFRESHED_SUCCESS')
             );
         } catch (\Exception $e) {
             return $this->errorResponse(
                 'TOKEN_REFRESH_FAILED',
                 ['error' => $e->getMessage()],
-                null,
+                __('errors.TOKEN_REFRESH_FAILED'),
                 401
             );
         }
@@ -145,9 +159,9 @@ class AuthController extends Controller
     /**
      * Get authenticated user
      */
-    public function me()
+    public function me(Request $request)
     {
-        $user = auth()->user();
+        $user = $request->user();
         $user->load(['role', 'avatar']);
 
         return $this->successResponse(
@@ -162,16 +176,25 @@ class AuthController extends Controller
     public function verifyOtp(VerifyOtpRequest $request)
     {
         try {
+            $responseData = null;
+
             if ($request->type === 'register') {
                 $verified = $this->authService->verifyEmailOtp(
                     $request->email,
                     $request->otp_code
                 );
             } else {
-                $verified = $this->passwordResetService->verifyPasswordResetOtp(
+                $resetToken = $this->passwordResetService->verifyPasswordResetOtp(
                     $request->email,
                     $request->otp_code
                 );
+                $verified = (bool) $resetToken;
+                $responseData = $resetToken
+                    ? [
+                        'reset_token' => $resetToken,
+                        'expires_in' => $this->passwordResetService->getResetTokenTtlSeconds(),
+                    ]
+                    : null;
             }
 
             if (!$verified) {
@@ -185,7 +208,7 @@ class AuthController extends Controller
 
             return $this->successResponse(
                 'OTP_VERIFIED_SUCCESS',
-                null,
+                $responseData,
                 __('success.OTP_VERIFIED_SUCCESS')
             );
         } catch (\Exception $e) {
@@ -265,66 +288,25 @@ class AuthController extends Controller
     }
 
     /**
-     * Verify password reset OTP
-     */
-    public function verifyPasswordResetOtp(VerifyOtpRequest $request)
-    {
-        try {
-            $verified = $this->passwordResetService->verifyPasswordResetOtp(
-                $request->email,
-                $request->otp_code
-            );
-
-            if (!$verified) {
-                return $this->errorResponse(
-                    'OTP_INVALID',
-                    ['otp_code' => __('errors.OTP_INVALID')],
-                    __('errors.OTP_INVALID'),
-                    400
-                );
-            }
-
-            return $this->successResponse(
-                'OTP_VERIFIED_SUCCESS',
-                null,
-                __('success.OTP_VERIFIED_SUCCESS')
-            );
-        } catch (\Exception $e) {
-            return $this->errorResponse(
-                'OTP_VERIFICATION_FAILED',
-                ['error' => $e->getMessage()],
-                null,
-                500
-            );
-        }
-    }
-
-    /**
      * Reset password after OTP verified
      */
     public function resetPassword(ResetPasswordRequest $request)
     {
         try {
-            // Verify OTP first
-            $verified = $this->passwordResetService->verifyPasswordResetOtp(
+            $user = $this->passwordResetService->resetPassword(
                 $request->email,
-                $request->otp_code
+                $request->password,
+                $request->reset_token
             );
 
-            if (!$verified) {
+            if (!$user) {
                 return $this->errorResponse(
-                    'OTP_INVALID',
-                    ['otp_code' => __('errors.OTP_INVALID')],
-                    __('errors.OTP_INVALID'),
+                    'RESET_TOKEN_INVALID',
+                    ['reset_token' => __('errors.RESET_TOKEN_INVALID')],
+                    __('errors.RESET_TOKEN_INVALID'),
                     400
                 );
             }
-
-            // Reset password
-            $user = $this->passwordResetService->resetPassword(
-                $request->email,
-                $request->password
-            );
             $user->load(['role', 'avatar']);
 
             return $this->successResponse(

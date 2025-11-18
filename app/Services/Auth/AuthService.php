@@ -2,14 +2,18 @@
 
 namespace App\Services\Auth;
 
+use App\Models\RefreshToken;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
     protected OtpService $otpService;
+    protected int $accessTokenTtlMinutes = 60; // 1 hour
+    protected int $refreshTokenTtlDays = 30; // 30 days
 
     public function __construct(OtpService $otpService)
     {
@@ -59,13 +63,20 @@ class AuthService
             ];
         }
 
-        $token = JWTAuth::fromUser($user);
+        // Generate access token (short-lived)
+        $accessToken = JWTAuth::customClaims([
+            'exp' => now()->addMinutes($this->accessTokenTtlMinutes)->timestamp,
+        ])->fromUser($user);
+
+        // Generate refresh token (long-lived)
+        $refreshToken = $this->createRefreshToken($user);
 
         return [
             'user' => $user,
-            'token' => $token,
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken,
             'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl') * 60,
+            'expires_in' => $this->accessTokenTtlMinutes * 60,
         ];
     }
 
@@ -74,7 +85,9 @@ class AuthService
      */
     public function verifyEmailOtp(string $email, string $otpCode): bool
     {
-        if (!$this->otpService->verifyOtp($email, $otpCode, 'register')) {
+        $otp = $this->otpService->verifyOtp($email, $otpCode, 'register');
+
+        if (!$otp) {
             return false;
         }
 
@@ -97,25 +110,106 @@ class AuthService
     }
 
     /**
-     * Logout user
+     * Logout user - invalidate access token and delete refresh tokens
      */
-    public function logout(): void
+    public function logout(?string $refreshToken = null): void
     {
-        JWTAuth::invalidate(JWTAuth::getToken());
+        // Invalidate current access token if available
+        try {
+            if (JWTAuth::getToken()) {
+                JWTAuth::invalidate(JWTAuth::getToken());
+            }
+        } catch (\Exception $e) {
+            // Token might already be invalid, ignore
+        }
+
+        // Delete refresh token if provided
+        if ($refreshToken) {
+            try {
+                $payload = JWTAuth::setToken($refreshToken)->getPayload();
+                $jti = $payload->get('jti');
+                if ($jti) {
+                    RefreshToken::where('jti', $jti)->delete();
+                }
+            } catch (JWTException $e) {
+                // Invalid refresh token, ignore
+            }
+        }
     }
 
     /**
-     * Refresh token
+     * Refresh access token using refresh token (JWT)
      */
-    public function refreshToken(): array
+    public function refreshAccessToken(string $refreshToken): ?array
     {
-        $token = JWTAuth::refresh(JWTAuth::getToken());
+        try {
+            // Parse and validate refresh token JWT
+            $payload = JWTAuth::setToken($refreshToken)->getPayload();
+            $jti = $payload->get('jti');
+            $userId = $payload->get('sub');
 
-        return [
-            'token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => config('jwt.ttl') * 60,
-        ];
+            if (!$jti || !$userId) {
+                return null;
+            }
+
+            // Check if refresh token exists in database and is valid
+            $tokenRecord = RefreshToken::where('jti', $jti)
+                ->where('user_id', $userId)
+                ->valid()
+                ->first();
+
+            if (!$tokenRecord) {
+                return null;
+            }
+
+            $user = $tokenRecord->user;
+
+            if (!$user) {
+                return null;
+            }
+
+            // Generate new access token
+            $accessToken = JWTAuth::customClaims([
+                'exp' => now()->addMinutes($this->accessTokenTtlMinutes)->timestamp,
+            ])->fromUser($user);
+
+            return [
+                'access_token' => $accessToken,
+                'token_type' => 'bearer',
+                'expires_in' => $this->accessTokenTtlMinutes * 60,
+            ];
+        } catch (JWTException $e) {
+            // Invalid or expired refresh token
+            return null;
+        }
+    }
+
+    /**
+     * Create a new refresh token (JWT) for user
+     */
+    protected function createRefreshToken(User $user): string
+    {
+        // Delete old refresh tokens for this user (optional: keep multiple devices)
+        // RefreshToken::where('user_id', $user->id)->delete();
+
+        // Generate JTI (JWT ID) for refresh token
+        $jti = bin2hex(random_bytes(32)); // 64 character hex string
+
+        // Generate refresh token as JWT with custom claims
+        $refreshToken = JWTAuth::customClaims([
+            'jti' => $jti,
+            'type' => 'refresh',
+            'exp' => now()->addDays($this->refreshTokenTtlDays)->timestamp,
+        ])->fromUser($user);
+
+        // Store JTI in database for revocation
+        RefreshToken::create([
+            'user_id' => $user->id,
+            'jti' => $jti,
+            'expires_at' => now()->addDays($this->refreshTokenTtlDays),
+        ]);
+
+        return $refreshToken;
     }
 }
 

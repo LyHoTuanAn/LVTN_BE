@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('otp_code', 6);
             $table->enum('type', ['register', 'forgot_password']);
             $table->timestamp('expires_at');
-            $table->timestamp('verified_at')->nullable();
             $table->timestamps();
 
             // Indexes
@@ -27,7 +26,6 @@ return new class extends Migration
             $table->index('type', 'idx_otps_type');
             $table->index('otp_code', 'idx_otps_otp_code');
             $table->index('expires_at', 'idx_otps_expires_at');
-            $table->index(['email', 'type', 'verified_at'], 'idx_otps_email_type_verified');
         });
     }
 

@@ -31,5 +31,6 @@ return [
     'RATE_LIMIT_EXCEEDED' => 'Vui lòng đợi 60 giây trước khi yêu cầu mã OTP mới',
     'PASSWORD_RESET_FAILED' => 'Đặt lại mật khẩu thất bại',
     'EMAIL_NOT_FOUND' => 'Email không tồn tại',
+    'RESET_TOKEN_INVALID' => 'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn',
 ];
 

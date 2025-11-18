@@ -26,8 +26,8 @@ Route::middleware(['language', 'api.key'])->group(function () {
         Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
         Route::post('/resend-otp', [AuthController::class, 'resendOtp']);
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-        Route::post('/verify-password-reset-otp', [AuthController::class, 'verifyPasswordResetOtp']);
         Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+        Route::post('/refresh', [AuthController::class, 'refresh']); // Public route - uses refresh_token from body
     });
 
     // Public movie routes
@@ -48,7 +48,6 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
     // Auth routes
     Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::post('/refresh', [AuthController::class, 'refresh']);
         Route::get('/me', [AuthController::class, 'me']);
     });
 

@@ -45,23 +45,22 @@ class OtpService
     /**
      * Verify OTP
      */
-    public function verifyOtp(string $email, string $otpCode, string $type): bool
+    public function verifyOtp(string $email, string $otpCode, string $type): ?Otp
     {
         $otp = Otp::forEmail($email)
             ->forType($type)
-            ->unverified()
             ->valid()
             ->where('otp_code', $otpCode)
             ->first();
 
         if (!$otp) {
-            return false;
+            return null;
         }
 
-        // Mark as verified
-        $otp->update(['verified_at' => now()]);
+        // Remove OTP after successful verification to prevent reuse
+        $otp->delete();
 
-        return true;
+        return $otp;
     }
 
     /**
@@ -91,8 +90,7 @@ class OtpService
     {
         Otp::forEmail($email)
             ->forType($type)
-            ->unverified()
-            ->update(['verified_at' => now()]);
+            ->delete();
     }
 
     /**
