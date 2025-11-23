@@ -81,6 +81,24 @@ class AuthService
     }
 
     /**
+     * Login user for web (session authentication, no JWT)
+     * Returns User object if successful, null if failed
+     */
+    public function loginWeb(string $email, string $password): ?User
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user || !Hash::check($password, $user->password)) {
+            return null;
+        }
+
+        // Load role relationship
+        $user->load('role');
+
+        return $user;
+    }
+
+    /**
      * Verify email OTP and set email_verified_at
      */
     public function verifyEmailOtp(string $email, string $otpCode): bool
