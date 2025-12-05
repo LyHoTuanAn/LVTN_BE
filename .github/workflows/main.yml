@@ -2,7 +2,7 @@ name: Deploy Laravel via SSH (No Test)
 
 on:
   push:
-    branches: ["staging"]
+    branches: ["staging", "main"]
 
 jobs:
   deploy:
@@ -10,6 +10,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Set deployment environment
+        id: set-env
+        run: |
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            echo "DEPLOY_ENV=production" >> $GITHUB_ENV
+            echo "🚀 Deploying to PRODUCTION"
+          else
+            echo "DEPLOY_ENV=staging" >> $GITHUB_ENV
+            echo "🚀 Deploying to STAGING"
+          fi
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@v1.0.0
@@ -20,23 +31,26 @@ jobs:
           script: |
             cd /var/www/LVTN_BE
 
-            echo "🔄 Pull source"
-            git pull
+            echo "🔄 Pull source code from ${{ github.ref_name }} branch"
+            git checkout ${{ github.ref_name }}
+            git pull origin ${{ github.ref_name }}
 
-            echo "📦 Composer install"
-            composer install --no-interaction --prefer-dist --optimize-autoloader
+            echo "📦 Install dependencies"
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
-            echo "⚡ Optimize Laravel"
+            echo "⚡ Run database migrations"
             php artisan migrate --force
+
+            echo "⚙️ Optimize Laravel"
             php artisan optimize
 
-            echo "🧹 Clear cache"
+            echo "🧹 Clear all caches"
             php artisan cache:clear
             php artisan config:clear
             php artisan route:clear
             php artisan view:clear
 
-            echo "🔁 Restart queue (nếu dùng)"
+            echo "🔁 Restart queue workers"
             php artisan queue:restart
 
-            echo "🚀 Done"
+            echo "✅ Deployment completed successfully!"
