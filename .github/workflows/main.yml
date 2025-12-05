@@ -1,0 +1,42 @@
+name: Deploy Laravel via SSH (No Test)
+
+on:
+  push:
+    branches: ["staging"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /var/www/LVTN_BE
+
+            echo "🔄 Pull source"
+            git pull
+
+            echo "📦 Composer install"
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            echo "⚡ Optimize Laravel"
+            php artisan migrate --force
+            php artisan optimize
+
+            echo "🧹 Clear cache"
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+
+            echo "🔁 Restart queue (nếu dùng)"
+            php artisan queue:restart
+
+            echo "🚀 Done"
