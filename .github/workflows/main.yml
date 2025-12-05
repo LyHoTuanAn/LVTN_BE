@@ -36,7 +36,13 @@ jobs:
             git pull origin ${{ github.ref_name }}
 
             echo "📦 Install dependencies"
-            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            if [ "${{ github.ref_name }}" == "main" ]; then
+              echo "Installing dependencies for production (without dev packages)"
+              composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+            else
+              echo "Installing dependencies for staging (with dev packages)"
+              composer install --no-interaction --prefer-dist --optimize-autoloader
+            fi
 
             echo "⚡ Run database migrations"
             php artisan migrate --force
