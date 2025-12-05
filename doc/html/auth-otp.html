@@ -298,10 +298,26 @@
         <h1>🔐 Authentication Flow</h1>
         
         <div class="section-box">
+            <h3>Mục lục</h3>
+            <ul>
+                <li><a href="#overview">Tổng Quan Flow</a></li>
+                <li><a href="#register">Register (Đăng Ký)</a></li>
+                <li><a href="#verify-otp">Verify OTP</a></li>
+                <li><a href="#resend-otp">Resend OTP</a></li>
+                <li><a href="#login">Login</a></li>
+                <li><a href="#forgot-password">Forgot Password</a></li>
+                <li><a href="#reset-password">Reset Password</a></li>
+                <li><a href="#refresh-token">Refresh Token</a></li>
+                <li><a href="#flow-diagram">Flow Diagram</a></li>
+                <li><a href="#important-notes">Lưu Ý Quan Trọng</a></li>
+            </ul>
+        </div>
+        
+        <div class="section-box">
             <p>Tài liệu này mô tả các API endpoints cho flow xác thực với OTP (One-Time Password) qua email.</p>
         </div>
-
-        <h2>Tổng Quan Flow</h2>
+        
+        <h2 id="overview">Tổng Quan Flow</h2>
 
         <div class="section-box">
             <h3>1. Register Flow</h3>
@@ -328,7 +344,7 @@
 
         <hr>
 
-        <h2>1. Register (Đăng Ký)</h2>
+        <h2 id="register">1. Register (Đăng Ký)</h2>
 
         <div class="section-box">
             <h3>URL</h3>
@@ -484,7 +500,7 @@
 
         <hr>
 
-        <h2>2. Verify OTP (Xác Minh OTP)</h2>
+        <h2 id="verify-otp">2. Verify OTP (Xác Minh OTP)</h2>
 
         <div class="section-box">
             <h3>URL</h3>
@@ -643,7 +659,7 @@
 
         <hr>
 
-        <h2>3. Resend OTP (Gửi Lại OTP)</h2>
+        <h2 id="resend-otp">3. Resend OTP (Gửi Lại OTP)</h2>
 
         <div class="section-box">
             <h3>URL</h3>
@@ -765,7 +781,7 @@
 
         <hr>
 
-        <h2>4. Login (Đăng Nhập)</h2>
+        <h2 id="login">4. Login (Đăng Nhập)</h2>
 
         <div class="section-box">
             <h3>URL</h3>
@@ -986,7 +1002,7 @@
 
         <hr>
 
-        <h2>5. Forgot Password (Quên Mật Khẩu)</h2>
+        <h2 id="forgot-password">5. Forgot Password (Quên Mật Khẩu)</h2>
 
         <div class="section-box">
             <h3>URL</h3>
@@ -1171,7 +1187,7 @@
 
         <hr>
 
-        <h2>6. Reset Password (Đặt Lại Mật Khẩu)</h2>
+        <h2 id="reset-password">6. Reset Password (Đặt Lại Mật Khẩu)</h2>
 
         <div class="section-box">
             <h3>URL</h3>
@@ -1321,7 +1337,7 @@
 
         <hr>
 
-        <h2>7. Refresh Token (Làm Mới Access Token)</h2>
+        <h2 id="refresh-token">7. Refresh Token (Làm Mới Access Token)</h2>
 
         <div class="section-box">
             <h3>URL</h3>
@@ -1532,7 +1548,7 @@
 
         <hr>
 
-        <h2>Flow Diagram</h2>
+        <h2 id="flow-diagram">Flow Diagram</h2>
 
         <div class="section-box">
             <pre><code>Register Flow:
@@ -1562,7 +1578,7 @@ User → POST /api/auth/reset-password (with reset_token) → Password reset suc
 
         <hr>
 
-        <h2>Lưu Ý Quan Trọng</h2>
+        <h2 id="important-notes">Lưu Ý Quan Trọng</h2>
 
         <div class="section-box">
             <ol>
