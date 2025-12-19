@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>👤 Update Profile - API Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #4a9eff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4a9eff;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #6bc46b;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #252525;
+            border-left: 4px solid #6bc46b;
+            border-radius: 6px;
+        }
+
+        h3 {
+            color: #ffa94d;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-left: 3px solid #ffa94d;
+            border-radius: 4px;
+        }
+
+        h4 {
+            color: #9d9dff;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .section-box {
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-box {
+            background: #1e3a5f;
+            border-left: 4px solid #4a9eff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #5a3a1e;
+            border-left: 4px solid #ffa94d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .success-box {
+            background: #1e3a2e;
+            border-left: 4px solid #6bc46b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .error-box {
+            background: #3a1e1e;
+            border-left: 4px solid #ff6b9d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        code {
+            background: #2a2a2a;
+            color: #ff6b9d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        pre code {
+            background: transparent;
+            color: #e0e0e0;
+            padding: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #222222;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            background: #2a2a2a;
+            color: #4a9eff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #4a9eff;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #333333;
+            color: #d0d0d0;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #d0d0d0;
+        }
+
+        blockquote {
+            border-left: 4px solid #6bc46b;
+            padding: 15px 20px;
+            margin: 20px 0;
+            background: #1e3a2e;
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #333333;
+            margin: 40px 0;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .method-post {
+            background: #4a9eff;
+            color: #fff;
+        }
+
+        .method-get {
+            background: #6bc46b;
+            color: #fff;
+        }
+
+        .method-put {
+            background: #ffa94d;
+            color: #fff;
+        }
+
+        .method-delete {
+            background: #ff6b9d;
+            color: #fff;
+        }
+
+        .required {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        .optional {
+            color: #9d9dff;
+        }
+
+        .url-box {
+            background: #1a1a1a;
+            border: 1px solid #4a9eff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #4a9eff;
+            font-size: 1.1em;
+        }
+
+        .json-block {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .json-key {
+            color: #4a9eff;
+        }
+
+        .json-string {
+            color: #6bc46b;
+        }
+
+        .json-number {
+            color: #ffa94d;
+        }
+
+        .json-boolean {
+            color: #ff6b9d;
+        }
+
+        .json-null {
+            color: #9d9dff;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👤 Update Profile</h1>
+        
+        <div class="section-box">
+            <p>API để cập nhật thông tin cá nhân của user đã đăng nhập.</p>
+        </div>
+
+        <h2>URL</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-put">PUT</span> /api/auth/me
+            </div>
+
+            <h3>Method</h3>
+            <p><span class="method-badge method-put">PUT</span></p>
+
+            <h3>Headers</h3>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Authorization</code>: <code>Bearer {token}</code> (JWT token từ login)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <h3>Body</h3>
+            <pre><code>{
+  "name": "Nguyễn Văn A",
+  "avatar_id": 1,
+  "phone": "0123456789",
+  "date_of_birth": "1990-01-15",
+  "gender": "male",
+  "address": "123 Đường ABC, Quận 1, TP.HCM"
+}</code></pre>
+
+            <h3>Request Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>name</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Họ và tên (tối đa 100 ký tự)</td>
+                    </tr>
+                    <tr>
+                        <td><code>avatar_id</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>Number</td>
+                        <td>ID của ảnh đại diện trong bảng <code>media_files</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>phone</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Số điện thoại (tối đa 20 ký tự)</td>
+                    </tr>
+                    <tr>
+                        <td><code>date_of_birth</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String (Date)</td>
+                        <td>Ngày sinh (format: YYYY-MM-DD, không được trong tương lai)</td>
+                    </tr>
+                    <tr>
+                        <td><code>gender</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Giới tính: <code>male</code>, <code>female</code>, hoặc <code>other</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>address</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Địa chỉ (tối đa 255 ký tự)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Chi tiết các trường</h3>
+
+            <h4><code>name</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Không</li>
+                <li><strong>Kiểu</strong>: String</li>
+                <li><strong>Mô tả</strong>: Họ và tên của user</li>
+                <li><strong>Validation</strong>: 
+                    <ul>
+                        <li>Tối đa 100 ký tự</li>
+                        <li>Nếu không cung cấp, giữ nguyên giá trị hiện tại</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4><code>avatar_id</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Không</li>
+                <li><strong>Kiểu</strong>: Number</li>
+                <li><strong>Mô tả</strong>: ID của ảnh đại diện trong bảng <code>media_files</code></li>
+                <li><strong>Validation</strong>: 
+                    <ul>
+                        <li>Phải tồn tại trong bảng <code>media_files</code></li>
+                        <li>Có thể set <code>null</code> để xóa ảnh đại diện (gửi <code>null</code> trong request)</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4><code>phone</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Không</li>
+                <li><strong>Kiểu</strong>: String</li>
+                <li><strong>Mô tả</strong>: Số điện thoại của user</li>
+                <li><strong>Validation</strong>: 
+                    <ul>
+                        <li>Tối đa 20 ký tự</li>
+                        <li>Nếu không cung cấp, giữ nguyên giá trị hiện tại</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4><code>date_of_birth</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Không</li>
+                <li><strong>Kiểu</strong>: String (Date)</li>
+                <li><strong>Mô tả</strong>: Ngày sinh của user</li>
+                <li><strong>Validation</strong>: 
+                    <ul>
+                        <li>Format: <code>YYYY-MM-DD</code> (ví dụ: <code>1990-01-15</code>)</li>
+                        <li>Không được trong tương lai (phải trước ngày hiện tại)</li>
+                        <li>Nếu không cung cấp, giữ nguyên giá trị hiện tại</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4><code>gender</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Không</li>
+                <li><strong>Kiểu</strong>: String (Enum)</li>
+                <li><strong>Mô tả</strong>: Giới tính của user</li>
+                <li><strong>Validation</strong>: 
+                    <ul>
+                        <li>Chỉ chấp nhận: <code>male</code>, <code>female</code>, hoặc <code>other</code></li>
+                        <li>Nếu không cung cấp, giữ nguyên giá trị hiện tại</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4><code>address</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Không</li>
+                <li><strong>Kiểu</strong>: String</li>
+                <li><strong>Mô tả</strong>: Địa chỉ của user</li>
+                <li><strong>Validation</strong>: 
+                    <ul>
+                        <li>Tối đa 255 ký tự</li>
+                        <li>Nếu không cung cấp, giữ nguyên giá trị hiện tại</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <h2>Response Success</h2>
+        <div class="section-box">
+            <div class="success-box">
+                <pre><code>{
+  "success": true,
+  "code": "PROFILE_UPDATED_SUCCESS",
+  "message": "Cập nhật thông tin cá nhân thành công",
+  "data": {
+    "id": 10,
+    "name": "Nguyễn Văn A",
+    "email": "user@example.com",
+    "phone": "0123456789",
+    "address": "123 Đường ABC, Quận 1, TP.HCM",
+    "date_of_birth": "1990-01-15",
+    "gender": "male",
+    "role": {
+      "id": 3,
+      "name": "Customer",
+      "slug": "customer"
+    },
+    "avatar": {
+      "id": 1,
+      "url": "https://example.com/avatars/user.jpg",
+      "type": "image"
+    },
+    "email_verified_at": "2024-01-15 10:30:00",
+    "created_at": "2024-01-15 10:30:00",
+    "updated_at": "2024-01-15 15:45:00"
+  }
+}</code></pre>
+            </div>
+
+            <h3>Response Fields</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>success</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Boolean</td>
+                        <td>Trạng thái thành công (<code>true</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mã response (<code>PROFILE_UPDATED_SUCCESS</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thông báo theo ngôn ngữ client yêu cầu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Thông tin user đã được cập nhật</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.id</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>ID của user</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.name</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Họ và tên</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.email</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Email (không thể thay đổi)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.phone</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Số điện thoại</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.address</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Địa chỉ</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.date_of_birth</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Ngày sinh (format: YYYY-MM-DD)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.gender</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Giới tính: <code>male</code>, <code>female</code>, hoặc <code>other</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>data.role</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Thông tin role của user</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.avatar</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>Object</td>
+                        <td>Thông tin ảnh đại diện</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.email_verified_at</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Thời gian xác minh email (format: YYYY-MM-DD HH:mm:ss)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.created_at</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thời gian tạo (format: YYYY-MM-DD HH:mm:ss)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.updated_at</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thời gian cập nhật (format: YYYY-MM-DD HH:mm:ss)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Response Error</h2>
+        <div class="section-box">
+            <h3>Validation Error</h3>
+            <div class="error-box">
+                <pre><code>{
+  "success": false,
+  "code": "VALIDATION_ERROR",
+  "message": "Dữ liệu không hợp lệ",
+  "errors": {
+    "name": "The name may not be greater than 100 characters.",
+    "avatar_id": "The selected avatar id is invalid.",
+    "date_of_birth": "The date of birth must be a date before today.",
+    "gender": "The selected gender is invalid."
+  }
+}</code></pre>
+            </div>
+
+            <h3>Unauthorized</h3>
+            <div class="error-box">
+                <pre><code>{
+  "success": false,
+  "code": "UNAUTHORIZED",
+  "message": "Chưa đăng nhập",
+  "errors": null
+}</code></pre>
+            </div>
+
+            <h3>Server Error</h3>
+            <div class="error-box">
+                <pre><code>{
+  "success": false,
+  "code": "PROFILE_UPDATE_FAILED",
+  "message": "Cập nhật thông tin cá nhân thất bại",
+  "errors": {
+    "error": "Error message details"
+  }
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>Success Codes</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>PROFILE_UPDATED_SUCCESS</code></td>
+                        <td>200</td>
+                        <td>Cập nhật thông tin cá nhân thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Error Codes</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>UNAUTHORIZED</code></td>
+                        <td>401</td>
+                        <td>Chưa đăng nhập (thiếu hoặc token không hợp lệ)</td>
+                    </tr>
+                    <tr>
+                        <td><code>PROFILE_UPDATE_FAILED</code></td>
+                        <td>500</td>
+                        <td>Lỗi server khi cập nhật profile</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Postman</h2>
+        <div class="section-box">
+            <h3>Collection</h3>
+            <p>Import collection từ: [Link hoặc file]</p>
+
+            <h3>Environment Variables</h3>
+            <ul>
+                <li><code>base_url</code>: <code>http://localhost:8000</code></li>
+                <li><code>api_key</code>: <code>your-api-key-here</code></li>
+                <li><code>token</code>: JWT token sau khi login</li>
+            </ul>
+
+            <h3>Example Request</h3>
+            <pre><code>PUT {{base_url}}/api/auth/me
+Headers:
+  X-Api-Key: {{api_key}}
+  Language: vi
+  Authorization: Bearer {{token}}
+  Content-Type: application/json
+  Accept: application/json
+
+Body:
+{
+  "name": "Nguyễn Văn A",
+  "avatar_id": 1,
+  "phone": "0123456789",
+  "date_of_birth": "1990-01-15",
+  "gender": "male",
+  "address": "123 Đường ABC, Quận 1, TP.HCM"
+}</code></pre>
+        </div>
+
+        <h2>Notes</h2>
+        <div class="section-box">
+            <ul>
+                <li>User phải đăng nhập trước khi có thể cập nhật profile</li>
+                <li>Tất cả các trường đều là optional - chỉ cập nhật các trường được gửi trong request</li>
+                <li>Email không thể thay đổi qua API này (phải dùng API riêng nếu cần)</li>
+                <li><code>avatar_id</code> phải tồn tại trong bảng <code>media_files</code> trước khi sử dụng</li>
+                <li><code>date_of_birth</code> không được trong tương lai</li>
+                <li><code>gender</code> chỉ chấp nhận: <code>male</code>, <code>female</code>, hoặc <code>other</code></li>
+                <li>Response trả về thông tin user đã được cập nhật với đầy đủ relationships (role, avatar)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+

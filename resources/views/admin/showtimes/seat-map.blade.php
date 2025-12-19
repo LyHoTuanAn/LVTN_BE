@@ -40,8 +40,8 @@
             <span style="color: #2c3e50; font-weight: 600;">{{ __('Booked') }}</span>
         </div>
         <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="width: 30px; height: 30px; background: #f39c12; border-radius: 4px; border: 2px solid #d68910;"></div>
-            <span style="color: #2c3e50; font-weight: 600;">{{ __('Booked (Unpaid)') }}</span>
+            <div style="width: 30px; height: 30px; background: #95a5a6; border-radius: 4px; border: 2px solid #7f8c8d;"></div>
+            <span style="color: #2c3e50; font-weight: 600;">{{ __('Maintenance') }}</span>
         </div>
     </div>
 
@@ -62,20 +62,28 @@
                     @php
                         $isBooked = isset($bookedSeats[$seat->id]);
                         $bookingInfo = $isBooked ? $bookedSeats[$seat->id] : null;
-                        $isPaid = $bookingInfo && $bookingInfo['is_paid'];
+                        $isMaintenance = in_array($seat->status, ['maintenance', 'disabled']);
                         
-                        if ($isBooked && $isPaid) {
+                        // Priority: Maintenance > Booked > Available
+                        if ($isMaintenance) {
+                            $bgColor = '#95a5a6';
+                            $borderColor = '#7f8c8d';
+                            $statusText = __('Maintenance');
+                        } elseif ($isBooked) {
                             $bgColor = '#e74c3c';
                             $borderColor = '#c0392b';
-                        } elseif ($isBooked && !$isPaid) {
-                            $bgColor = '#f39c12';
-                            $borderColor = '#d68910';
+                            $statusText = __('Booked');
                         } else {
                             $bgColor = '#27ae60';
                             $borderColor = '#1e8449';
+                            $statusText = __('Available');
                         }
                     @endphp
                     <div 
+                        id="seat-{{ $seat->id }}"
+                        data-seat-id="{{ $seat->id }}"
+                        data-seat-status="{{ $seat->status }}"
+                        data-is-booked="{{ $isBooked ? '1' : '0' }}"
                         style="
                             width: 45px; 
                             height: 45px; 
@@ -88,14 +96,19 @@
                             color: white; 
                             font-weight: 700; 
                             font-size: 0.9em;
-                            cursor: {{ $isBooked ? 'help' : 'default' }};
+                            cursor: {{ $isBooked ? 'not-allowed' : ($isMaintenance ? 'pointer' : 'pointer') }};
                             position: relative;
                             transition: transform 0.2s, box-shadow 0.2s;
                         "
-                        onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'"
-                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'"
-                        @if($isBooked)
-                        title="{{ __('Booking Code') }}: {{ $bookingInfo['booking_code'] }} | {{ __('Customer') }}: {{ $bookingInfo['user_name'] }} | {{ $isPaid ? __('Paid') : __('Unpaid') }}"
+                        onmouseover="if (!this.dataset.isBooked || this.dataset.isBooked === '0') { this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'; }"
+                        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';"
+                        onclick="toggleSeatMaintenance({{ $showtime->id }}, {{ $seat->id }}, this)"
+                        @if($isMaintenance)
+                        title="{{ __('Status') }}: {{ $statusText }} | {{ __('Click to remove maintenance') }}"
+                        @elseif($isBooked)
+                        title="{{ __('Status') }}: {{ $statusText }} | {{ __('Booking Code') }}: {{ $bookingInfo['booking_code'] }} | {{ __('Customer') }}: {{ $bookingInfo['user_name'] }}"
+                        @else
+                        title="{{ __('Status') }}: {{ $statusText }} | {{ __('Click to set maintenance') }}"
                         @endif
                     >
                         {{ $seat->number }}
@@ -111,33 +124,147 @@
         @php
             $totalSeats = $showtime->room->seats->count();
             $bookedSeatsCount = count($bookedSeats);
-            $availableSeatsCount = $totalSeats - $bookedSeatsCount;
-            $paidBookingsCount = collect($bookedSeats)->where('is_paid', true)->count();
-            $unpaidBookingsCount = collect($bookedSeats)->where('is_paid', false)->count();
+            $maintenanceSeatsCount = $showtime->room->seats->whereIn('status', ['maintenance', 'disabled'])->count();
+            $availableSeatsCount = $totalSeats - $bookedSeatsCount - $maintenanceSeatsCount;
         @endphp
         <div style="padding: 20px; background: #e8f5e9; border-radius: 8px; border-left: 5px solid #27ae60;">
             <div style="font-size: 2em; font-weight: 700; color: #27ae60; margin-bottom: 5px;">{{ $totalSeats }}</div>
             <div style="color: #2c3e50; font-weight: 600;">{{ __('Total Seats') }}</div>
         </div>
-        <div style="padding: 20px; background: #fff3e0; border-radius: 8px; border-left: 5px solid #f39c12;">
-            <div style="font-size: 2em; font-weight: 700; color: #f39c12; margin-bottom: 5px;">{{ $availableSeatsCount }}</div>
+        <div style="padding: 20px; background: #fff3e0; border-radius: 8px; border-left: 5px solid #27ae60;">
+            <div style="font-size: 2em; font-weight: 700; color: #27ae60; margin-bottom: 5px;">{{ $availableSeatsCount }}</div>
             <div style="color: #2c3e50; font-weight: 600;">{{ __('Available') }}</div>
         </div>
         <div style="padding: 20px; background: #ffebee; border-radius: 8px; border-left: 5px solid #e74c3c;">
-            <div style="font-size: 2em; font-weight: 700; color: #e74c3c; margin-bottom: 5px;">{{ $paidBookingsCount }}</div>
-            <div style="color: #2c3e50; font-weight: 600;">{{ __('Booked (Paid)') }}</div>
+            <div style="font-size: 2em; font-weight: 700; color: #e74c3c; margin-bottom: 5px;">{{ $bookedSeatsCount }}</div>
+            <div style="color: #2c3e50; font-weight: 600;">{{ __('Booked') }}</div>
         </div>
-        <div style="padding: 20px; background: #fff8e1; border-radius: 8px; border-left: 5px solid #f39c12;">
-            <div style="font-size: 2em; font-weight: 700; color: #f39c12; margin-bottom: 5px;">{{ $unpaidBookingsCount }}</div>
-            <div style="color: #2c3e50; font-weight: 600;">{{ __('Booked (Unpaid)') }}</div>
+        <div style="padding: 20px; background: #eceff1; border-radius: 8px; border-left: 5px solid #95a5a6;">
+            <div style="font-size: 2em; font-weight: 700; color: #95a5a6; margin-bottom: 5px;">{{ $maintenanceSeatsCount }}</div>
+            <div style="color: #2c3e50; font-weight: 600;">{{ __('Maintenance') }}</div>
         </div>
     </div>
 </div>
+
+<script>
+function toggleSeatMaintenance(showtimeId, seatId, element) {
+    // Don't allow toggle for booked seats
+    if (element.dataset.isBooked === '1') {
+        showMessage('{{ __("Cannot set maintenance for booked seat") }}', 'error');
+        return;
+    }
+
+    // Show loading state
+    const originalBg = element.style.background;
+    const originalBorder = element.style.borderColor;
+    element.style.background = '#bdc3c7';
+    element.style.cursor = 'wait';
+
+    const url = `/admin/showtimes/${showtimeId}/seat/${seatId}/toggle-maintenance`;
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update seat status
+            const isMaintenance = data.seat.is_maintenance;
+            
+            if (isMaintenance) {
+                element.style.background = '#95a5a6';
+                element.style.borderColor = '#7f8c8d';
+                element.dataset.seatStatus = 'maintenance';
+                element.title = '{{ __("Status") }}: {{ __("Maintenance") }} | {{ __("Click to remove maintenance") }}';
+            } else {
+                element.style.background = '#27ae60';
+                element.style.borderColor = '#1e8449';
+                element.dataset.seatStatus = 'active';
+                element.title = '{{ __("Status") }}: {{ __("Available") }} | {{ __("Click to set maintenance") }}';
+            }
+            
+            // Show success message
+            showMessage(data.message, 'success');
+            
+            // Reload statistics
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        } else {
+            element.style.background = originalBg;
+            element.style.borderColor = originalBorder;
+            showMessage(data.message || '{{ __("Failed to update seat status") }}', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        element.style.background = originalBg;
+        element.style.borderColor = originalBorder;
+        showMessage('{{ __("An error occurred") }}', 'error');
+    })
+    .finally(() => {
+        element.style.cursor = 'pointer';
+    });
+}
+
+function showMessage(message, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        background: ${type === 'success' ? '#27ae60' : '#e74c3c'};
+        color: white;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-weight: 600;
+        animation: slideIn 0.3s ease-out;
+    `;
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            document.body.removeChild(messageDiv);
+        }, 300);
+    }, 3000);
+}
+</script>
 
 <style>
     @media print {
         .no-print {
             display: none;
+        }
+    }
+    
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
         }
     }
 </style>

@@ -208,6 +208,18 @@
                     <span class="doc-link">Xem tài liệu →</span>
                 </div>
             </a>
+
+            <a href="/api-docs/auth-update-profile" class="doc-card">
+                <div class="doc-icon">👤</div>
+                <div class="doc-title">Update Profile</div>
+                <div class="doc-description">
+                    API để cập nhật thông tin cá nhân của user đã đăng nhập. Cho phép cập nhật: 
+                    họ tên, ảnh đại diện, số điện thoại, ngày sinh, giới tính, và địa chỉ. API này yêu cầu authentication token.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
         </div>
 
         <div class="info-box" style="margin-top: 40px;">

@@ -101,6 +101,7 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::post('/', [ShowtimeController::class, 'store'])->name('store');
         Route::get('/{id}', [ShowtimeController::class, 'show'])->name('show');
         Route::get('/{id}/seat-map', [ShowtimeController::class, 'seatMap'])->name('seat-map');
+        Route::post('/{showtimeId}/seat/{seatId}/toggle-maintenance', [ShowtimeController::class, 'toggleSeatMaintenance'])->name('toggle-seat-maintenance');
         Route::get('/{id}/edit', [ShowtimeController::class, 'edit'])->name('edit');
         Route::put('/{id}', [ShowtimeController::class, 'update'])->name('update');
         Route::delete('/{id}', [ShowtimeController::class, 'destroy'])->name('destroy');

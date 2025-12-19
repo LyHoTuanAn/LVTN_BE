@@ -30,5 +30,6 @@ return [
     'PASSWORD_RESET_SUCCESS' => 'Đặt lại mật khẩu thành công',
     'PASSWORD_CHANGED_SUCCESS' => 'Đổi mật khẩu thành công',
     'OTP_RESENT_SUCCESS' => 'Mã OTP đã được gửi lại đến email của bạn',
+    'PROFILE_UPDATED_SUCCESS' => 'Cập nhật thông tin cá nhân thành công',
 ];
 

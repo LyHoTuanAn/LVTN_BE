@@ -221,6 +221,43 @@ class AuthService
     }
 
     /**
+     * Update user profile
+     */
+    public function updateProfile(User $user, array $data): User
+    {
+        // Only update fields that are provided
+        $updateData = [];
+        
+        if (isset($data['name'])) {
+            $updateData['name'] = $data['name'];
+        }
+        
+        if (isset($data['avatar_id'])) {
+            $updateData['avatar_id'] = $data['avatar_id'];
+        }
+        
+        if (isset($data['phone'])) {
+            $updateData['phone'] = $data['phone'];
+        }
+        
+        if (isset($data['date_of_birth'])) {
+            $updateData['date_of_birth'] = $data['date_of_birth'];
+        }
+        
+        if (isset($data['gender'])) {
+            $updateData['gender'] = $data['gender'];
+        }
+        
+        if (isset($data['address'])) {
+            $updateData['address'] = $data['address'];
+        }
+        
+        $user->update($updateData);
+        
+        return $user->fresh(['role', 'avatar']);
+    }
+
+    /**
      * Create a new refresh token (JWT) for user
      */
     protected function createRefreshToken(User $user): string

@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             // RoleSeeder::class,
             // PermissionSeeder::class,
             // RolePermissionSeeder::class,
+            RoomSeeder::class,      // Create seats for rooms (must run before BookingSeeder)
+            BookingSeeder::class,    // Create bookings (requires seats to exist)
         ]);
     }
 }

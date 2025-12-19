@@ -10,6 +10,7 @@ use App\Http\Requests\Auth\RefreshTokenRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ResendOtpRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\Auth\UpdateProfileRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Http\Resources\UserResource;
 use App\Http\Traits\ApiResponseTrait;
@@ -169,6 +170,31 @@ class AuthController extends Controller
             'USER_FETCHED_SUCCESS',
             new UserResource($user)
         );
+    }
+
+    /**
+     * Update authenticated user profile
+     */
+    public function updateProfile(UpdateProfileRequest $request)
+    {
+        try {
+            $user = $request->user();
+            $updatedUser = $this->authService->updateProfile($user, $request->validated());
+            $updatedUser->load(['role', 'avatar']);
+
+            return $this->successResponse(
+                'PROFILE_UPDATED_SUCCESS',
+                new UserResource($updatedUser),
+                __('success.PROFILE_UPDATED_SUCCESS')
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'PROFILE_UPDATE_FAILED',
+                ['error' => $e->getMessage()],
+                __('errors.PROFILE_UPDATE_FAILED'),
+                500
+            );
+        }
     }
 
     /**

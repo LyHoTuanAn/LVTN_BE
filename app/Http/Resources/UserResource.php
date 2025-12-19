@@ -20,6 +20,8 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
+            'date_of_birth' => $this->date_of_birth?->format('Y-m-d'),
+            'gender' => $this->gender,
             'role' => new RoleResource($this->whenLoaded('role')),
             'avatar' => new MediaFileResource($this->whenLoaded('avatar')),
             'email_verified_at' => $this->email_verified_at?->toDateTimeString(),

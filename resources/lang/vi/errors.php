@@ -34,5 +34,6 @@ return [
     'RESET_TOKEN_INVALID' => 'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn',
     'CURRENT_PASSWORD_INVALID' => 'Mật khẩu hiện tại không chính xác',
     'PASSWORD_CHANGE_FAILED' => 'Đổi mật khẩu thất bại',
+    'PROFILE_UPDATE_FAILED' => 'Cập nhật thông tin cá nhân thất bại',
 ];
 

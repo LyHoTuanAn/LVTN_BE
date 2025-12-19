@@ -76,9 +76,10 @@ class ShowtimeController extends Controller
         // Load seats with booking status for this showtime
         $showtime->load(['room.seats', 'bookings.seats']);
         
-        // Get booked seat IDs for this showtime
+        // Get booked seat IDs for this showtime (ONLY paid bookings reserve seats)
         $bookedSeatIds = $showtime->bookings()
             ->where('status', '!=', 'canceled')
+            ->where('is_paid', true) // Only paid bookings reserve seats
             ->get()
             ->pluck('seats')
             ->flatten()
@@ -103,14 +104,17 @@ class ShowtimeController extends Controller
         // Load seats with booking status for this showtime
         $showtime->load(['room.seats', 'bookings.seats', 'bookings.user']);
         
-        // Get booked seats with booking info
+        // Get booked seats with booking info (ONLY paid bookings - unpaid bookings don't reserve seats)
         $bookedSeats = [];
-        foreach ($showtime->bookings()->where('status', '!=', 'canceled')->get() as $booking) {
+        foreach ($showtime->bookings()
+            ->where('status', '!=', 'canceled')
+            ->where('is_paid', true) // Only paid bookings reserve seats
+            ->get() as $booking) {
             foreach ($booking->seats as $seat) {
                 $bookedSeats[$seat->id] = [
                     'booking_code' => $booking->code,
                     'user_name' => $booking->user->name,
-                    'is_paid' => $booking->is_paid,
+                    'is_paid' => true, // Always true since we filtered
                 ];
             }
         }
@@ -119,6 +123,69 @@ class ShowtimeController extends Controller
         $seatsByRow = $showtime->room->seats->groupBy('row')->sortKeys();
 
         return view('admin.showtimes.seat-map', compact('showtime', 'seatsByRow', 'bookedSeats'));
+    }
+
+    /**
+     * Toggle seat maintenance status
+     */
+    public function toggleSeatMaintenance(Request $request, int $showtimeId, int $seatId)
+    {
+        $showtime = $this->showtimeService->getShowtimeById($showtimeId);
+
+        if (!$showtime) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Showtime not found'),
+            ], 404);
+        }
+
+        $seat = \App\Models\Seat::where('id', $seatId)
+            ->where('room_id', $showtime->room_id)
+            ->first();
+
+        if (!$seat) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Seat not found'),
+            ], 404);
+        }
+
+        // Check if seat is booked (paid booking)
+        $isBooked = \App\Models\Booking::where('showtime_id', $showtimeId)
+            ->where('status', '!=', 'canceled')
+            ->where('is_paid', true)
+            ->whereHas('seats', function ($query) use ($seatId) {
+                $query->where('seats.id', $seatId);
+            })
+            ->exists();
+
+        if ($isBooked) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Cannot set maintenance for booked seat'),
+            ], 400);
+        }
+
+        // Toggle maintenance status
+        if (in_array($seat->status, ['maintenance', 'disabled'])) {
+            $seat->status = 'active';
+            $message = __('Seat maintenance removed');
+        } else {
+            $seat->status = 'maintenance';
+            $message = __('Seat set to maintenance');
+        }
+
+        $seat->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'seat' => [
+                'id' => $seat->id,
+                'status' => $seat->status,
+                'is_maintenance' => in_array($seat->status, ['maintenance', 'disabled']),
+            ],
+        ]);
     }
 
     /**
