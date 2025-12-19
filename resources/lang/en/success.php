@@ -31,5 +31,6 @@ return [
     'PASSWORD_CHANGED_SUCCESS' => 'Password changed successfully',
     'OTP_RESENT_SUCCESS' => 'OTP code has been resent to your email',
     'PROFILE_UPDATED_SUCCESS' => 'Profile updated successfully',
+    'IMAGE_UPLOADED_SUCCESS' => 'Image uploaded successfully',
 ];
 

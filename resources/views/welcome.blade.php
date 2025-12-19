@@ -220,6 +220,18 @@
                     <span class="doc-link">Xem tài liệu →</span>
                 </div>
             </a>
+
+            <a href="/api-docs/media-upload-image" class="doc-card">
+                <div class="doc-icon">📸</div>
+                <div class="doc-title">Upload Image</div>
+                <div class="doc-description">
+                    API để upload ảnh lên server. Ảnh sẽ được tự động chuyển đổi sang định dạng WebP để tối ưu dung lượng. 
+                    Hỗ trợ các định dạng: jpeg, jpg, png, gif, webp. Kích thước tối đa: 10MB. API này yêu cầu authentication token.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
         </div>
 
         <div class="info-box" style="margin-top: 40px;">

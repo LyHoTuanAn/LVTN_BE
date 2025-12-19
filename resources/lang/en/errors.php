@@ -35,5 +35,6 @@ return [
     'CURRENT_PASSWORD_INVALID' => 'Current password is incorrect',
     'PASSWORD_CHANGE_FAILED' => 'Failed to change password',
     'PROFILE_UPDATE_FAILED' => 'Failed to update profile',
+    'IMAGE_UPLOAD_FAILED' => 'Failed to upload image',
 ];
 

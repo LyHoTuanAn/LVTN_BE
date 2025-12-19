@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📸 Upload Image - API Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #4a9eff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4a9eff;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #6bc46b;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #252525;
+            border-left: 4px solid #6bc46b;
+            border-radius: 6px;
+        }
+
+        h3 {
+            color: #ffa94d;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-left: 3px solid #ffa94d;
+            border-radius: 4px;
+        }
+
+        h4 {
+            color: #9d9dff;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .section-box {
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-box {
+            background: #1e3a5f;
+            border-left: 4px solid #4a9eff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #5a3a1e;
+            border-left: 4px solid #ffa94d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .success-box {
+            background: #1e5f3a;
+            border-left: 4px solid #6bc46b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table thead {
+            background: #2a2a2a;
+        }
+
+        table th {
+            padding: 15px;
+            text-align: left;
+            color: #4a9eff;
+            font-weight: bold;
+            border-bottom: 2px solid #333;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #333;
+            color: #d0d0d0;
+        }
+
+        table tbody tr:hover {
+            background: #252525;
+        }
+
+        code {
+            background: #2a2a2a;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: #ffa94d;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #333;
+            margin: 20px 0;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: #e0e0e0;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .method-post {
+            background: #4a9eff;
+            color: white;
+        }
+
+        .required {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .optional {
+            color: #6bc46b;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: #d0d0d0;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #333;
+            margin: 40px 0;
+        }
+
+        .json-key {
+            color: #9d9dff;
+        }
+
+        .json-string {
+            color: #6bc46b;
+        }
+
+        .json-number {
+            color: #ffa94d;
+        }
+
+        .json-boolean {
+            color: #4a9eff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📸 Upload Image</h1>
+
+        <div class="section-box">
+            <p>API để upload ảnh lên server. Ảnh sẽ được tự động chuyển đổi sang định dạng WebP để tối ưu dung lượng.</p>
+        </div>
+
+        <h2>URL</h2>
+        <div class="section-box">
+            <p><span class="method-badge method-post">POST</span><code>/api/media/upload-image</code></p>
+        </div>
+
+        <h2>Method</h2>
+        <div class="section-box">
+            <p><code>POST</code></p>
+        </div>
+
+        <h2>Headers</h2>
+        <div class="section-box">
+            <p><strong>Bắt buộc</strong> ✓</p>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Authorization</code>: <code>Bearer {token}</code> (bắt buộc - cần đăng nhập)</li>
+                <li><code>Content-Type</code>: <code>multipart/form-data</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+        </div>
+
+        <h2>Body (Form Data)</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>image</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>File</td>
+                        <td>File ảnh cần upload</td>
+                    </tr>
+                    <tr>
+                        <td><code>folder_id</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>Number</td>
+                        <td>ID của thư mục media (nếu có)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Chi tiết các trường</h3>
+
+            <h4><code>image</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Có</li>
+                <li><strong>Kiểu</strong>: File (multipart/form-data)</li>
+                <li><strong>Mô tả</strong>: File ảnh cần upload</li>
+                <li><strong>Định dạng hỗ trợ</strong>: <code>jpeg</code>, <code>jpg</code>, <code>png</code>, <code>gif</code>, <code>webp</code></li>
+                <li><strong>Kích thước tối đa</strong>: 10MB</li>
+                <li><strong>Validation</strong>:
+                    <ul>
+                        <li>Phải là file ảnh hợp lệ</li>
+                        <li>Định dạng: jpeg, jpg, png, gif, webp</li>
+                        <li>Kích thước tối đa: 10MB</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4><code>folder_id</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Không</li>
+                <li><strong>Kiểu</strong>: Number</li>
+                <li><strong>Mô tả</strong>: ID của thư mục media để lưu ảnh vào (nếu có)</li>
+                <li><strong>Validation</strong>:
+                    <ul>
+                        <li>Nếu có, phải tồn tại trong bảng <code>media_folders</code></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <h2>Request Example</h2>
+        <div class="section-box">
+            <h3>cURL</h3>
+            <pre><code>curl -X POST "http://localhost:8000/api/media/upload-image" \
+  -H "X-Api-Key: your-api-key-here" \
+  -H "Language: vi" \
+  -H "Authorization: Bearer {token}" \
+  -H "Accept: application/json" \
+  -F "image=@/path/to/image.jpg" \
+  -F "folder_id=1"</code></pre>
+
+            <h3>JavaScript (Fetch)</h3>
+            <pre><code>const formData = new FormData();
+formData.append('image', fileInput.files[0]);
+formData.append('folder_id', 1);
+
+fetch('http://localhost:8000/api/media/upload-image', {
+  method: 'POST',
+  headers: {
+    'X-Api-Key': 'your-api-key-here',
+    'Language': 'vi',
+    'Authorization': 'Bearer {token}',
+    'Accept': 'application/json'
+  },
+  body: formData
+})
+.then(response => response.json())
+.then(data => console.log(data));</code></pre>
+        </div>
+
+        <h2>Response Success</h2>
+        <div class="section-box">
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"IMAGE_UPLOADED_SUCCESS"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Tải ảnh lên thành công"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"id"</span>: <span class="json-number">123</span>,
+    <span class="json-key">"folder_id"</span>: <span class="json-number">1</span>,
+    <span class="json-key">"user_id"</span>: <span class="json-number">10</span>,
+    <span class="json-key">"file_name"</span>: <span class="json-string">"image_1705123456_abc123.webp"</span>,
+    <span class="json-key">"file_path"</span>: <span class="json-string">"media/avatars/2024/01/image_1705123456_abc123.webp"</span>,
+    <span class="json-key">"url"</span>: <span class="json-string">"http://localhost:8000/storage/media/avatars/2024/01/image_1705123456_abc123.webp"</span>,
+    <span class="json-key">"mime_type"</span>: <span class="json-string">"image/webp"</span>,
+    <span class="json-key">"size"</span>: <span class="json-number">245678</span>,
+    <span class="json-key">"type"</span>: <span class="json-string">"image"</span>,
+    <span class="json-key">"created_at"</span>: <span class="json-string">"2024-01-15 10:30:00"</span>,
+    <span class="json-key">"updated_at"</span>: <span class="json-string">"2024-01-15 10:30:00"</span>
+  }
+}</code></pre>
+        </div>
+
+        <h2>Response Fields</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>success</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Boolean</td>
+                        <td>Trạng thái thành công (<code>true</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mã response (<code>IMAGE_UPLOADED_SUCCESS</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thông báo theo ngôn ngữ client yêu cầu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Dữ liệu file media đã upload</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.id</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>ID của media file</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.folder_id</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>Number</td>
+                        <td>ID của thư mục media (nếu có)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.user_id</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>ID của user đã upload</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.file_name</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Tên file đã lưu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.file_path</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Đường dẫn file trên server</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.url</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>URL công khai để truy cập ảnh</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.mime_type</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>MIME type của file (luôn là <code>image/webp</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.size</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>Kích thước file (bytes)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.type</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Loại file (luôn là <code>image</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.created_at</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thời gian tạo (format: YYYY-MM-DD HH:mm:ss)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.updated_at</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thời gian cập nhật (format: YYYY-MM-DD HH:mm:ss)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Response Error</h2>
+        <div class="section-box">
+            <h3>Validation Error</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"VALIDATION_ERROR"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Dữ liệu không hợp lệ"</span>,
+  <span class="json-key">"errors"</span>: {
+    <span class="json-key">"image"</span>: <span class="json-string">"The image field is required."</span>
+  }
+}</code></pre>
+
+            <h3>File Too Large</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"VALIDATION_ERROR"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Dữ liệu không hợp lệ"</span>,
+  <span class="json-key">"errors"</span>: {
+    <span class="json-key">"image"</span>: <span class="json-string">"The image may not be greater than 10240 kilobytes."</span>
+  }
+}</code></pre>
+
+            <h3>Invalid File Format</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"VALIDATION_ERROR"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Dữ liệu không hợp lệ"</span>,
+  <span class="json-key">"errors"</span>: {
+    <span class="json-key">"image"</span>: <span class="json-string">"The image must be a file of type: jpeg, jpg, png, gif, webp."</span>
+  }
+}</code></pre>
+
+            <h3>Upload Failed</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"IMAGE_UPLOAD_FAILED"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Tải ảnh lên thất bại"</span>,
+  <span class="json-key">"errors"</span>: {
+    <span class="json-key">"image"</span>: <span class="json-string">"Failed to convert image to WebP: ..."</span>
+  }
+}</code></pre>
+
+            <h3>Unauthorized</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"UNAUTHORIZED"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Chưa đăng nhập"</span>,
+  <span class="json-key">"errors"</span>: {}
+}</code></pre>
+        </div>
+
+        <h2>Success Codes</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>IMAGE_UPLOADED_SUCCESS</code></td>
+                        <td>201</td>
+                        <td>Upload ảnh thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Error Codes</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>IMAGE_UPLOAD_FAILED</code></td>
+                        <td>400</td>
+                        <td>Upload ảnh thất bại (lỗi server)</td>
+                    </tr>
+                    <tr>
+                        <td><code>UNAUTHORIZED</code></td>
+                        <td>401</td>
+                        <td>Chưa đăng nhập</td>
+                    </tr>
+                    <tr>
+                        <td><code>FORBIDDEN</code></td>
+                        <td>403</td>
+                        <td>Không có quyền truy cập</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Notes</h2>
+        <div class="section-box">
+            <ul>
+                <li><strong>Ảnh tự động chuyển đổi sang WebP</strong>: Tất cả ảnh upload sẽ được tự động chuyển đổi sang định dạng WebP để tối ưu dung lượng và tốc độ tải</li>
+                <li><strong>Lưu trữ theo thư mục</strong>: Ảnh được lưu theo cấu trúc <code>media/avatars/YYYY/MM/</code> để dễ quản lý</li>
+                <li><strong>Tên file unique</strong>: Tên file được tự động generate với format <code>{original_name}_{timestamp}_{uniqid}.webp</code> để tránh trùng lặp</li>
+                <li><strong>URL công khai</strong>: Sử dụng field <code>url</code> trong response để truy cập ảnh từ client</li>
+                <li><strong>Kích thước tối đa</strong>: 10MB</li>
+                <li><strong>Định dạng hỗ trợ</strong>: jpeg, jpg, png, gif, webp (tất cả sẽ được convert sang webp)</li>
+                <li><strong>Authentication</strong>: API này yêu cầu đăng nhập (JWT token)</li>
+            </ul>
+        </div>
+
+        <h2>Postman</h2>
+        <div class="section-box">
+            <h3>Collection</h3>
+            <p>Import collection từ: [Link hoặc file]</p>
+
+            <h3>Environment Variables</h3>
+            <ul>
+                <li><code>base_url</code>: <code>http://localhost:8000</code></li>
+                <li><code>api_key</code>: <code>your-api-key-here</code></li>
+                <li><code>token</code>: JWT token sau khi login</li>
+            </ul>
+
+            <h3>Example Request</h3>
+            <pre><code>POST {{base_url}}/api/media/upload-image
+Headers:
+  X-Api-Key: {{api_key}}
+  Language: vi
+  Authorization: Bearer {{token}}
+  Accept: application/json
+
+Body (form-data):
+  image: [Select File]
+  folder_id: 1 (optional)</code></pre>
+        </div>
+
+    </div>
+</body>
+</html>
+

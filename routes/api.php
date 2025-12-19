@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\CinemaController;
+use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\ShowtimeController;
 use Illuminate\Support\Facades\Route;
@@ -59,6 +60,11 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
         Route::post('/', [BookingController::class, 'store']);
         Route::get('/{id}', [BookingController::class, 'show']);
         Route::delete('/{id}', [BookingController::class, 'cancel']);
+    });
+
+    // Media routes
+    Route::prefix('media')->group(function () {
+        Route::post('/upload-image', [MediaController::class, 'uploadImage']);
     });
 });
 

@@ -35,5 +35,6 @@ return [
     'CURRENT_PASSWORD_INVALID' => 'Mật khẩu hiện tại không chính xác',
     'PASSWORD_CHANGE_FAILED' => 'Đổi mật khẩu thất bại',
     'PROFILE_UPDATE_FAILED' => 'Cập nhật thông tin cá nhân thất bại',
+    'IMAGE_UPLOAD_FAILED' => 'Tải ảnh lên thất bại',
 ];
 
