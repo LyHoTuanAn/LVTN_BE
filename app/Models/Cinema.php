@@ -20,7 +20,7 @@ class Cinema extends Model
     ];
 
     /**
-     * Get the user (partner) who owns this cinema
+     * Get the user (admin) who manages this cinema
      */
     public function user(): BelongsTo
     {

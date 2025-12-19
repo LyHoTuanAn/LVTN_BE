@@ -40,6 +40,17 @@ class BookingService
             $query->where('is_paid', $filters['is_paid']);
         }
 
+        if (isset($filters['search']) && $filters['search']) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('code', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($userQuery) use ($search) {
+                      $userQuery->where('name', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                  });
+            });
+        }
+
         return $query->orderBy('created_at', 'desc')->paginate($filters['per_page'] ?? 15);
     }
 

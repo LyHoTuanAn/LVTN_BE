@@ -32,5 +32,7 @@ return [
     'PASSWORD_RESET_FAILED' => 'Đặt lại mật khẩu thất bại',
     'EMAIL_NOT_FOUND' => 'Email không tồn tại',
     'RESET_TOKEN_INVALID' => 'Token đặt lại mật khẩu không hợp lệ hoặc đã hết hạn',
+    'CURRENT_PASSWORD_INVALID' => 'Mật khẩu hiện tại không chính xác',
+    'PASSWORD_CHANGE_FAILED' => 'Đổi mật khẩu thất bại',
 ];
 

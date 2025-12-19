@@ -18,6 +18,9 @@ class Movie extends Model
         'duration',
         'release_date',
         'status',
+        'genre',
+        'age_classification',
+        'language',
         'poster_id',
         'trailer_id',
     ];
@@ -27,6 +30,21 @@ class Movie extends Model
         return [
             'release_date' => 'date',
             'duration' => 'integer',
+        ];
+    }
+
+    /**
+     * Age classification options
+     */
+    public static function getAgeClassifications(): array
+    {
+        return [
+            'P' => 'All Ages',
+            'K' => 'Children (Parental Guidance)',
+            'T13' => '13+',
+            'T16' => '16+',
+            'T18' => '18+',
+            'C' => 'Prohibited',
         ];
     }
 
@@ -69,4 +87,21 @@ class Movie extends Model
     {
         return $this->belongsToMany(User::class, 'favorite_movies');
     }
+
+    /**
+     * Get all directors for this movie
+     */
+    public function directors(): HasMany
+    {
+        return $this->hasMany(DirectorMovie::class);
+    }
+
+    /**
+     * Get all actors for this movie
+     */
+    public function actors(): HasMany
+    {
+        return $this->hasMany(ActorMovie::class);
+    }
 }
+

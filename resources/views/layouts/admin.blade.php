@@ -4,11 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', __('Admin Dashboard')) - Admin Panel</title>
+    <!-- Flatpickr Date Picker -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        /* Flatpickr altInput styling to match other inputs */
+        input.flatpickr-alt-input,
+        .flatpickr-input.flatpickr-mobile,
+        input[type="text"].form-control + input,
+        .datepicker + input,
+        .datepicker-future + input {
+            width: 100% !important;
+            padding: 10px 12px !important;
+            border: 1px solid #ddd !important;
+            border-radius: 6px !important;
+            font-size: 1em !important;
+            background: white !important;
+            cursor: pointer !important;
+            box-sizing: border-box !important;
+        }
+        input.flatpickr-alt-input:focus,
+        .datepicker + input:focus,
+        .datepicker-future + input:focus {
+            border-color: #3498db !important;
+            outline: none !important;
         }
 
         body {
@@ -155,6 +180,26 @@
                     </a>
                 </li>
                 <li>
+                    <a href="{{ route('admin.movies.index') }}" class="{{ request()->routeIs('admin.movies.*') ? 'active' : '' }}">
+                        {{ __('Movies') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.rooms.index') }}" class="{{ request()->routeIs('admin.rooms.*') ? 'active' : '' }}">
+                        {{ __('Rooms') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.showtimes.index') }}" class="{{ request()->routeIs('admin.showtimes.*') ? 'active' : '' }}">
+                        {{ __('Showtimes') }}
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                        {{ __('Bookings') }}
+                    </a>
+                </li>
+                <li>
                     <a href="{{ route('admin.media.index') }}" class="{{ request()->routeIs('admin.media.*') ? 'active' : '' }}">
                         {{ __('Media') }}
                     </a>
@@ -197,6 +242,39 @@
             </div>
         </main>
     </div>
+
+    <!-- Flatpickr Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
+    <script>
+        // Initialize Flatpickr with Vietnamese locale for all date inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr.localize(flatpickr.l10ns.vn);
+            
+            // Auto-init for elements with class 'datepicker'
+            flatpickr('.datepicker', {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd/m/Y',
+                altInputClass: 'flatpickr-alt-input',
+                locale: 'vn',
+                allowInput: true,
+                disableMobile: true
+            });
+
+            // For datepicker with future dates only (minDate = today)
+            flatpickr('.datepicker-future', {
+                dateFormat: 'Y-m-d',
+                altInput: true,
+                altFormat: 'd/m/Y',
+                altInputClass: 'flatpickr-alt-input',
+                locale: 'vn',
+                allowInput: true,
+                disableMobile: true,
+                minDate: 'today'
+            });
+        });
+    </script>
 
     @stack('scripts')
 </body>

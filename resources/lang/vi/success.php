@@ -28,6 +28,7 @@ return [
     'OTP_VERIFIED_SUCCESS' => 'Xác minh mã OTP thành công',
     'EMAIL_VERIFIED_SUCCESS' => 'Xác minh email thành công',
     'PASSWORD_RESET_SUCCESS' => 'Đặt lại mật khẩu thành công',
+    'PASSWORD_CHANGED_SUCCESS' => 'Đổi mật khẩu thành công',
     'OTP_RESENT_SUCCESS' => 'Mã OTP đã được gửi lại đến email của bạn',
 ];
 

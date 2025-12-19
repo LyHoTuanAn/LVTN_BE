@@ -196,6 +196,18 @@
                     <span class="doc-link">Xem tài liệu →</span>
                 </div>
             </a>
+
+            <a href="/api-docs/auth-change-password" class="doc-card">
+                <div class="doc-icon">🔑</div>
+                <div class="doc-title">Change Password</div>
+                <div class="doc-description">
+                    API để đổi mật khẩu cho user đã đăng nhập. Yêu cầu mật khẩu hiện tại để xác thực 
+                    và mật khẩu mới với xác nhận. API này yêu cầu authentication token.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
         </div>
 
         <div class="info-box" style="margin-top: 40px;">

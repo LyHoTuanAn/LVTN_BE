@@ -88,7 +88,6 @@ class AuthController extends Controller
 
         return match ($roleSlug) {
             'admin' => '/admin/dashboard',
-            'partner' => '/partner/dashboard',
             'customer' => '/user/dashboard',
             default => '/login',
         };

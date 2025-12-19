@@ -203,6 +203,24 @@ class AuthService
     }
 
     /**
+     * Change password for authenticated user
+     */
+    public function changePassword(User $user, string $currentPassword, string $newPassword): bool
+    {
+        // Verify current password
+        if (!Hash::check($currentPassword, $user->password)) {
+            return false;
+        }
+
+        // Update password
+        $user->update([
+            'password' => Hash::make($newPassword),
+        ]);
+
+        return true;
+    }
+
+    /**
      * Create a new refresh token (JWT) for user
      */
     protected function createRefreshToken(User $user): string

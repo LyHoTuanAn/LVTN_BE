@@ -28,6 +28,7 @@ return [
     'OTP_VERIFIED_SUCCESS' => 'OTP code verified successfully',
     'EMAIL_VERIFIED_SUCCESS' => 'Email address verified successfully',
     'PASSWORD_RESET_SUCCESS' => 'Password reset successfully',
+    'PASSWORD_CHANGED_SUCCESS' => 'Password changed successfully',
     'OTP_RESENT_SUCCESS' => 'OTP code has been resent to your email',
 ];
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ChangePasswordRequest;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RefreshTokenRequest;
@@ -319,6 +320,44 @@ class AuthController extends Controller
                 'PASSWORD_RESET_FAILED',
                 ['error' => $e->getMessage()],
                 __('errors.PASSWORD_RESET_FAILED'),
+                500
+            );
+        }
+    }
+
+    /**
+     * Change password for authenticated user
+     */
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        try {
+            $user = $request->user();
+
+            $changed = $this->authService->changePassword(
+                $user,
+                $request->current_password,
+                $request->password
+            );
+
+            if (!$changed) {
+                return $this->errorResponse(
+                    'CURRENT_PASSWORD_INVALID',
+                    ['current_password' => __('errors.CURRENT_PASSWORD_INVALID')],
+                    __('errors.CURRENT_PASSWORD_INVALID'),
+                    400
+                );
+            }
+
+            return $this->successResponse(
+                'PASSWORD_CHANGED_SUCCESS',
+                null,
+                __('success.PASSWORD_CHANGED_SUCCESS')
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'PASSWORD_CHANGE_FAILED',
+                ['error' => $e->getMessage()],
+                __('errors.PASSWORD_CHANGE_FAILED'),
                 500
             );
         }

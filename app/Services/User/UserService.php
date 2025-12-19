@@ -103,6 +103,38 @@ class UserService
     }
 
     /**
+     * Create a new user
+     */
+    public function createUser(array $data, ?UploadedFile $avatarFile = null): User
+    {
+        return DB::transaction(function () use ($data, $avatarFile) {
+            // Hash password
+            $data['password'] = Hash::make($data['password']);
+
+            // Handle email verification
+            if (isset($data['email_verified']) && $data['email_verified']) {
+                $data['email_verified_at'] = now();
+            }
+            unset($data['email_verified']);
+
+            // Create user first
+            $user = User::create($data);
+
+            // Handle avatar upload after user creation
+            if ($avatarFile) {
+                $mediaFile = $this->mediaService->uploadImage($avatarFile, $user->id);
+                $user->avatar_id = $mediaFile->id;
+                $user->save();
+            }
+
+            // Reload relationships
+            $user->load(['role', 'avatar']);
+
+            return $user;
+        });
+    }
+
+    /**
      * Verify user email
      */
     public function verifyUserEmail(int $userId): User
@@ -132,4 +164,5 @@ class UserService
         return Role::orderBy('name')->get();
     }
 }
+
 

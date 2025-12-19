@@ -71,7 +71,7 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * Get all cinemas owned by this user (if partner)
+     * Get all cinemas managed by this user (admin)
      */
     public function cinemas(): HasMany
     {

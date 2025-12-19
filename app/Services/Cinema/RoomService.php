@@ -3,10 +3,29 @@
 namespace App\Services\Cinema;
 
 use App\Models\Room;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class RoomService
 {
+    /**
+     * Get all rooms with filters
+     */
+    public function getAllRooms(array $filters = []): LengthAwarePaginator
+    {
+        $query = Room::query()->with(['cinema', 'seats']);
+
+        if (isset($filters['search'])) {
+            $query->where('name', 'like', '%' . $filters['search'] . '%');
+        }
+
+        if (isset($filters['cinema_id'])) {
+            $query->where('cinema_id', $filters['cinema_id']);
+        }
+
+        return $query->orderBy('name')->paginate($filters['per_page'] ?? 15);
+    }
+
     /**
      * Get all rooms for a cinema
      */

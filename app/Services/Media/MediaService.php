@@ -54,6 +54,50 @@ class MediaService
     }
 
     /**
+     * Upload video file
+     */
+    public function uploadVideo(UploadedFile $file, int $userId, ?int $folderId = null): MediaFile
+    {
+        // Validate video
+        if (!$file->isValid()) {
+            throw new \Exception(__('Invalid video file'));
+        }
+
+        $mimeType = $file->getMimeType();
+        if (!str_starts_with($mimeType, 'video/')) {
+            throw new \Exception(__('File is not a video'));
+        }
+
+        // Generate unique filename
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $extension = $file->getClientOriginalExtension();
+        $fileName = $originalName . '_' . time() . '_' . uniqid() . '.' . $extension;
+
+        // Create directory if not exists
+        $directory = 'media/videos/' . date('Y/m');
+        Storage::disk($this->disk)->makeDirectory($directory);
+
+        // Store file
+        $filePath = $file->storeAs($directory, $fileName, $this->disk);
+
+        // Get file size
+        $fileSize = Storage::disk($this->disk)->size($filePath);
+
+        // Create media file record
+        $mediaFile = MediaFile::create([
+            'folder_id' => $folderId,
+            'user_id' => $userId,
+            'file_name' => $fileName,
+            'file_path' => $filePath,
+            'mime_type' => $mimeType,
+            'size' => $fileSize,
+            'type' => 'video',
+        ]);
+
+        return $mediaFile;
+    }
+
+    /**
      * Check if file is an image
      */
     protected function isImage(UploadedFile $file): bool

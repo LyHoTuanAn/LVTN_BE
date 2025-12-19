@@ -7,7 +7,7 @@
 <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2 style="color: #2c3e50; font-size: 1.5em;">{{ __('User List') }}</h2>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; align-items: center;">
             <form method="GET" action="{{ route('admin.users.index') }}" style="display: flex; gap: 10px;">
                 <input 
                     type="text" 
@@ -20,6 +20,12 @@
                     {{ __('Search') }}
                 </button>
             </form>
+            <a 
+                href="{{ route('admin.users.create') }}" 
+                style="padding: 8px 20px; background: #27ae60; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9em; white-space: nowrap;"
+            >
+                + {{ __('Add User') }}
+            </a>
         </div>
     </div>
 

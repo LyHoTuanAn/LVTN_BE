@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;
 use App\Services\User\UserService;
 use Illuminate\Http\Request;
@@ -24,6 +25,37 @@ class UserController extends Controller
         $users = $this->userService->getAllUsers($request->all());
 
         return view('admin.users.index', compact('users'));
+    }
+
+    /**
+     * Show the form for creating a new user
+     */
+    public function create()
+    {
+        $roles = $this->userService->getAllRoles();
+
+        return view('admin.users.create', compact('roles'));
+    }
+
+    /**
+     * Store a newly created user in storage
+     */
+    public function store(StoreUserRequest $request)
+    {
+        try {
+            $data = $request->validated();
+            $avatarFile = $request->file('avatar');
+
+            $user = $this->userService->createUser($data, $avatarFile);
+
+            return redirect()
+                ->route('admin.users.show', $user->id)
+                ->with('success', __('User created successfully'));
+        } catch (\Exception $e) {
+            return back()
+                ->withErrors(['error' => __('Failed to create user: :message', ['message' => $e->getMessage()])])
+                ->withInput();
+        }
     }
 
     /**
