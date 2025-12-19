@@ -10,6 +10,8 @@ return new class extends Migration
     public function up(): void
     {
         // Step 1: Create new actor_movie table with all actor data
+        // Drop if exists to handle partial migration runs
+        Schema::dropIfExists('actor_movie_new');
         Schema::create('actor_movie_new', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
@@ -27,19 +29,24 @@ return new class extends Migration
         });
 
         // Step 2: Migrate data from actors + actor_movie to actor_movie_new
-        DB::statement("
-            INSERT INTO actor_movie_new (name, avatar_id, movie_id, created_at, updated_at)
-            SELECT 
-                a.name,
-                a.avatar_id,
-                am.movie_id,
-                a.created_at,
-                a.updated_at
-            FROM actors a
-            INNER JOIN actor_movie am ON a.id = am.actor_id
-        ");
+        // Only migrate if old tables exist
+        if (Schema::hasTable('actors') && Schema::hasTable('actor_movie')) {
+            DB::statement("
+                INSERT INTO actor_movie_new (name, avatar_id, movie_id, created_at, updated_at)
+                SELECT 
+                    a.name,
+                    a.avatar_id,
+                    am.movie_id,
+                    a.created_at,
+                    a.updated_at
+                FROM actors a
+                INNER JOIN actor_movie am ON a.id = am.actor_id
+            ");
+        }
 
         // Step 3: Create new director_movie table with all director data
+        // Drop if exists to handle partial migration runs
+        Schema::dropIfExists('director_movie_new');
         Schema::create('director_movie_new', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
@@ -57,27 +64,35 @@ return new class extends Migration
         });
 
         // Step 4: Migrate data from directors + director_movie to director_movie_new
-        DB::statement("
-            INSERT INTO director_movie_new (name, avatar_id, movie_id, created_at, updated_at)
-            SELECT 
-                d.name,
-                d.avatar_id,
-                dm.movie_id,
-                d.created_at,
-                d.updated_at
-            FROM directors d
-            INNER JOIN director_movie dm ON d.id = dm.director_id
-        ");
+        // Only migrate if old tables exist
+        if (Schema::hasTable('directors') && Schema::hasTable('director_movie')) {
+            DB::statement("
+                INSERT INTO director_movie_new (name, avatar_id, movie_id, created_at, updated_at)
+                SELECT 
+                    d.name,
+                    d.avatar_id,
+                    dm.movie_id,
+                    d.created_at,
+                    d.updated_at
+                FROM directors d
+                INNER JOIN director_movie dm ON d.id = dm.director_id
+            ");
+        }
 
-        // Step 5: Drop old tables
+        // Step 5: Drop old tables (if they exist)
         Schema::dropIfExists('actor_movie');
         Schema::dropIfExists('actors');
         Schema::dropIfExists('director_movie');
         Schema::dropIfExists('directors');
 
         // Step 6: Rename new tables to final names using raw SQL
-        DB::statement('ALTER TABLE actor_movie_new RENAME TO actor_movie');
-        DB::statement('ALTER TABLE director_movie_new RENAME TO director_movie');
+        // Only rename if new tables exist and final tables don't exist
+        if (Schema::hasTable('actor_movie_new') && !Schema::hasTable('actor_movie')) {
+            DB::statement('ALTER TABLE actor_movie_new RENAME TO actor_movie');
+        }
+        if (Schema::hasTable('director_movie_new') && !Schema::hasTable('director_movie')) {
+            DB::statement('ALTER TABLE director_movie_new RENAME TO director_movie');
+        }
     }
 
     public function down(): void
