@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('title', __('Booking Management'))
 @section('page-title', __('Booking Management'))

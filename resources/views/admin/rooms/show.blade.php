@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('title', $room->name)
 @section('page-title', __('Room Details'))

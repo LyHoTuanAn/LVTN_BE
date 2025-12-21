@@ -9,9 +9,9 @@ use App\Http\Controllers\Web\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 
-Route::get('/', function () {
+Route::get('/api-docs', function () {
     return view('welcome');
-});
+})->name('api-docs');
 
 // Route để serve các file tài liệu HTML từ doc/html/
 Route::get('/api-docs/{filename}', function ($filename) {
@@ -116,8 +116,15 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
     });
 });
 
-Route::middleware(['auth:web', 'role:customer'])->group(function () {
-    Route::get('/user/dashboard', function () {
-        return view('user.dashboard');
-    })->name('user.dashboard');
-});
+// FinTech Dashboard Routes
+Route::get('/', function () {
+    return view('dashboard');
+})->name('dashboard');
+
+Route::get('/api-management', function () {
+    return view('api-management');
+})->name('api-management');
+
+Route::get('/settings', function () {
+    return view('settings');
+})->name('settings');

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('title', __('Seat Map Management'))
 @section('page-title', __('Seat Map Management'))

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('title', $movie->title)
 @section('page-title', __('Movie Details'))

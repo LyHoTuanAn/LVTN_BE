@@ -192,6 +192,32 @@
             margin: 40px 0;
         }
 
+        .toc {
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .toc ol {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .toc li {
+            margin: 10px 0;
+        }
+
+        .toc a {
+            color: #4a9eff;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
         .method-badge {
             display: inline-block;
             padding: 5px 12px;
@@ -297,9 +323,9 @@
     <div class="container">
         <h1>🔐 Authentication Flow</h1>
         
-        <div class="section-box">
-            <h3>Mục lục</h3>
-            <ul>
+        <div class="toc">
+            <h2>📋 MỤC LỤC</h2>
+            <ol>
                 <li><a href="#overview">Tổng Quan Flow</a></li>
                 <li><a href="#register">Register (Đăng Ký)</a></li>
                 <li><a href="#verify-otp">Verify OTP</a></li>
@@ -310,7 +336,7 @@
                 <li><a href="#refresh-token">Refresh Token</a></li>
                 <li><a href="#flow-diagram">Flow Diagram</a></li>
                 <li><a href="#important-notes">Lưu Ý Quan Trọng</a></li>
-            </ul>
+            </ol>
         </div>
         
         <div class="section-box">

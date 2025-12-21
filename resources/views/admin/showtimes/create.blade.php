@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('title', __('Add Showtime'))
 @section('page-title', __('Add Showtime'))

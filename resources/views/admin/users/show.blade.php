@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 
 @section('title', __('User Details') . ' - ' . $user->name)
 @section('page-title', __('User Details'))
