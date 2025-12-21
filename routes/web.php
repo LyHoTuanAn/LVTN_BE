@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 
 Route::get('/api-docs', function () {
-    return view('welcome');
+    return view('api-docs');
 })->name('api-docs');
 
 // Route để serve các file tài liệu HTML từ doc/html/
