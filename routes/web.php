@@ -41,6 +41,9 @@ Route::get('/docs/instructions', function () {
     abort(404, 'Instructions not found');
 });
 
+// Language switch route
+Route::get('/language/{locale}', [AuthController::class, 'switchLanguage'])->name('language.switch');
+
 // Authentication routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('web.login');
@@ -48,10 +51,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('web.logout');
 
 // Protected dashboard routes
 Route::middleware(['auth:web', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-
     // Admin Users Management
     Route::prefix('admin/users')->name('admin.users.')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');

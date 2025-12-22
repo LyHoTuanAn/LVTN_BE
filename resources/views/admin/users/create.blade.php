@@ -13,10 +13,10 @@
 
     <h2 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 30px;">{{ __('Create New User') }}</h2>
 
-    <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data" autocomplete="off">
         @csrf
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="user-grid-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
             <div style="margin-bottom: 20px;">
                 <label for="name" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
                     {{ __('Name') }} <span style="color: #e74c3c;">*</span>
@@ -46,6 +46,7 @@
                     id="email" 
                     value="{{ old('email') }}"
                     required
+                    autocomplete="off"
                     placeholder="{{ __('Enter email address') }}"
                     style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box;"
                 >
@@ -58,15 +59,26 @@
                 <label for="password" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
                     {{ __('Password') }} <span style="color: #e74c3c;">*</span>
                 </label>
-                <input 
-                    type="password" 
-                    name="password" 
-                    id="password" 
-                    required
-                    minlength="6"
-                    placeholder="{{ __('Enter password (min 6 characters)') }}"
-                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box;"
-                >
+                <div style="position: relative;">
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="password" 
+                        required
+                        minlength="6"
+                        autocomplete="new-password"
+                        placeholder="{{ __('Enter password (min 6 characters)') }}"
+                        style="width: 100%; padding: 10px 40px 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box;"
+                    >
+                    <button 
+                        type="button" 
+                        onclick="togglePasswordVisibility('password', 'password_toggle_icon')" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; color: #7f8c8d; font-size: 1em;"
+                        aria-label="Toggle password visibility"
+                    >
+                        <span id="password_toggle_icon">👁️</span>
+                    </button>
+                </div>
                 @error('password')
                     <span style="color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: block;">{{ $message }}</span>
                 @enderror
@@ -76,15 +88,26 @@
                 <label for="password_confirmation" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
                     {{ __('Confirm Password') }} <span style="color: #e74c3c;">*</span>
                 </label>
-                <input 
-                    type="password" 
-                    name="password_confirmation" 
-                    id="password_confirmation" 
-                    required
-                    minlength="6"
-                    placeholder="{{ __('Confirm password') }}"
-                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box;"
-                >
+                <div style="position: relative;">
+                    <input 
+                        type="password" 
+                        name="password_confirmation" 
+                        id="password_confirmation" 
+                        required
+                        minlength="6"
+                        autocomplete="new-password"
+                        placeholder="{{ __('Confirm password') }}"
+                        style="width: 100%; padding: 10px 40px 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box;"
+                    >
+                    <button 
+                        type="button" 
+                        onclick="togglePasswordVisibility('password_confirmation', 'password_confirm_toggle_icon')" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; color: #7f8c8d; font-size: 1em;"
+                        aria-label="Toggle password confirmation visibility"
+                    >
+                        <span id="password_confirm_toggle_icon">👁️</span>
+                    </button>
+                </div>
             </div>
 
             <div style="margin-bottom: 20px;">
@@ -177,7 +200,7 @@
             <small style="color: #7f8c8d; margin-top: 5px; display: block; padding-left: 28px;">{{ __('If checked, user can login immediately without email verification') }}</small>
         </div>
 
-        <div style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee;">
+        <div class="user-actions" style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee; flex-wrap: wrap;">
             <button 
                 type="submit" 
                 style="padding: 12px 30px; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; font-weight: 600;"
@@ -193,4 +216,38 @@
         </div>
     </form>
 </div>
+
+<script>
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+
+        if (!input || !icon) return;
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁️';
+        }
+    }
+</script>
+
+<style>
+    @media (max-width: 768px) {
+        .user-grid-2 {
+            grid-template-columns: 1fr !important;
+        }
+        .user-actions {
+            flex-direction: column;
+        }
+        .user-actions button,
+        .user-actions a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
 @endsection

@@ -5,11 +5,11 @@
 
 @section('content')
 <div style="background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
-    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
         <a href="{{ route('admin.rooms.index') }}" style="color: #3498db; text-decoration: none; font-size: 0.9em;">
             ← {{ __('Back to List') }}
         </a>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <a 
                 href="{{ route('admin.rooms.edit', $room->id) }}" 
                 style="padding: 8px 20px; background: #f39c12; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9em;"
@@ -28,7 +28,7 @@
 
     <h2 style="color: #2c3e50; font-size: 1.8em; margin-bottom: 30px;">{{ $room->name }}</h2>
 
-    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+    <div class="room-show-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
         <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
             <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; font-size: 0.9em;">{{ __('Cinema') }}</label>
             <p style="margin: 0; color: #2c3e50; font-size: 1.1em;">{{ $room->cinema?->name ?? '-' }}</p>
@@ -54,32 +54,48 @@
         <h3 style="color: #2c3e50; font-size: 1.3em; margin-bottom: 20px;">{{ __('Showtimes') }} ({{ $room->showtimes?->count() ?? 0 }})</h3>
 
         @if($room->showtimes && $room->showtimes->count() > 0)
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                        <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Movie') }}</th>
-                        <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Date') }}</th>
-                        <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Time') }}</th>
-                        <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Price') }}</th>
-                        <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Status') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div style="width: 100%; overflow-x: auto;">
+                <table class="responsive-table" style="width: 100%; border-collapse: collapse; min-width: 700px;">
+                    <thead>
+                        <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                            <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Movie') }}</th>
+                            <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Date') }}</th>
+                            <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Time') }}</th>
+                            <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Price') }}</th>
+                            <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Status') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     @foreach ($room->showtimes as $showtime)
+                        @php
+                            $statusColors = [
+                                'scheduled' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
+                                'ongoing' => ['bg' => '#fff3e0', 'color' => '#e65100'],
+                                'completed' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
+                                'cancelled' => ['bg' => '#ffebee', 'color' => '#c62828'],
+                            ];
+                            $statusLabels = [
+                                'scheduled' => __('Scheduled'),
+                                'ongoing' => __('Ongoing'),
+                                'completed' => __('Completed'),
+                                'cancelled' => __('Cancelled'),
+                            ];
+                        @endphp
                         <tr style="border-bottom: 1px solid #dee2e6;">
-                            <td style="padding: 12px;">{{ $showtime->movie?->title ?? '-' }}</td>
-                            <td style="padding: 12px;">{{ $showtime->date->format('d/m/Y') }}</td>
-                            <td style="padding: 12px;">{{ $showtime->start_time }} - {{ $showtime->end_time }}</td>
-                            <td style="padding: 12px;">{{ number_format($showtime->price, 0, ',', '.') }} VNĐ</td>
-                            <td style="padding: 12px;">
-                                <span style="padding: 4px 8px; background: #e3f2fd; color: #1976d2; border-radius: 4px; font-size: 0.85em;">
-                                    {{ ucfirst($showtime->status) }}
+                            <td style="padding: 12px;" data-label="{{ __('Movie') }}">{{ $showtime->movie?->title ?? '-' }}</td>
+                            <td style="padding: 12px;" data-label="{{ __('Date') }}">{{ $showtime->date->format('d/m/Y') }}</td>
+                            <td style="padding: 12px;" data-label="{{ __('Time') }}">{{ $showtime->start_time }} - {{ $showtime->end_time }}</td>
+                            <td style="padding: 12px;" data-label="{{ __('Price') }}">{{ number_format($showtime->price, 0, ',', '.') }} VNĐ</td>
+                            <td style="padding: 12px;" data-label="{{ __('Status') }}">
+                                <span style="padding: 4px 8px; background: {{ $statusColors[$showtime->status]['bg'] ?? '#eee' }}; color: {{ $statusColors[$showtime->status]['color'] ?? '#666' }}; border-radius: 4px; font-size: 0.85em;">
+                                    {{ $statusLabels[$showtime->status] ?? $showtime->status }}
                                 </span>
                             </td>
                         </tr>
                     @endforeach
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         @else
             <div style="padding: 30px; text-align: center; color: #666; background: #f8f9fa; border-radius: 8px;">
                 {{ __('No showtimes found for this room') }}
@@ -88,3 +104,48 @@
     </div>
 </div>
 @endsection
+
+<style>
+    @media (max-width: 768px) {
+        .room-show-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .responsive-table {
+            min-width: unset !important;
+        }
+        .responsive-table thead {
+            display: none;
+        }
+        .responsive-table,
+        .responsive-table tbody,
+        .responsive-table tr,
+        .responsive-table td {
+            display: block;
+            width: 100%;
+        }
+        .responsive-table tr {
+            margin-bottom: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .responsive-table td {
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .responsive-table td:last-child {
+            border-bottom: none;
+        }
+        .responsive-table td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #7f8c8d;
+            flex-shrink: 0;
+            min-width: 120px;
+        }
+    }
+</style>

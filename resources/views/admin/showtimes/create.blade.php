@@ -16,7 +16,7 @@
     <form method="POST" action="{{ route('admin.showtimes.store') }}">
         @csrf
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="showtime-grid-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
             <div style="margin-bottom: 20px;">
                 <label for="movie_id" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
                     {{ __('Movie') }} <span style="color: #e74c3c;">*</span>
@@ -102,7 +102,7 @@
 
             <div style="margin-bottom: 20px;">
                 <label for="start_time" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
-                    {{ __('Start Time') }} <span style="color: #e74c3c;">*</span> <span style="color: #7f8c8d; font-size: 0.85em; font-weight: 400;">(24-hour format)</span>
+                    {{ __('Start Time') }} <span style="color: #e74c3c;">*</span>
                 </label>
                 <input 
                     type="text" 
@@ -111,7 +111,7 @@
                     class="timepicker-24h"
                     value="{{ old('start_time', '09:00') }}"
                     required
-                    placeholder="HH:mm (24-hour)"
+                    placeholder="{{ __('HH:mm (24-hour)') }}"
                     style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box; font-family: monospace;"
                 >
                 @error('start_time')
@@ -121,7 +121,7 @@
 
             <div style="margin-bottom: 20px;">
                 <label for="end_time" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
-                    {{ __('End Time') }} <span style="color: #7f8c8d; font-size: 0.85em; font-weight: 400;">({{ __('Auto calculated') }}, 24-hour format)</span>
+                    {{ __('End Time') }} <span style="color: #7f8c8d; font-size: 0.85em; font-weight: 400;">({{ __('Auto calculated') }})</span>
                 </label>
                 <input 
                     type="text" 
@@ -130,7 +130,7 @@
                     value="{{ old('end_time', '11:00') }}"
                     readonly
                     disabled
-                    placeholder="HH:mm (24-hour)"
+                    placeholder="{{ __('HH:mm (24-hour)') }}"
                     style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box; background: #f5f5f5; color: #666; cursor: not-allowed; font-family: monospace;"
                 >
                 <input 
@@ -166,7 +166,7 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee;">
+        <div class="showtime-actions" style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee; flex-wrap: wrap;">
             <button 
                 type="submit" 
                 style="padding: 12px 30px; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; font-weight: 600;"
@@ -203,6 +203,19 @@
     .flatpickr-time input.flatpickr-hour,
     .flatpickr-time input.flatpickr-minute {
         font-family: monospace;
+    }
+    @media (max-width: 768px) {
+        .showtime-grid-2 {
+            grid-template-columns: 1fr !important;
+        }
+        .showtime-actions {
+            flex-direction: column;
+        }
+        .showtime-actions button,
+        .showtime-actions a {
+            width: 100%;
+            text-align: center;
+        }
     }
 </style>
 @endpush

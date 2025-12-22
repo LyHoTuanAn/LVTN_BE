@@ -16,7 +16,14 @@ class LanguageMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $language = $request->header('Language', 'en');
+        // For API: get from header
+        // For Web: get from session, fallback to header, then default to 'en'
+        if ($request->is('api/*')) {
+            $language = $request->header('Language', 'en');
+        } else {
+            // Web routes: check session first, then header, then default
+            $language = $request->session()->get('locale', $request->header('Language', 'en'));
+        }
 
         // Chỉ chấp nhận 'en' hoặc 'vi'
         if (!in_array($language, ['en', 'vi'])) {

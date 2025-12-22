@@ -87,7 +87,7 @@ class AuthController extends Controller
         $roleSlug = $user->role?->slug;
 
         return match ($roleSlug) {
-            'admin' => '/admin/dashboard',
+            'admin' => '/',
             'customer' => '/',
             default => '/login',
         };
@@ -99,6 +99,23 @@ class AuthController extends Controller
     protected function redirectToDashboard($user)
     {
         return redirect($this->getDashboardUrl($user));
+    }
+
+    /**
+     * Switch language
+     */
+    public function switchLanguage(Request $request, string $locale)
+    {
+        // Validate locale
+        if (!in_array($locale, ['en', 'vi'])) {
+            $locale = 'en';
+        }
+
+        // Store in session
+        $request->session()->put('locale', $locale);
+
+        // Redirect back to previous page or home
+        return redirect()->back();
     }
 }
 

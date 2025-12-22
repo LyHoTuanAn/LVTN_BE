@@ -1,9 +1,8 @@
 @extends('layouts.app')
-
+@section('title', __('API Management'))
+@section('page-title', __('API Management'))
 @section('content')
 <div class="space-y-6">
-    <h1 class="text-3xl font-bold text-gray-900">{{ __('API Management') }}</h1>
-    
     <x-tabs :defaultTab="'keys'" :tabs="['keys' => __('API Keys'), 'usage' => __('API Usage')]">
         <x-tab-panel tabKey="keys">
             <x-card-container 

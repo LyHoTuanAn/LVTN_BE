@@ -13,7 +13,7 @@
 
     <div style="margin-bottom: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
         <h2 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 15px;">{{ __('Showtime Information') }}</h2>
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+        <div class="seat-info-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
             <div>
                 <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; font-size: 0.8em;">{{ __('Movie') }}</label>
                 <p style="margin: 0; color: #2c3e50; font-size: 1.1em; font-weight: 600;">{{ $showtime->movie->title }}</p>
@@ -46,8 +46,8 @@
     </div>
 
     <!-- Screen -->
-    <div style="text-align: center; margin-bottom: 40px;">
-        <div style="display: inline-block; padding: 15px 60px; background: linear-gradient(to bottom, #34495e, #2c3e50); color: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+    <div style="display: flex; justify-content: center; margin-bottom: 40px;">
+        <div style="padding: 15px 60px; background: linear-gradient(to bottom, #34495e, #2c3e50); color: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
             <span style="font-size: 1.2em; font-weight: 700; letter-spacing: 3px;">{{ __('SCREEN') }}</span>
         </div>
     </div>
@@ -120,7 +120,7 @@
     </div>
 
     <!-- Statistics -->
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px;">
+    <div class="seat-stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px;">
         @php
             $totalSeats = $showtime->room->seats->count();
             $bookedSeatsCount = count($bookedSeats);
@@ -265,6 +265,22 @@ function showMessage(message, type) {
         to {
             transform: translateX(100%);
             opacity: 0;
+        }
+    }
+</style>
+<style>
+    @media (max-width: 768px) {
+        .seat-info-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .seat-stats-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+
+    @media (max-width: 500px) {
+        .seat-stats-grid {
+            grid-template-columns: 1fr !important;
         }
     }
 </style>

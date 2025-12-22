@@ -1423,6 +1423,11 @@ Body:
 - [ ] Thêm bản dịch vào `resources/lang/vi/vi.json` và `resources/lang/en/en.json` nếu cần
 - [ ] Sử dụng `use` statement trong config files, không dùng full namespace string
 - [ ] Test với cả 2 locale (en và vi)
+- [ ] Cấu hình favicon dùng version để tránh cache: trong layout chính (vd `resources/views/layouts/app.blade.php`) thêm:
+  ```blade
+  @php $assetVersion = config('app.asset_version'); @endphp
+  <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') . '?v=' . $assetVersion }}">
+  ```
 
 ---
 

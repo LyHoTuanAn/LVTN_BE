@@ -16,7 +16,7 @@
     <form method="POST" action="{{ route('admin.movies.store') }}" enctype="multipart/form-data">
         @csrf
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="movie-form-grid-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
             <div style="margin-bottom: 20px;">
                 <label for="title" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
                     {{ __('Title') }} <span style="color: #e74c3c;">*</span>
@@ -214,7 +214,7 @@
             @enderror
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="movie-form-grid-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
             <div style="margin-bottom: 20px;">
                 <label for="poster" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
                     {{ __('Poster Image') }}
@@ -250,7 +250,7 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee;">
+        <div class="movie-actions" style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee; flex-wrap: wrap;">
             <button 
                 type="submit" 
                 style="padding: 12px 30px; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; font-weight: 600;"
@@ -317,4 +317,25 @@ function previewImage(input) {
     // Optional: Add image preview functionality here
 }
 </script>
+
+<style>
+    @media (max-width: 768px) {
+        .movie-form-grid-2 {
+            grid-template-columns: 1fr !important;
+        }
+        #directors-container .director-row,
+        #actors-container .actor-row {
+            grid-template-columns: 1fr !important;
+        }
+        .movie-actions {
+            flex-direction: column;
+        }
+        .movie-actions button,
+        .movie-actions a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
 @endsection

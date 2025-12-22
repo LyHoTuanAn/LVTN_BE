@@ -6,11 +6,11 @@
 @section('content')
 <div style="background: white; border-radius: 8px; padding: 30px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
     <!-- Header Actions -->
-    <div style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;">
         <a href="{{ route('admin.movies.index') }}" style="color: #3498db; text-decoration: none; font-size: 0.9em; display: inline-flex; align-items: center; gap: 5px;">
             <span>←</span> <span>{{ __('Back to List') }}</span>
         </a>
-        <div style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <a 
                 href="{{ route('admin.movies.edit', $movie->id) }}" 
                 style="padding: 10px 24px; background: #f39c12; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9em; font-weight: 500; transition: background 0.2s;"
@@ -30,7 +30,7 @@
     </div>
 
     <!-- Movie Header Section -->
-    <div style="display: grid; grid-template-columns: 280px 1fr; gap: 40px; margin-bottom: 40px;">
+    <div class="movie-header-grid" style="display: grid; grid-template-columns: 280px 1fr; gap: 40px; margin-bottom: 40px;">
         <!-- Poster -->
         <div>
             @if ($movie->poster)
@@ -72,13 +72,17 @@
                 <span style="padding: 6px 14px; background: {{ $statusColors[$movie->status]['bg'] ?? '#eee' }}; color: {{ $statusColors[$movie->status]['color'] ?? '#666' }}; border-radius: 6px; font-size: 0.85em; font-weight: 600;">
                     {{ $statusLabels[$movie->status] ?? $movie->status }}
                 </span>
+                @php
+                    $ageCode = $movie->age_classification ?? 'P';
+                    $ageText = $ageLabels[$ageCode] ?? $ageCode;
+                @endphp
                 <span style="padding: 6px 14px; background: #e3f2fd; color: #1976d2; border-radius: 6px; font-size: 0.85em; font-weight: 600;">
-                    {{ $movie->age_classification ?? 'P' }} - {{ $ageLabels[$movie->age_classification ?? 'P'] }}
+                    {{ $ageCode }} - {{ __($ageText) }}
                 </span>
             </div>
 
             <!-- Info Cards Grid -->
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
+            <div class="movie-info-cards-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px;">
                 <div style="padding: 18px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #3498db;">
                     <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.5px;">{{ __('Duration') }}</label>
                     <p style="margin: 0; color: #2c3e50; font-size: 1.2em; font-weight: 600;">{{ $movie->duration }} {{ __('mins') }}</p>
@@ -96,7 +100,7 @@
             </div>
 
             @if ($movie->genre || $movie->language)
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px;">
+            <div class="movie-extra-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px;">
                 @if ($movie->genre)
                 <div style="padding: 18px; background: #f8f9fa; border-radius: 8px;">
                     <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.5px;">{{ __('Genre') }}</label>
@@ -125,7 +129,7 @@
     <!-- Directors & Actors Section -->
     @if (($movie->directors && $movie->directors->count() > 0) || ($movie->actors && $movie->actors->count() > 0))
     <div style="margin-bottom: 40px; padding-top: 30px; border-top: 2px solid #eee;">
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;">
+        <div class="movie-people-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px;">
             @if ($movie->directors && $movie->directors->count() > 0)
             <div>
                 <h3 style="color: #2c3e50; font-size: 1.2em; margin-bottom: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
@@ -203,7 +207,7 @@
 
         @if($movie->showtimes->count() > 0)
             <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
+                <table class="responsive-table" style="width: 100%; border-collapse: collapse; min-width: 600px;">
                     <thead>
                         <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
                             <th style="padding: 14px 12px; text-align: left; color: #2c3e50; font-weight: 600; font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px;">{{ __('Date') }}</th>
@@ -215,18 +219,32 @@
                     </thead>
                     <tbody>
                         @foreach ($movie->showtimes as $showtime)
+                            @php
+                                $showtimeStatusColors = [
+                                    'scheduled' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
+                                    'ongoing' => ['bg' => '#fff3e0', 'color' => '#e65100'],
+                                    'completed' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
+                                    'cancelled' => ['bg' => '#ffebee', 'color' => '#c62828'],
+                                ];
+                                $showtimeStatusLabels = [
+                                    'scheduled' => __('Scheduled'),
+                                    'ongoing' => __('Ongoing'),
+                                    'completed' => __('Completed'),
+                                    'cancelled' => __('Cancelled'),
+                                ];
+                            @endphp
                             <tr style="border-bottom: 1px solid #e9ecef; transition: background 0.2s;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='transparent'">
-                                <td style="padding: 14px 12px; color: #2c3e50; font-weight: 500;">{{ $showtime->date->format('d/m/Y') }}</td>
-                                <td style="padding: 14px 12px; color: #2c3e50;">
+                                <td style="padding: 14px 12px; color: #2c3e50; font-weight: 500;" data-label="{{ __('Date') }}">{{ $showtime->date->format('d/m/Y') }}</td>
+                                <td style="padding: 14px 12px; color: #2c3e50;" data-label="{{ __('Time') }}">
                                     <span style="font-weight: 600;">{{ $showtime->start_time }}</span>
                                     <span style="color: #7f8c8d; margin: 0 5px;">-</span>
                                     <span style="font-weight: 600;">{{ $showtime->end_time }}</span>
                                 </td>
-                                <td style="padding: 14px 12px; color: #2c3e50; font-weight: 500;">{{ $showtime->room?->name ?? '-' }}</td>
-                                <td style="padding: 14px 12px; color: #2c3e50; font-weight: 600;">{{ number_format($showtime->price, 0, ',', '.') }} VNĐ</td>
-                                <td style="padding: 14px 12px;">
-                                    <span style="padding: 6px 12px; background: #e3f2fd; color: #1976d2; border-radius: 6px; font-size: 0.85em; font-weight: 600;">
-                                        {{ ucfirst($showtime->status) }}
+                                <td style="padding: 14px 12px; color: #2c3e50; font-weight: 500;" data-label="{{ __('Room') }}">{{ $showtime->room?->name ?? '-' }}</td>
+                                <td style="padding: 14px 12px; color: #2c3e50; font-weight: 600;" data-label="{{ __('Price') }}">{{ number_format($showtime->price, 0, ',', '.') }} VNĐ</td>
+                                <td style="padding: 14px 12px;" data-label="{{ __('Status') }}">
+                                    <span style="padding: 6px 12px; background: {{ $showtimeStatusColors[$showtime->status]['bg'] ?? '#eee' }}; color: {{ $showtimeStatusColors[$showtime->status]['color'] ?? '#666' }}; border-radius: 6px; font-size: 0.85em; font-weight: 600;">
+                                        {{ $showtimeStatusLabels[$showtime->status] ?? $showtime->status }}
                                     </span>
                                 </td>
                             </tr>
@@ -282,16 +300,50 @@
     }
 
     @media (max-width: 768px) {
-        div[style*="grid-template-columns: 280px 1fr"] {
+        .movie-header-grid {
             grid-template-columns: 1fr !important;
         }
-        
-        div[style*="grid-template-columns: repeat(3, 1fr)"] {
+        .movie-info-cards-grid,
+        .movie-extra-grid,
+        .movie-people-grid {
             grid-template-columns: 1fr !important;
         }
-        
-        div[style*="grid-template-columns: repeat(2, 1fr)"] {
-            grid-template-columns: 1fr !important;
+        .responsive-table {
+            min-width: unset !important;
+        }
+        .responsive-table thead {
+            display: none;
+        }
+        .responsive-table,
+        .responsive-table tbody,
+        .responsive-table tr,
+        .responsive-table td {
+            display: block;
+            width: 100%;
+        }
+        .responsive-table tr {
+            margin-bottom: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .responsive-table td {
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .responsive-table td:last-child {
+            border-bottom: none;
+        }
+        .responsive-table td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #7f8c8d;
+            flex-shrink: 0;
+            min-width: 120px;
         }
     }
 </style>

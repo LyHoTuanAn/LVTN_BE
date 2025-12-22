@@ -28,12 +28,13 @@ class BookingValidationService
             throw new \Exception('Some seats are invalid or inactive');
         }
 
-        // Check if seats are already booked
+        // Check if seats are already booked (only paid bookings reserve seats)
         $bookedSeats = DB::table('booking_seats')
             ->join('bookings', 'booking_seats.booking_id', '=', 'bookings.id')
             ->where('bookings.showtime_id', $showtimeId)
             ->whereIn('booking_seats.seat_id', $seatIds)
             ->where('bookings.status', '!=', 'canceled')
+            ->where('bookings.is_paid', true)
             ->pluck('booking_seats.seat_id')
             ->toArray();
 
@@ -70,6 +71,7 @@ class BookingValidationService
             ->join('bookings', 'booking_seats.booking_id', '=', 'bookings.id')
             ->where('bookings.showtime_id', $showtimeId)
             ->where('bookings.status', '!=', 'canceled')
+            ->where('bookings.is_paid', true) // Only paid bookings reserve seats
             ->pluck('booking_seats.seat_id')
             ->toArray();
 

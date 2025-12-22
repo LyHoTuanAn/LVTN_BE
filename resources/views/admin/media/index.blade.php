@@ -20,7 +20,7 @@
         <h3 style="color: #2c3e50; font-size: 1.2em; margin-bottom: 15px;">{{ __('Create New Folder') }}</h3>
         <form method="POST" action="{{ route('admin.media.create-folder') }}">
             @csrf
-            <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 15px; align-items: end;">
+            <div class="media-grid-3" style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 15px; align-items: end;">
                 <div>
                     <label style="display: block; margin-bottom: 8px; color: #2c3e50; font-weight: 500;">
                         {{ __('Folder Name') }} <span style="color: #e74c3c;">*</span>
@@ -144,7 +144,7 @@
         <h3 style="color: #2c3e50; font-size: 1.3em; margin-bottom: 15px;">{{ __('Upload Image') }}</h3>
         <form method="POST" action="{{ route('admin.media.upload-file') }}" enctype="multipart/form-data">
             @csrf
-            <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 15px; align-items: start;">
+            <div class="media-grid-3" style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 15px; align-items: start;">
                 <div>
                     <label style="display: block; margin-bottom: 8px; color: #2c3e50; font-weight: 500;">
                         {{ __('Select Image') }} <span style="color: #e74c3c;">*</span>
@@ -205,7 +205,7 @@
 
         @if ($recentFiles->count() > 0)
             <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse;">
+                <table class="responsive-table" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background: #f8f9fa; border-bottom: 2px solid #ddd;">
                             <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('File Name') }}</th>
@@ -221,15 +221,15 @@
                     <tbody>
                         @foreach ($recentFiles as $file)
                             <tr style="border-bottom: 1px solid #eee;">
-                                <td style="padding: 12px; color: #2c3e50;">{{ $file->file_name }}</td>
-                                <td style="padding: 12px; color: #666;">
+                                <td style="padding: 12px; color: #2c3e50;" data-label="{{ __('File Name') }}">{{ $file->file_name }}</td>
+                                <td style="padding: 12px; color: #666;" data-label="{{ __('Folder') }}">
                                     {{ $file->folder ? $file->folder->name : __('No Folder') }}
                                 </td>
-                                <td style="padding: 12px; color: #666;">{{ $file->mime_type }}</td>
-                                <td style="padding: 12px; color: #666;">{{ number_format($file->size / 1024, 2) }} KB</td>
-                                <td style="padding: 12px; color: #666;">{{ $file->user->name ?? __('Unknown') }}</td>
-                                <td style="padding: 12px; color: #666;">{{ $file->created_at->format('Y-m-d H:i') }}</td>
-                                <td style="padding: 12px;">
+                                <td style="padding: 12px; color: #666;" data-label="{{ __('Type') }}">{{ $file->mime_type }}</td>
+                                <td style="padding: 12px; color: #666;" data-label="{{ __('Size') }}">{{ number_format($file->size / 1024, 2) }} KB</td>
+                                <td style="padding: 12px; color: #666;" data-label="{{ __('Uploaded By') }}">{{ $file->user->name ?? __('Unknown') }}</td>
+                                <td style="padding: 12px; color: #666;" data-label="{{ __('Created At') }}">{{ $file->created_at->format('Y-m-d H:i') }}</td>
+                                <td style="padding: 12px;" data-label="{{ __('Preview') }}">
                                     @if (str_starts_with($file->mime_type, 'image/'))
                                         <img 
                                             src="{{ asset('storage/' . $file->file_path) }}" 
@@ -241,7 +241,7 @@
                                         <span style="color: #999;">-</span>
                                     @endif
                                 </td>
-                                <td style="padding: 12px;">
+                                <td style="padding: 12px;" data-label="{{ __('Actions') }}">
                                     <div style="display: flex; gap: 5px;">
                                         <button 
                                             onclick="showMoveModal({{ $file->id }}, {{ $file->folder_id ?? 'null' }})"
@@ -346,5 +346,54 @@
         }
     });
 </script>
-@endsection
 
+<style>
+    @media (max-width: 768px) {
+        .media-grid-3 {
+            grid-template-columns: 1fr !important;
+        }
+        .responsive-table thead {
+            display: none;
+        }
+        .responsive-table,
+        .responsive-table tbody,
+        .responsive-table tr,
+        .responsive-table td {
+            display: block;
+            width: 100%;
+        }
+        .responsive-table tr {
+            margin-bottom: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .responsive-table td {
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .responsive-table td:last-child {
+            border-bottom: none;
+        }
+        .responsive-table td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #7f8c8d;
+            flex-shrink: 0;
+            min-width: 120px;
+        }
+        .responsive-table td img {
+            margin-left: auto;
+        }
+        #createFolderForm form,
+        #createFolderForm .media-grid-3,
+        form[enctype="multipart/form-data"] .media-grid-3 {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+@endsection

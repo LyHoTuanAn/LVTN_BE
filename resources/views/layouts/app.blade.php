@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', __('Admin Dashboard')) - {{ __('Admin Panel') }}</title>
+    @php $assetVersion = config('app.asset_version'); @endphp
+    <link rel="icon" type="image/png" href="{{ asset('img/favicon.png') . '?v=' . $assetVersion }}">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -66,12 +68,21 @@
     
     @stack('styles')
 </head>
-<body class="min-h-screen bg-gray-50 font-sans antialiased">
-    <div class="flex h-screen overflow-hidden">
+<body class="h-screen bg-gray-50 font-sans antialiased overflow-hidden" x-data="{ sidebarOpen: false }">
+    <div class="flex h-screen">
         {{-- Sidebar --}}
         @include('layouts.sidebar')
         
-        <div class="flex-1 flex flex-col overflow-hidden">
+        {{-- Overlay for mobile --}}
+        <div 
+            class="fixed inset-0 bg-black bg-opacity-30 z-20 md:hidden"
+            x-show="sidebarOpen"
+            x-transition.opacity
+            @click="sidebarOpen = false"
+            aria-hidden="true"
+        ></div>
+        
+        <div class="flex-1 flex flex-col min-h-screen overflow-hidden">
             {{-- Header --}}
             @include('layouts.header')
             

@@ -1,7 +1,15 @@
-<div class="bg-gray-100 w-64 h-full flex flex-col border-r border-gray-200">
-    <div class="p-4 border-b border-gray-200">
-        <h1 class="text-2xl font-bold text-gray-900">{{ __('Admin Panel') }}</h1>
-    </div>
+<div 
+    class="bg-gray-100 w-64 md:w-64 h-screen flex flex-col border-r border-gray-200 fixed md:static inset-y-0 left-0 z-30 transform md:transform-none transition-transform duration-200 ease-in-out"
+    :class="{'-translate-x-full md:translate-x-0': !sidebarOpen, 'translate-x-0': sidebarOpen}"
+>
+<div class="p-4 h-20 border-b border-gray-200 flex items-center justify-center">
+    <img 
+        src="{{ asset('img/logo_admin.png') }}"
+        alt="Admin Logo"
+        class="!max-w-none !h-auto w-[459px]"
+    />
+</div>
+
     <nav class="flex-1 py-4 overflow-y-auto">
         <ul class="space-y-1">
             <li>
@@ -9,7 +17,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                     </svg>
-                    Dashboard
+                    {{ __('Dashboard') }}
                 </a>
             </li>
             <li>
@@ -17,7 +25,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                     </svg>
-                    API Documentation
+                    {{ __('API Documentation') }}
                 </a>
             </li>
             <li>
@@ -25,7 +33,7 @@
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                     </svg>
-                    API Management
+                    {{ __('API Management') }}
                 </a>
             </li>
             <li>
@@ -87,5 +95,24 @@
             </li>
         </ul>
     </nav>
+
+    @auth
+        <div class="p-4 border-t border-gray-200 mt-auto">
+            <div class="flex items-center justify-between">
+                <div class="text-sm text-gray-700">
+                    <div class="font-medium">{{ auth()->user()->name }}</div>
+                    @if (auth()->user()->email)
+                        <div class="text-gray-500 text-xs">{{ auth()->user()->email }}</div>
+                    @endif
+                </div>
+                <form method="POST" action="{{ route('web.logout') }}">
+                    @csrf
+                    <button type="submit" class="px-3 py-1.5 bg-red-600 text-white text-xs font-medium rounded hover:bg-red-700 transition-colors">
+                        {{ __('Logout') }}
+                    </button>
+                </form>
+            </div>
+        </div>
+    @endauth
 </div>
 

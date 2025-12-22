@@ -68,6 +68,21 @@ use Illuminate\Support\Facades\Storage;
             updateToggleStyle(toggle);
         }
     });
+
+    function togglePasswordVisibility() {
+        const input = document.getElementById('password_input');
+        const icon = document.getElementById('password_toggle_icon');
+
+        if (!input || !icon) return;
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁️';
+        }
+    }
 </script>
 @endpush
 
@@ -90,7 +105,7 @@ use Illuminate\Support\Facades\Storage;
         @csrf
         @method('PUT')
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
+        <div class="user-grid-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
             <div>
                 <label style="display: block; margin-bottom: 8px; color: #2c3e50; font-weight: 500;">
                     {{ __('Name') }} <span style="color: #e74c3c;">*</span>
@@ -174,12 +189,23 @@ use Illuminate\Support\Facades\Storage;
                 <label style="display: block; margin-bottom: 8px; color: #2c3e50; font-weight: 500;">
                     {{ __('Password') }} <span style="color: #666; font-size: 0.85em;">({{ __('Leave blank to keep current password') }})</span>
                 </label>
-                <input 
-                    type="password" 
-                    name="password" 
-                    placeholder="{{ __('New password (min 6 characters)') }}"
-                    style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;"
-                >
+                <div style="position: relative;">
+                    <input 
+                        id="password_input"
+                        type="password" 
+                        name="password" 
+                        placeholder="{{ __('New password (min 6 characters)') }}"
+                        style="width: 100%; padding: 10px 40px 10px 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em;"
+                    >
+                    <button 
+                        type="button" 
+                        onclick="togglePasswordVisibility()" 
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); border: none; background: transparent; cursor: pointer; color: #7f8c8d; font-size: 1em;"
+                        aria-label="Toggle password visibility"
+                    >
+                        <span id="password_toggle_icon">👁️</span>
+                    </button>
+                </div>
                 @error('password')
                     <div style="color: #e74c3c; font-size: 0.85em; margin-top: 5px;">{{ $message }}</div>
                 @enderror
@@ -261,7 +287,8 @@ use Illuminate\Support\Facades\Storage;
 
 
 
-        <div style="display: flex; gap: 10px;">
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <div class="user-actions" style="display: flex; gap: 10px; flex-wrap: wrap;">
             <button 
                 type="submit" 
                 style="padding: 12px 30px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1em; font-weight: 600;"
@@ -278,3 +305,19 @@ use Illuminate\Support\Facades\Storage;
     </form>
 </div>
 @endsection
+
+<style>
+    @media (max-width: 768px) {
+        .user-grid-2 {
+            grid-template-columns: 1fr !important;
+        }
+        .user-actions {
+            flex-direction: column;
+        }
+        .user-actions button,
+        .user-actions a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>

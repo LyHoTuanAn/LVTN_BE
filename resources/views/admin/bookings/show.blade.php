@@ -17,9 +17,9 @@
         </div>
     @endif
 
-    <h2 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 30px;">{{ __('Booking') }} #{{ $booking->code }}</h2>
+    <h2 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 30px;">#{{ $booking->code }}</h2>
 
-    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px;">
+    <div class="booking-details-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px;">
         <!-- Booking Information -->
         <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 5px solid #3498db;">
             <h3 style="color: #2c3e50; font-size: 1.2em; margin-bottom: 15px; border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">
@@ -159,7 +159,7 @@
     </div>
 
     <!-- Actions -->
-    <div style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee;">
+    <div class="booking-actions" style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee; flex-wrap: wrap;">
         <form method="POST" action="{{ route('admin.bookings.update-status', $booking->id) }}" style="display: inline;">
             @csrf
             <select name="status" style="padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; margin-right: 10px;">
@@ -192,5 +192,28 @@
         </form>
     </div>
 </div>
-@endsection
 
+<style>
+    @media (max-width: 768px) {
+        .booking-details-grid {
+            grid-template-columns: 1fr !important;
+        }
+        .booking-actions {
+            flex-direction: column;
+            gap: 12px;
+        }
+        .booking-actions form {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .booking-actions select,
+        .booking-actions input,
+        .booking-actions button {
+            width: 100%;
+        }
+    }
+</style>
+
+@endsection

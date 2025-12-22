@@ -5,10 +5,10 @@
 
 @section('content')
 <div style="background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; flex-wrap: wrap;">
         <h2 style="color: #2c3e50; font-size: 1.5em;">{{ __('Movie List') }}</h2>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <form method="GET" action="{{ route('admin.movies.index') }}" style="display: flex; gap: 10px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <form method="GET" action="{{ route('admin.movies.index') }}" class="movie-filter-form" style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <input 
                     type="text" 
                     name="search" 
@@ -22,36 +22,37 @@
                     <option value="now_showing" {{ request('status') == 'now_showing' ? 'selected' : '' }}>{{ __('Now Showing') }}</option>
                     <option value="trending" {{ request('status') == 'trending' ? 'selected' : '' }}>{{ __('Trending') }}</option>
                 </select>
-                <button type="submit" style="padding: 8px 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                <button type="submit" style="padding: 0 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9em; line-height: 1; height: 38px; box-sizing: border-box;">
                     {{ __('Search') }}
                 </button>
             </form>
             <a 
                 href="{{ route('admin.movies.create') }}" 
-                style="padding: 8px 20px; background: #27ae60; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9em; white-space: nowrap;"
+                style="padding: 0 20px; background: #27ae60; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9em; white-space: nowrap; display: inline-flex; align-items: center; justify-content: center; line-height: 1; height: 38px; box-sizing: border-box;"
             >
                 + {{ __('Add Movie') }}
             </a>
         </div>
     </div>
 
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('ID') }}</th>
-                <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Poster') }}</th>
-                <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Title') }}</th>
-                <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Duration') }}</th>
-                <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Release Date') }}</th>
-                <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Status') }}</th>
-                <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Actions') }}</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div style="width: 100%; overflow-x: auto;">
+        <table class="responsive-table" style="width: 100%; border-collapse: collapse; min-width: 800px;">
+            <thead>
+                <tr style="background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
+                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('ID') }}</th>
+                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Poster') }}</th>
+                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Title') }}</th>
+                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Duration') }}</th>
+                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Release Date') }}</th>
+                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Status') }}</th>
+                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Actions') }}</th>
+                </tr>
+            </thead>
+            <tbody>
             @forelse ($movies as $movie)
                 <tr style="border-bottom: 1px solid #dee2e6;">
-                    <td style="padding: 12px;">{{ $movie->id }}</td>
-                    <td style="padding: 12px;">
+                    <td style="padding: 12px;" data-label="{{ __('ID') }}">{{ $movie->id }}</td>
+                    <td style="padding: 12px;" data-label="{{ __('Poster') }}">
                         @if ($movie->poster)
                             <img src="{{ asset('storage/' . $movie->poster->file_path) }}" alt="{{ $movie->title }}" style="width: 50px; height: 75px; object-fit: cover; border-radius: 4px;">
                         @else
@@ -60,10 +61,10 @@
                             </div>
                         @endif
                     </td>
-                    <td style="padding: 12px; font-weight: 500;">{{ $movie->title }}</td>
-                    <td style="padding: 12px;">{{ $movie->duration }} {{ __('mins') }}</td>
-                    <td style="padding: 12px;">{{ $movie->release_date->format('Y-m-d') }}</td>
-                    <td style="padding: 12px;">
+                    <td style="padding: 12px; font-weight: 500;" data-label="{{ __('Title') }}">{{ $movie->title }}</td>
+                    <td style="padding: 12px;" data-label="{{ __('Duration') }}">{{ $movie->duration }} {{ __('mins') }}</td>
+                    <td style="padding: 12px;" data-label="{{ __('Release Date') }}">{{ $movie->release_date->format('Y-m-d') }}</td>
+                    <td style="padding: 12px;" data-label="{{ __('Status') }}">
                         @php
                             $statusColors = [
                                 'coming_soon' => ['bg' => '#fff3e0', 'color' => '#e65100'],
@@ -80,24 +81,24 @@
                             {{ $statusLabels[$movie->status] ?? $movie->status }}
                         </span>
                     </td>
-                    <td style="padding: 12px;">
-                        <div style="display: flex; gap: 8px;">
+                    <td style="padding: 12px;" data-label="{{ __('Actions') }}">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                             <a 
                                 href="{{ route('admin.movies.show', $movie->id) }}" 
-                                style="padding: 6px 12px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85em;"
+                                style="padding: 0 12px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85em; display: inline-flex; align-items: center; justify-content: center; height: 32px; line-height: 1; box-sizing: border-box;"
                             >
                                 {{ __('View') }}
                             </a>
                             <a 
                                 href="{{ route('admin.movies.edit', $movie->id) }}" 
-                                style="padding: 6px 12px; background: #f39c12; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85em;"
+                                style="padding: 0 12px; background: #f39c12; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85em; display: inline-flex; align-items: center; justify-content: center; height: 32px; line-height: 1; box-sizing: border-box;"
                             >
                                 {{ __('Edit') }}
                             </a>
                             <form method="POST" action="{{ route('admin.movies.destroy', $movie->id) }}" style="display: inline;" onsubmit="return confirm('{{ __('Are you sure you want to delete this movie?') }}');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" style="padding: 6px 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; font-size: 0.85em; cursor: pointer;">
+                                <button type="submit" style="padding: 0 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; font-size: 0.85em; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; height: 32px; line-height: 1; box-sizing: border-box;">
                                     {{ __('Delete') }}
                                 </button>
                             </form>
@@ -111,11 +112,78 @@
                     </td>
                 </tr>
             @endforelse
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 
     <div style="margin-top: 20px;">
         {{ $movies->links() }}
     </div>
 </div>
 @endsection
+
+<style>
+    @media (max-width: 768px) {
+        .movie-filter-form {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .movie-filter-form input,
+        .movie-filter-form select,
+        .movie-filter-form button {
+            width: 100%;
+        }
+        .responsive-table {
+            min-width: unset !important;
+        }
+        .responsive-table thead {
+            display: none;
+        }
+        .responsive-table,
+        .responsive-table tbody,
+        .responsive-table tr,
+        .responsive-table td {
+            display: block;
+            width: 100%;
+        }
+        .responsive-table tr {
+            margin-bottom: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .responsive-table td {
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .responsive-table td:last-child {
+            border-bottom: none;
+        }
+        .responsive-table td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            color: #7f8c8d;
+            flex-shrink: 0;
+            min-width: 120px;
+        }
+        .responsive-table td img {
+            margin-left: auto;
+        }
+        .responsive-table td div {
+            text-align: right;
+        }
+        .responsive-table td form,
+        .responsive-table td a,
+        .responsive-table td button {
+            width: 100%;
+        }
+        .responsive-table td a,
+        .responsive-table td button {
+            text-align: center;
+        }
+    }
+</style>

@@ -25,6 +25,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
         ]);
+        
+        // Add language middleware to web group
+        $middleware->appendToGroup('web', LanguageMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Handle validation errors for API routes

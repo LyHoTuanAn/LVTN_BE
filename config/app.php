@@ -56,6 +56,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Asset Version
+    |--------------------------------------------------------------------------
+    |
+    | This value will be appended as a query string to static assets (CSS, JS,
+    | images, etc.) to help with browser cache busting. Update ASSET_VERSION
+    | in your .env file when you deploy new frontend changes.
+    |
+    */
+
+    'asset_version' => env('ASSET_VERSION', '2'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |

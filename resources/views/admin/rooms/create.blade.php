@@ -20,7 +20,7 @@
     <form method="POST" action="{{ route('admin.rooms.store') }}">
         @csrf
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div class="room-grid-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
             <div style="margin-bottom: 20px;">
                 <label for="name" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
                     {{ __('Room Name') }} <span style="color: #e74c3c;">*</span>
@@ -62,7 +62,7 @@
             </div>
         </div>
 
-        <div style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee;">
+        <div class="room-actions" style="display: flex; gap: 15px; padding-top: 20px; border-top: 1px solid #eee; flex-wrap: wrap;">
             <button 
                 type="submit" 
                 style="padding: 12px 30px; background: #27ae60; color: white; border: none; border-radius: 6px; font-size: 1em; cursor: pointer; font-weight: 600;"
@@ -78,4 +78,20 @@
         </div>
     </form>
 </div>
+
+<style>
+    @media (max-width: 768px) {
+        .room-grid-2 {
+            grid-template-columns: 1fr !important;
+        }
+        .room-actions {
+            flex-direction: column;
+        }
+        .room-actions button,
+        .room-actions a {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
 @endsection
