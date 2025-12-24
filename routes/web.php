@@ -113,6 +113,9 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::get('/create', [NewsController::class, 'create'])->name('create');
         Route::post('/', [NewsController::class, 'store'])->name('store');
         Route::post('/translate', [NewsController::class, 'translate'])->name('translate');
+        Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [NewsController::class, 'update'])->name('update');
+        Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy');
     });
 
     // Admin Bookings Management

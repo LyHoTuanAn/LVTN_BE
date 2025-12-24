@@ -45,7 +45,7 @@ class NewsService
     {
         return DB::transaction(function () use ($data, $authorId, $thumbnail, $inlineImages) {
             $data['author_id'] = $authorId;
-            $data['slug'] = $this->prepareSlug($data);
+            $data['slug'] = $this->prepareSlug($data, null);
 
             if ($thumbnail) {
                 $thumbnailFile = $this->mediaService->uploadImage($thumbnail, $authorId);
@@ -68,7 +68,58 @@ class NewsService
         });
     }
 
-    protected function prepareSlug(array $data): string
+    /**
+     * Get news by ID
+     */
+    public function getById(int $id): ?News
+    {
+        return News::with(['thumbnail', 'author'])->find($id);
+    }
+
+    /**
+     * Update a news item with optional media uploads.
+     */
+    public function update(int $id, array $data, ?UploadedFile $thumbnail = null, array $inlineImages = []): bool
+    {
+        return DB::transaction(function () use ($id, $data, $thumbnail, $inlineImages) {
+            $news = News::find($id);
+            if (!$news) {
+                return false;
+            }
+
+            // Update slug if title_vi changed
+            if (isset($data['title_vi']) && $data['title_vi'] !== $news->title_vi) {
+                $data['slug'] = $this->prepareSlug($data, $id);
+            }
+
+            if ($thumbnail) {
+                // Delete old thumbnail if exists
+                if ($news->thumbnail_id) {
+                    $this->mediaService->deleteMediaFile($news->thumbnail_id);
+                }
+                $thumbnailFile = $this->mediaService->uploadImage($thumbnail, $news->author_id);
+                $data['thumbnail_id'] = $thumbnailFile->id;
+            }
+
+            // Handle inline images - append to existing ones
+            $existingInlineIds = $news->inline_image_ids ?? [];
+            $uploadedInlineIds = [];
+            foreach ($inlineImages as $inlineImage) {
+                if ($inlineImage instanceof UploadedFile) {
+                    $media = $this->mediaService->uploadImage($inlineImage, $news->author_id);
+                    $uploadedInlineIds[] = $media->id;
+                }
+            }
+
+            if (!empty($uploadedInlineIds)) {
+                $data['inline_image_ids'] = array_merge($existingInlineIds, $uploadedInlineIds);
+            }
+
+            return $news->update($data);
+        });
+    }
+
+    protected function prepareSlug(array $data, ?int $excludeId = null): string
     {
         // Ưu tiên slug từ Title (Vietnamese), nếu không có thì dùng English
         $base = $data['slug'] ?? $data['title_vi'] ?? $data['title_en'] ?? Str::random(8);
@@ -77,12 +128,47 @@ class NewsService
         $original = $slug;
         $counter = 1;
 
-        while (News::withTrashed()->where('slug', $slug)->exists()) {
+        $query = News::withTrashed()->where('slug', $slug);
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        while ($query->exists()) {
             $slug = $original . '-' . $counter;
             $counter++;
+            $query = News::withTrashed()->where('slug', $slug);
+            if ($excludeId) {
+                $query->where('id', '!=', $excludeId);
+            }
         }
 
         return $slug;
+    }
+
+    /**
+     * Delete a news item (soft delete).
+     */
+    public function delete(int $id): bool
+    {
+        $news = News::find($id);
+        
+        if (!$news) {
+            return false;
+        }
+
+        // Delete thumbnail if exists
+        if ($news->thumbnail_id) {
+            $this->mediaService->deleteMediaFile($news->thumbnail_id);
+        }
+
+        // Delete inline images if exist
+        if (!empty($news->inline_image_ids)) {
+            foreach ($news->inline_image_ids as $mediaId) {
+                $this->mediaService->deleteMediaFile($mediaId);
+            }
+        }
+
+        return $news->delete();
     }
 }
 

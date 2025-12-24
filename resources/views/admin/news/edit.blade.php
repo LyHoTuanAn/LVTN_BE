@@ -1,17 +1,18 @@
 @extends('layouts.app')
 
-@section('title', __('Create News'))
-@section('page-title', __('Create News'))
+@section('title', __('Edit News'))
+@section('page-title', __('Edit News'))
 
 @section('content')
 <div style="background: white; border-radius: 8px; padding: 24px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);">
-    <form method="POST" action="{{ route('admin.news.store') }}" enctype="multipart/form-data" style="display: grid; gap: 20px;">
+    <form method="POST" action="{{ route('admin.news.update', $news->id) }}" enctype="multipart/form-data" style="display: grid; gap: 20px;">
         @csrf
+        @method('PUT')
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Title (English)') }}</label>
-                <input type="text" name="title_en" value="{{ old('title_en') }}" readonly
+                <input type="text" name="title_en" value="{{ old('title_en', $news->title_en) }}" readonly
                     style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; background-color: #f5f5f5; cursor: not-allowed;">
                 @error('title_en')
                     <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
@@ -19,7 +20,7 @@
             </div>
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Title (Vietnamese)') }}</label>
-                <input type="text" name="title_vi" value="{{ old('title_vi') }}" required
+                <input type="text" name="title_vi" value="{{ old('title_vi', $news->title_vi) }}" required
                     style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
                 @error('title_vi')
                     <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
@@ -29,7 +30,7 @@
 
         <div>
             <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Slug') }}</label>
-            <input type="text" name="slug" value="{{ old('slug') }}" 
+            <input type="text" name="slug" value="{{ old('slug', $news->slug) }}" 
                 style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
             @error('slug')
                 <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
@@ -39,14 +40,14 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Summary (English)') }}</label>
-                <textarea name="summary_en" rows="3" readonly style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; background-color: #f5f5f5; cursor: not-allowed;">{{ old('summary_en') }}</textarea>
+                <textarea name="summary_en" rows="3" readonly style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; background-color: #f5f5f5; cursor: not-allowed;">{{ old('summary_en', $news->summary_en) }}</textarea>
                 @error('summary_en')
                     <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
                 @enderror
             </div>
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Summary (Vietnamese)') }}</label>
-                <textarea name="summary_vi" rows="3" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">{{ old('summary_vi') }}</textarea>
+                <textarea name="summary_vi" rows="3" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">{{ old('summary_vi', $news->summary_vi) }}</textarea>
                 @error('summary_vi')
                     <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
                 @enderror
@@ -56,14 +57,14 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Content (English)') }}</label>
-                <textarea name="content_en" rows="8" readonly style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; background-color: #f5f5f5; cursor: not-allowed;">{{ old('content_en') }}</textarea>
+                <textarea name="content_en" rows="8" readonly style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; background-color: #f5f5f5; cursor: not-allowed;">{{ old('content_en', $news->content_en) }}</textarea>
                 @error('content_en')
                     <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
                 @enderror
             </div>
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Content (Vietnamese)') }}</label>
-                <textarea id="content_vi_editor" name="content_vi" rows="8" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">{{ old('content_vi') }}</textarea>
+                <textarea id="content_vi_editor" name="content_vi" rows="8" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">{{ old('content_vi', $news->content_vi) }}</textarea>
                 @error('content_vi')
                     <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
                 @enderror
@@ -74,7 +75,7 @@
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Status') }}</label>
                 <select name="status" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                    @php $selectedStatus = old('status', 'draft'); @endphp
+                    @php $selectedStatus = old('status', $news->status); @endphp
                     <option value="draft" {{ $selectedStatus === 'draft' ? 'selected' : '' }}>{{ __('Draft') }}</option>
                     <option value="published" {{ $selectedStatus === 'published' ? 'selected' : '' }}>{{ __('Published') }}</option>
                 </select>
@@ -87,16 +88,32 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Thumbnail') }}</label>
+                @if ($news->thumbnail)
+                    <div style="margin-bottom: 10px;">
+                        <img src="{{ asset('storage/' . $news->thumbnail->file_path) }}" alt="Current thumbnail" style="max-width: 200px; max-height: 150px; border-radius: 6px; border: 1px solid #ddd;">
+                        <p style="font-size: 0.85em; color: #666; margin-top: 6px;">{{ __('Current thumbnail') }}</p>
+                    </div>
+                @endif
                 <input type="file" name="thumbnail" accept="image/*" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Used as the main cover image (converted to WebP).') }}</p>
+                <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Leave empty to keep current. Upload new to replace (converted to WebP).') }}</p>
                 @error('thumbnail')
                     <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
                 @enderror
             </div>
             <div>
                 <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Inline Images') }}</label>
+                @if (!empty($news->inline_image_ids))
+                    <div style="margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 8px;">
+                        @foreach ($news->inline_image_ids as $mediaId)
+                            @php $media = \App\Models\MediaFile::find($mediaId); @endphp
+                            @if ($media)
+                                <img src="{{ asset('storage/' . $media->file_path) }}" alt="Inline image" style="max-width: 100px; max-height: 100px; border-radius: 4px; border: 1px solid #ddd;">
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
                 <input type="file" name="inline_images[]" accept="image/*" multiple style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Uploaded images will be processed via MediaService; URLs will show after save to embed inside content.') }}</p>
+                <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Upload additional images (will be appended to existing ones).') }}</p>
                 @error('inline_images')
                     <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
                 @enderror
@@ -111,7 +128,7 @@
                 {{ __('Cancel') }}
             </a>
             <button type="submit" style="padding: 10px 18px; background: #27ae60; color: white; border: none; border-radius: 6px; font-weight: 700; cursor: pointer;">
-                {{ __('Save News') }}
+                {{ __('Update News') }}
             </button>
         </div>
     </form>

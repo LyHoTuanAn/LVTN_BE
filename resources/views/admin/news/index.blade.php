@@ -59,6 +59,7 @@
                     <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Title') }}</th>
                     <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Status') }}</th>
                     <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Created At') }}</th>
+                    <th style="padding: 12px; text-align: left; color: #2c3e50; font-weight: 600;">{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,10 +81,27 @@
                     <td style="padding: 12px;" data-label="{{ __('Created At') }}">
                         {{ $item->created_at?->format('Y-m-d H:i') }}
                     </td>
+                    <td style="padding: 12px;" data-label="{{ __('Actions') }}">
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <a 
+                                href="{{ route('admin.news.edit', $item->id) }}" 
+                                style="padding: 0 12px; background: #f39c12; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85em; display: inline-flex; align-items: center; justify-content: center; height: 32px; line-height: 1; box-sizing: border-box;"
+                            >
+                                {{ __('Edit') }}
+                            </a>
+                            <form method="POST" action="{{ route('admin.news.destroy', $item->id) }}" style="display: inline;" onsubmit="return confirm('{{ __('Are you sure you want to delete this news?') }}');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" style="padding: 0 12px; background: #e74c3c; color: white; border: none; border-radius: 4px; font-size: 0.85em; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; height: 32px; line-height: 1; box-sizing: border-box;">
+                                    {{ __('Delete') }}
+                                </button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="5" style="padding: 40px; text-align: center; color: #666;">
+                    <td colspan="6" style="padding: 40px; text-align: center; color: #666;">
                         {{ __('No news found') }}
                     </td>
                 </tr>

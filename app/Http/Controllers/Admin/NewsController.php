@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreNewsRequest;
+use App\Http\Requests\Admin\UpdateNewsRequest;
 use App\Services\News\NewsService;
 use App\Services\Translation\GoogleTranslateService;
 use Illuminate\Http\Request;
@@ -90,6 +91,97 @@ class NewsController extends Controller
         return response()->json([
             'translated' => $translated,
         ]);
+    }
+
+    public function edit(int $id)
+    {
+        $news = $this->newsService->getById($id);
+
+        if (!$news) {
+            return redirect()
+                ->route('admin.news.index')
+                ->with('error', __('News not found'));
+        }
+
+        return view('admin.news.edit', [
+            'news' => $news,
+        ]);
+    }
+
+    public function update(UpdateNewsRequest $request, int $id)
+    {
+        $news = $this->newsService->getById($id);
+
+        if (!$news) {
+            return redirect()
+                ->route('admin.news.index')
+                ->with('error', __('News not found'));
+        }
+
+        $data = $request->validated();
+
+        // Auto-translate from Vietnamese to English if EN fields are empty
+        if (empty($data['title_en']) && !empty($data['title_vi'])) {
+            $data['title_en'] = $this->translator->translate($data['title_vi'], 'vi', 'en');
+        }
+
+        if (empty($data['summary_en']) && !empty($data['summary_vi'])) {
+            $data['summary_en'] = $this->translator->translate($data['summary_vi'], 'vi', 'en');
+        }
+
+        if (empty($data['content_en']) && !empty($data['content_vi'])) {
+            // Content English giữ y chang nội dung tiếng Việt (đã được sync từ TinyMCE phía client)
+            $data['content_en'] = $data['content_vi'];
+        }
+
+        $updated = $this->newsService->update(
+            $id,
+            $data,
+            $request->file('thumbnail'),
+            $request->file('inline_images', [])
+        );
+
+        if (!$updated) {
+            return redirect()
+                ->route('admin.news.edit', $id)
+                ->with('error', __('Failed to update news'));
+        }
+
+        $inlineUrls = [];
+        $updatedNews = $this->newsService->getById($id);
+        if (!empty($updatedNews->inline_image_ids)) {
+            foreach ($updatedNews->inline_image_ids as $mediaId) {
+                $inlineUrls[] = asset('storage/' . (\App\Models\MediaFile::find($mediaId)?->file_path));
+            }
+        }
+
+        return redirect()
+            ->route('admin.news.index')
+            ->with('success', __('News updated successfully'))
+            ->with('inline_urls', array_filter($inlineUrls));
+    }
+
+    public function destroy(int $id)
+    {
+        $news = $this->newsService->getById($id);
+
+        if (!$news) {
+            return redirect()
+                ->route('admin.news.index')
+                ->with('error', __('News not found'));
+        }
+
+        $deleted = $this->newsService->delete($id);
+
+        if (!$deleted) {
+            return redirect()
+                ->route('admin.news.index')
+                ->with('error', __('Failed to delete news'));
+        }
+
+        return redirect()
+            ->route('admin.news.index')
+            ->with('success', __('News deleted successfully'));
     }
 }
 
