@@ -84,26 +84,13 @@
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-            <div>
-                <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Thumbnail') }}</label>
-                <input type="file" name="thumbnail" accept="image/*" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Used as the main cover image (converted to WebP).') }}</p>
-                @error('thumbnail')
-                    <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
-                @enderror
-            </div>
-            <div>
-                <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Inline Images') }}</label>
-                <input type="file" name="inline_images[]" accept="image/*" multiple style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Uploaded images will be processed via MediaService; URLs will show after save to embed inside content.') }}</p>
-                @error('inline_images')
-                    <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
-                @enderror
-                @error('inline_images.*')
-                    <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
-                @enderror
-            </div>
+        <div>
+            <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Thumbnail') }}</label>
+            <input type="file" name="thumbnail" accept="image/*" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
+            <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Used as the main cover image (converted to WebP).') }}</p>
+            @error('thumbnail')
+                <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
+            @enderror
         </div>
 
         <div style="display: flex; gap: 12px; justify-content: flex-end;">

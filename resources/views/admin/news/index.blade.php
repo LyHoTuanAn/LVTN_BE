@@ -40,16 +40,6 @@
         </div>
     @endif
 
-    @if (session('inline_urls'))
-        <div style="padding: 12px 16px; background: #f1f8ff; color: #0b63ce; border-radius: 6px; margin-bottom: 16px;">
-            <div style="font-weight: 600; margin-bottom: 6px;">{{ __('Inline image URLs') }}:</div>
-            <ul style="padding-left: 16px; margin: 0;">
-                @foreach (session('inline_urls') as $url)
-                    <li style="margin-bottom: 4px; word-break: break-all;">{{ $url }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <div style="width: 100%; overflow-x: auto;">
         <table class="responsive-table" style="width: 100%; border-collapse: collapse; min-width: 800px;">
@@ -83,6 +73,12 @@
                     </td>
                     <td style="padding: 12px;" data-label="{{ __('Actions') }}">
                         <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <a 
+                                href="{{ route('admin.news.show', $item->id) }}" 
+                                style="padding: 0 12px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85em; display: inline-flex; align-items: center; justify-content: center; height: 32px; line-height: 1; box-sizing: border-box;"
+                            >
+                                {{ __('View') }}
+                            </a>
                             <a 
                                 href="{{ route('admin.news.edit', $item->id) }}" 
                                 style="padding: 0 12px; background: #f39c12; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85em; display: inline-flex; align-items: center; justify-content: center; height: 32px; line-height: 1; box-sizing: border-box;"

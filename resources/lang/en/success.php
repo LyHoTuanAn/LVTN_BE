@@ -32,5 +32,9 @@ return [
     'OTP_RESENT_SUCCESS' => 'OTP code has been resent to your email',
     'PROFILE_UPDATED_SUCCESS' => 'Profile updated successfully',
     'IMAGE_UPLOADED_SUCCESS' => 'Image uploaded successfully',
+    'VOUCHER_CREATED_SUCCESS' => 'Voucher created successfully',
+    'VOUCHER_UPDATED_SUCCESS' => 'Voucher updated successfully',
+    'VOUCHER_DELETED_SUCCESS' => 'Voucher deleted successfully',
+    'VOUCHERS_FETCHED_SUCCESS' => 'Vouchers fetched successfully',
 ];
 

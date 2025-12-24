@@ -85,42 +85,19 @@
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-            <div>
-                <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Thumbnail') }}</label>
-                @if ($news->thumbnail)
-                    <div style="margin-bottom: 10px;">
-                        <img src="{{ asset('storage/' . $news->thumbnail->file_path) }}" alt="Current thumbnail" style="max-width: 200px; max-height: 150px; border-radius: 6px; border: 1px solid #ddd;">
-                        <p style="font-size: 0.85em; color: #666; margin-top: 6px;">{{ __('Current thumbnail') }}</p>
-                    </div>
-                @endif
-                <input type="file" name="thumbnail" accept="image/*" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Leave empty to keep current. Upload new to replace (converted to WebP).') }}</p>
-                @error('thumbnail')
-                    <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
-                @enderror
-            </div>
-            <div>
-                <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Inline Images') }}</label>
-                @if (!empty($news->inline_image_ids))
-                    <div style="margin-bottom: 10px; display: flex; flex-wrap: wrap; gap: 8px;">
-                        @foreach ($news->inline_image_ids as $mediaId)
-                            @php $media = \App\Models\MediaFile::find($mediaId); @endphp
-                            @if ($media)
-                                <img src="{{ asset('storage/' . $media->file_path) }}" alt="Inline image" style="max-width: 100px; max-height: 100px; border-radius: 4px; border: 1px solid #ddd;">
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
-                <input type="file" name="inline_images[]" accept="image/*" multiple style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
-                <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Upload additional images (will be appended to existing ones).') }}</p>
-                @error('inline_images')
-                    <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
-                @enderror
-                @error('inline_images.*')
-                    <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
-                @enderror
-            </div>
+        <div>
+            <label style="display: block; font-weight: 600; margin-bottom: 6px;">{{ __('Thumbnail') }}</label>
+            @if ($news->thumbnail)
+                <div style="margin-bottom: 10px;">
+                    <img src="{{ asset('storage/' . $news->thumbnail->file_path) }}" alt="Current thumbnail" style="max-width: 200px; max-height: 150px; border-radius: 6px; border: 1px solid #ddd;">
+                    <p style="font-size: 0.85em; color: #666; margin-top: 6px;">{{ __('Current thumbnail') }}</p>
+                </div>
+            @endif
+            <input type="file" name="thumbnail" accept="image/*" style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px;">
+            <p style="font-size: 0.9em; color: #666; margin-top: 6px;">{{ __('Leave empty to keep current. Upload new to replace (converted to WebP).') }}</p>
+            @error('thumbnail')
+                <div style="color: #e74c3c; margin-top: 6px; font-size: 0.9em;">{{ $message }}</div>
+            @enderror
         </div>
 
         <div style="display: flex; gap: 12px; justify-content: flex-end;">

@@ -32,5 +32,9 @@ return [
     'OTP_RESENT_SUCCESS' => 'Mã OTP đã được gửi lại đến email của bạn',
     'PROFILE_UPDATED_SUCCESS' => 'Cập nhật thông tin cá nhân thành công',
     'IMAGE_UPLOADED_SUCCESS' => 'Tải ảnh lên thành công',
+    'VOUCHER_CREATED_SUCCESS' => 'Tạo voucher thành công',
+    'VOUCHER_UPDATED_SUCCESS' => 'Cập nhật voucher thành công',
+    'VOUCHER_DELETED_SUCCESS' => 'Xóa voucher thành công',
+    'VOUCHERS_FETCHED_SUCCESS' => 'Lấy danh sách voucher thành công',
 ];
 

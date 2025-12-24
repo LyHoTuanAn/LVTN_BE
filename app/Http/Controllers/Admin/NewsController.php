@@ -36,9 +36,32 @@ class NewsController extends Controller
         return view('admin.news.create');
     }
 
+    public function show(int $id)
+    {
+        $news = $this->newsService->getById($id);
+
+        if (!$news) {
+            return redirect()
+                ->route('admin.news.index')
+                ->with('error', __('News not found'));
+        }
+
+        return view('admin.news.show', [
+            'news' => $news,
+        ]);
+    }
+
     public function store(StoreNewsRequest $request)
     {
         $data = $request->validated();
+
+        // Trim summary fields to remove leading/trailing whitespace and line breaks
+        if (isset($data['summary_vi'])) {
+            $data['summary_vi'] = trim($data['summary_vi']);
+        }
+        if (isset($data['summary_en'])) {
+            $data['summary_en'] = trim($data['summary_en']);
+        }
 
         // Auto-translate from Vietnamese to English if EN fields are empty
         if (empty($data['title_en']) && !empty($data['title_vi'])) {
@@ -46,7 +69,7 @@ class NewsController extends Controller
         }
 
         if (empty($data['summary_en']) && !empty($data['summary_vi'])) {
-            $data['summary_en'] = $this->translator->translate($data['summary_vi'], 'vi', 'en');
+            $data['summary_en'] = trim($this->translator->translate($data['summary_vi'], 'vi', 'en'));
         }
 
         if (empty($data['content_en']) && !empty($data['content_vi'])) {
@@ -57,21 +80,12 @@ class NewsController extends Controller
         $news = $this->newsService->create(
             $data,
             auth()->id(),
-            $request->file('thumbnail'),
-            $request->file('inline_images', [])
+            $request->file('thumbnail')
         );
-
-        $inlineUrls = [];
-        if (!empty($news->inline_image_ids)) {
-            foreach ($news->inline_image_ids as $id) {
-                $inlineUrls[] = asset('storage/' . (\App\Models\MediaFile::find($id)?->file_path));
-            }
-        }
 
         return redirect()
             ->route('admin.news.index')
-            ->with('success', __('News created successfully'))
-            ->with('inline_urls', array_filter($inlineUrls));
+            ->with('success', __('News created successfully'));
     }
 
     public function translate(Request $request)
@@ -120,13 +134,21 @@ class NewsController extends Controller
 
         $data = $request->validated();
 
+        // Trim summary fields to remove leading/trailing whitespace and line breaks
+        if (isset($data['summary_vi'])) {
+            $data['summary_vi'] = trim($data['summary_vi']);
+        }
+        if (isset($data['summary_en'])) {
+            $data['summary_en'] = trim($data['summary_en']);
+        }
+
         // Auto-translate from Vietnamese to English if EN fields are empty
         if (empty($data['title_en']) && !empty($data['title_vi'])) {
             $data['title_en'] = $this->translator->translate($data['title_vi'], 'vi', 'en');
         }
 
         if (empty($data['summary_en']) && !empty($data['summary_vi'])) {
-            $data['summary_en'] = $this->translator->translate($data['summary_vi'], 'vi', 'en');
+            $data['summary_en'] = trim($this->translator->translate($data['summary_vi'], 'vi', 'en'));
         }
 
         if (empty($data['content_en']) && !empty($data['content_vi'])) {
@@ -137,8 +159,7 @@ class NewsController extends Controller
         $updated = $this->newsService->update(
             $id,
             $data,
-            $request->file('thumbnail'),
-            $request->file('inline_images', [])
+            $request->file('thumbnail')
         );
 
         if (!$updated) {
@@ -147,18 +168,9 @@ class NewsController extends Controller
                 ->with('error', __('Failed to update news'));
         }
 
-        $inlineUrls = [];
-        $updatedNews = $this->newsService->getById($id);
-        if (!empty($updatedNews->inline_image_ids)) {
-            foreach ($updatedNews->inline_image_ids as $mediaId) {
-                $inlineUrls[] = asset('storage/' . (\App\Models\MediaFile::find($mediaId)?->file_path));
-            }
-        }
-
         return redirect()
             ->route('admin.news.index')
-            ->with('success', __('News updated successfully'))
-            ->with('inline_urls', array_filter($inlineUrls));
+            ->with('success', __('News updated successfully'));
     }
 
     public function destroy(int $id)

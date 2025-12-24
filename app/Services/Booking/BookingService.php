@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Showtime;
 use App\Models\Voucher;
 use App\Services\Booking\BookingValidationService;
+use App\Services\Voucher\VoucherValidationService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -13,7 +14,8 @@ use Illuminate\Support\Str;
 class BookingService
 {
     public function __construct(
-        protected BookingValidationService $validationService
+        protected BookingValidationService $validationService,
+        protected VoucherValidationService $voucherValidationService
     ) {
     }
 
@@ -93,20 +95,29 @@ class BookingService
             if (isset($data['voucher_code']) && $data['voucher_code']) {
                 $voucher = Voucher::where('code', $data['voucher_code'])->first();
                 
-                if ($voucher && $voucher->isValid()) {
-                    if ($voucher->type === 'percentage') {
-                        $voucherAmount = $price * ($voucher->amount / 100);
-                    } else {
-                        $voucherAmount = $voucher->amount;
-                    }
-                    
-                    $totalPrice = max(0, $price - $voucherAmount);
-                    $data['voucher_id'] = $voucher->id;
-                    $data['voucher_amount'] = $voucherAmount;
-                    
-                    // Update voucher used count
-                    $voucher->increment('used_count');
+                if (!$voucher) {
+                    throw new \Exception(__('errors.VOUCHER_NOT_FOUND'));
                 }
+                
+                // Validate voucher using VoucherValidationService
+                $this->voucherValidationService->validateVoucherForUser(
+                    $voucher,
+                    $userId,
+                    $showtime->movie_id
+                );
+                
+                // Calculate discount amount
+                $voucherAmount = $this->voucherValidationService->calculateDiscountAmount(
+                    $voucher,
+                    $price
+                );
+                
+                $totalPrice = max(0, $price - $voucherAmount);
+                $data['voucher_id'] = $voucher->id;
+                $data['voucher_amount'] = $voucherAmount;
+                
+                // Update voucher used count
+                $voucher->increment('used_count');
             }
 
             // Generate booking code

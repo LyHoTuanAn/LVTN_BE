@@ -23,8 +23,6 @@ class StoreNewsRequest extends FormRequest
             'content_vi' => 'nullable|string',
             'status' => 'required|in:draft,published',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-            'inline_images' => 'nullable|array',
-            'inline_images.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ];
     }
 
@@ -40,7 +38,6 @@ class StoreNewsRequest extends FormRequest
             'content_vi' => __('Content (Vietnamese)'),
             'status' => __('Status'),
             'thumbnail' => __('Thumbnail'),
-            'inline_images' => __('Inline Images'),
         ];
     }
 }

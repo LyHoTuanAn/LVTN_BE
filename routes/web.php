@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\ShowtimeController;
+use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Web\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
@@ -113,6 +114,7 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::get('/create', [NewsController::class, 'create'])->name('create');
         Route::post('/', [NewsController::class, 'store'])->name('store');
         Route::post('/translate', [NewsController::class, 'translate'])->name('translate');
+        Route::get('/{id}', [NewsController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('edit');
         Route::put('/{id}', [NewsController::class, 'update'])->name('update');
         Route::delete('/{id}', [NewsController::class, 'destroy'])->name('destroy');
@@ -124,6 +126,17 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::get('/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'show'])->name('show');
         Route::post('/{id}/update-status', [\App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('update-status');
         Route::post('/{id}/update-payment', [\App\Http\Controllers\Admin\BookingController::class, 'updatePayment'])->name('update-payment');
+    });
+
+    // Admin Vouchers Management
+    Route::prefix('admin/vouchers')->name('admin.vouchers.')->group(function () {
+        Route::get('/', [VoucherController::class, 'index'])->name('index');
+        Route::get('/create', [VoucherController::class, 'create'])->name('create');
+        Route::post('/', [VoucherController::class, 'store'])->name('store');
+        Route::get('/{id}', [VoucherController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [VoucherController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [VoucherController::class, 'update'])->name('update');
+        Route::delete('/{id}', [VoucherController::class, 'destroy'])->name('destroy');
     });
 });
 

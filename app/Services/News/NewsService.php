@@ -41,27 +41,15 @@ class NewsService
     /**
      * Create a news item with optional media uploads.
      */
-    public function create(array $data, int $authorId, ?UploadedFile $thumbnail = null, array $inlineImages = []): News
+    public function create(array $data, int $authorId, ?UploadedFile $thumbnail = null): News
     {
-        return DB::transaction(function () use ($data, $authorId, $thumbnail, $inlineImages) {
+        return DB::transaction(function () use ($data, $authorId, $thumbnail) {
             $data['author_id'] = $authorId;
             $data['slug'] = $this->prepareSlug($data, null);
 
             if ($thumbnail) {
                 $thumbnailFile = $this->mediaService->uploadImage($thumbnail, $authorId);
                 $data['thumbnail_id'] = $thumbnailFile->id;
-            }
-
-            $uploadedInlineIds = [];
-            foreach ($inlineImages as $inlineImage) {
-                if ($inlineImage instanceof UploadedFile) {
-                    $media = $this->mediaService->uploadImage($inlineImage, $authorId);
-                    $uploadedInlineIds[] = $media->id;
-                }
-            }
-
-            if (!empty($uploadedInlineIds)) {
-                $data['inline_image_ids'] = $uploadedInlineIds;
             }
 
             return News::create($data);
@@ -79,9 +67,9 @@ class NewsService
     /**
      * Update a news item with optional media uploads.
      */
-    public function update(int $id, array $data, ?UploadedFile $thumbnail = null, array $inlineImages = []): bool
+    public function update(int $id, array $data, ?UploadedFile $thumbnail = null): bool
     {
-        return DB::transaction(function () use ($id, $data, $thumbnail, $inlineImages) {
+        return DB::transaction(function () use ($id, $data, $thumbnail) {
             $news = News::find($id);
             if (!$news) {
                 return false;
@@ -99,20 +87,6 @@ class NewsService
                 }
                 $thumbnailFile = $this->mediaService->uploadImage($thumbnail, $news->author_id);
                 $data['thumbnail_id'] = $thumbnailFile->id;
-            }
-
-            // Handle inline images - append to existing ones
-            $existingInlineIds = $news->inline_image_ids ?? [];
-            $uploadedInlineIds = [];
-            foreach ($inlineImages as $inlineImage) {
-                if ($inlineImage instanceof UploadedFile) {
-                    $media = $this->mediaService->uploadImage($inlineImage, $news->author_id);
-                    $uploadedInlineIds[] = $media->id;
-                }
-            }
-
-            if (!empty($uploadedInlineIds)) {
-                $data['inline_image_ids'] = array_merge($existingInlineIds, $uploadedInlineIds);
             }
 
             return $news->update($data);
@@ -159,13 +133,6 @@ class NewsService
         // Delete thumbnail if exists
         if ($news->thumbnail_id) {
             $this->mediaService->deleteMediaFile($news->thumbnail_id);
-        }
-
-        // Delete inline images if exist
-        if (!empty($news->inline_image_ids)) {
-            foreach ($news->inline_image_ids as $mediaId) {
-                $this->mediaService->deleteMediaFile($mediaId);
-            }
         }
 
         return $news->delete();
