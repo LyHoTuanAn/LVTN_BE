@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MovieController;
+use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\ShowtimeController;
 use App\Http\Controllers\Web\AuthController;
@@ -104,6 +105,14 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::get('/{id}/edit', [ShowtimeController::class, 'edit'])->name('edit');
         Route::put('/{id}', [ShowtimeController::class, 'update'])->name('update');
         Route::delete('/{id}', [ShowtimeController::class, 'destroy'])->name('destroy');
+    });
+
+    // Admin News Management
+    Route::prefix('admin/news')->name('admin.news.')->group(function () {
+        Route::get('/', [NewsController::class, 'index'])->name('index');
+        Route::get('/create', [NewsController::class, 'create'])->name('create');
+        Route::post('/', [NewsController::class, 'store'])->name('store');
+        Route::post('/translate', [NewsController::class, 'translate'])->name('translate');
     });
 
     // Admin Bookings Management
