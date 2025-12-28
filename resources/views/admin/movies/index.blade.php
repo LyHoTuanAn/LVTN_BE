@@ -18,9 +18,9 @@
                 >
                 <select name="status" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9em;">
                     <option value="">{{ __('All Status') }}</option>
-                    <option value="coming_soon" {{ request('status') == 'coming_soon' ? 'selected' : '' }}>{{ __('Coming Soon') }}</option>
-                    <option value="now_showing" {{ request('status') == 'now_showing' ? 'selected' : '' }}>{{ __('Now Showing') }}</option>
-                    <option value="trending" {{ request('status') == 'trending' ? 'selected' : '' }}>{{ __('Trending') }}</option>
+                    <option value="COMING_SOON" {{ request('status') == 'COMING_SOON' ? 'selected' : '' }}>{{ __('Coming Soon') }}</option>
+                    <option value="UPCOMING" {{ request('status') == 'UPCOMING' ? 'selected' : '' }}>{{ __('Upcoming') }}</option>
+                    <option value="NOW_SHOWING" {{ request('status') == 'NOW_SHOWING' ? 'selected' : '' }}>{{ __('Now Showing') }}</option>
                 </select>
                 <button type="submit" style="padding: 0 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9em; line-height: 1; height: 38px; box-sizing: border-box;">
                     {{ __('Search') }}
@@ -66,19 +66,20 @@
                     <td style="padding: 12px;" data-label="{{ __('Release Date') }}">{{ $movie->release_date->format('Y-m-d') }}</td>
                     <td style="padding: 12px;" data-label="{{ __('Status') }}">
                         @php
+                            $computedStatus = $movie->getComputedStatus();
                             $statusColors = [
-                                'coming_soon' => ['bg' => '#fff3e0', 'color' => '#e65100'],
-                                'now_showing' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
-                                'trending' => ['bg' => '#fff8e1', 'color' => '#f57c00'],
+                                'COMING_SOON' => ['bg' => '#fff3e0', 'color' => '#e65100'],
+                                'UPCOMING' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
+                                'NOW_SHOWING' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
                             ];
                             $statusLabels = [
-                                'coming_soon' => __('Coming Soon'),
-                                'now_showing' => __('Now Showing'),
-                                'trending' => __('Trending'),
+                                'COMING_SOON' => __('Coming Soon'),
+                                'UPCOMING' => __('Upcoming'),
+                                'NOW_SHOWING' => __('Now Showing'),
                             ];
                         @endphp
-                        <span style="padding: 4px 8px; background: {{ $statusColors[$movie->status]['bg'] ?? '#eee' }}; color: {{ $statusColors[$movie->status]['color'] ?? '#666' }}; border-radius: 4px; font-size: 0.85em;">
-                            {{ $statusLabels[$movie->status] ?? $movie->status }}
+                        <span style="padding: 4px 8px; background: {{ $statusColors[$computedStatus]['bg'] ?? '#eee' }}; color: {{ $statusColors[$computedStatus]['color'] ?? '#666' }}; border-radius: 4px; font-size: 0.85em;">
+                            {{ $statusLabels[$computedStatus] ?? $computedStatus }}
                         </span>
                     </td>
                     <td style="padding: 12px;" data-label="{{ __('Actions') }}">

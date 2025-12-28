@@ -3,8 +3,10 @@
 namespace App\Services\Cinema;
 
 use App\Models\Room;
+use App\Models\Seat;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class RoomService
 {
@@ -45,11 +47,53 @@ class RoomService
     }
 
     /**
-     * Create a new room
+     * Create a new room with seats
      */
     public function createRoom(array $data): Room
     {
-        return Room::create($data);
+        return DB::transaction(function () use ($data) {
+            // Create the room
+            $room = Room::create($data);
+
+            // Auto-generate seats based on seat_count
+            $seatCount = $data['seat_count'] ?? 0;
+            if ($seatCount > 0) {
+                $this->generateSeatsForRoom($room->id, $seatCount);
+            }
+
+            return $room;
+        });
+    }
+
+    /**
+     * Generate seats for a room
+     * Layout: 10 seats per row (A1-A10, B1-B10, ...)
+     */
+    protected function generateSeatsForRoom(int $roomId, int $seatCount): void
+    {
+        $seatsPerRow = 10;
+        $rows = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
+        
+        $seatNumber = 0;
+        $rowIndex = 0;
+
+        while ($seatNumber < $seatCount && $rowIndex < count($rows)) {
+            $row = $rows[$rowIndex];
+            $seatsInThisRow = min($seatsPerRow, $seatCount - $seatNumber);
+
+            for ($number = 1; $number <= $seatsInThisRow; $number++) {
+                Seat::create([
+                    'room_id' => $roomId,
+                    'row' => $row,
+                    'number' => $number,
+                    'type' => 'normal',
+                    'status' => 'active',
+                ]);
+                $seatNumber++;
+            }
+
+            $rowIndex++;
+        }
     }
 
     /**

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BookingController;
 use App\Http\Controllers\Api\CinemaController;
+use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\ShowtimeController;
@@ -34,6 +35,7 @@ Route::middleware(['language', 'api.key'])->group(function () {
     // Public movie routes
     Route::get('/movies', [MovieController::class, 'index']);
     Route::get('/movies/{id}', [MovieController::class, 'show']);
+    Route::get('/movies/{id}/showtimes', [MovieController::class, 'showtimes']);
 
     // Public cinema routes
     Route::get('/cinemas', [CinemaController::class, 'index']);
@@ -42,6 +44,10 @@ Route::middleware(['language', 'api.key'])->group(function () {
     // Public showtime routes
     Route::get('/showtimes', [ShowtimeController::class, 'index']);
     Route::get('/showtimes/{id}', [ShowtimeController::class, 'show']);
+    Route::get('/showtimes/{id}/seats', [ShowtimeController::class, 'seats']);
+
+    // Home route
+    Route::get('/home', [HomeController::class, 'index']);
 });
 
 // Protected routes (require authentication)
@@ -57,9 +63,10 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
     // Booking routes (customer)
     Route::prefix('bookings')->group(function () {
         Route::get('/', [BookingController::class, 'index']);
+        Route::post('/calculate-price', [BookingController::class, 'calculatePrice']);
         Route::post('/', [BookingController::class, 'store']);
-        Route::get('/{id}', [BookingController::class, 'show']);
-        Route::delete('/{id}', [BookingController::class, 'cancel']);
+        Route::get('/{id}', [BookingController::class, 'show'])->where('id', '[0-9]+');
+        Route::post('/{id}/cancel', [BookingController::class, 'cancel'])->where('id', '[0-9]+');
     });
 
     // Media routes

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MovieResource;
+use App\Http\Resources\ShowtimeResource;
 use App\Http\Traits\ApiResponseTrait;
 use App\Services\Movie\MovieService;
+use App\Services\Showtime\ShowtimeService;
 use Illuminate\Http\Request;
 
 class MovieController extends Controller
@@ -13,10 +15,12 @@ class MovieController extends Controller
     use ApiResponseTrait;
 
     protected MovieService $movieService;
+    protected ShowtimeService $showtimeService;
 
-    public function __construct(MovieService $movieService)
+    public function __construct(MovieService $movieService, ShowtimeService $showtimeService)
     {
         $this->movieService = $movieService;
+        $this->showtimeService = $showtimeService;
     }
 
     /**
@@ -53,4 +57,81 @@ class MovieController extends Controller
             new MovieResource($movie)
         );
     }
+
+    /**
+     * Get showtimes for a movie
+     * 
+     * @param int $id Movie ID
+     * @param Request $request
+     *   - date: Filter by specific date (Y-m-d format)
+     *   - date_from: Filter from date
+     *   - date_to: Filter to date
+     *   - group_by_date: If true, group showtimes by date
+     */
+    public function showtimes($id, Request $request)
+    {
+        // Check if movie exists
+        $movie = $this->movieService->getMovieById($id);
+
+        if (!$movie) {
+            return $this->errorResponse(
+                'NOT_FOUND',
+                [],
+                null,
+                404
+            );
+        }
+
+        // Get showtimes with filters
+        $date = $request->get('date');
+        $showtimes = $this->showtimeService->getShowtimesByMovie($id, $date);
+
+        // Optional: Filter by date range
+        if ($request->has('date_from')) {
+            $showtimes = $showtimes->filter(function ($showtime) use ($request) {
+                return $showtime->date >= $request->get('date_from');
+            });
+        }
+
+        if ($request->has('date_to')) {
+            $showtimes = $showtimes->filter(function ($showtime) use ($request) {
+                return $showtime->date <= $request->get('date_to');
+            });
+        }
+
+        // Group by date if requested
+        if ($request->boolean('group_by_date')) {
+            $grouped = $showtimes->groupBy(function ($showtime) {
+                return $showtime->date->format('Y-m-d');
+            })->map(function ($items, $date) {
+                return [
+                    'date' => $date,
+                    'showtimes' => ShowtimeResource::collection($items),
+                ];
+            })->values();
+
+            return $this->successResponse(
+                'MOVIE_SHOWTIMES_FETCHED_SUCCESS',
+                [
+                    'movie' => [
+                        'id' => $movie->id,
+                        'title' => $movie->title,
+                    ],
+                    'schedule' => $grouped,
+                ]
+            );
+        }
+
+        return $this->successResponse(
+            'MOVIE_SHOWTIMES_FETCHED_SUCCESS',
+            [
+                'movie' => [
+                    'id' => $movie->id,
+                    'title' => $movie->title,
+                ],
+                'showtimes' => ShowtimeResource::collection($showtimes),
+            ]
+        );
+    }
 }
+

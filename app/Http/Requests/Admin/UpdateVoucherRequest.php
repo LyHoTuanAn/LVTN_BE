@@ -16,6 +16,27 @@ class UpdateVoucherRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Normalize amount: remove dots (thousands separator) before validation
+        // This handles cases where user inputs "1.000" (should be 1000, not 1.00)
+        if ($this->has('amount')) {
+            $amount = $this->input('amount');
+            if (is_string($amount)) {
+                // Remove all dots (Vietnamese thousands separator)
+                // Only remove dots if they are thousands separators (not decimal point)
+                // For VND currency, we don't use decimal points, so remove all dots
+                $normalizedAmount = str_replace('.', '', $amount);
+                $this->merge([
+                    'amount' => $normalizedAmount,
+                ]);
+            }
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      */
     public function rules(): array

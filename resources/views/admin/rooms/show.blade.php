@@ -9,17 +9,17 @@
         <a href="{{ route('admin.rooms.index') }}" style="color: #3498db; text-decoration: none; font-size: 0.9em;">
             ← {{ __('Back to List') }}
         </a>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 10px; align-items: stretch;">
             <a 
                 href="{{ route('admin.rooms.edit', $room->id) }}" 
-                style="padding: 8px 20px; background: #f39c12; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9em;"
+                style="width: 100px; height: 36px; background: #f39c12; color: white; text-decoration: none; border-radius: 6px; font-size: 0.9em; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;"
             >
                 {{ __('Edit') }}
             </a>
-            <form method="POST" action="{{ route('admin.rooms.destroy', $room->id) }}" style="display: inline;" onsubmit="return confirm('{{ __('Are you sure you want to delete this room?') }}');">
+            <form method="POST" action="{{ route('admin.rooms.destroy', $room->id) }}" style="display: flex; margin: 0;" onsubmit="return confirm('{{ __('Are you sure you want to delete this room?') }}');">
                 @csrf
                 @method('DELETE')
-                <button type="submit" style="padding: 8px 20px; background: #e74c3c; color: white; border: none; border-radius: 6px; font-size: 0.9em; cursor: pointer;">
+                <button type="submit" style="width: 100px; height: 36px; background: #e74c3c; color: white; border: none; border-radius: 6px; font-size: 0.9em; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;">
                     {{ __('Delete') }}
                 </button>
             </form>

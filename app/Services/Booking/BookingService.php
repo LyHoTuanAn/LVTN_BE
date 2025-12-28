@@ -3,6 +3,7 @@
 namespace App\Services\Booking;
 
 use App\Models\Booking;
+use App\Models\Seat;
 use App\Models\Showtime;
 use App\Models\Voucher;
 use App\Services\Booking\BookingValidationService;
@@ -141,6 +142,71 @@ class BookingService
 
             return $booking->load(['user', 'showtime', 'seats', 'voucher']);
         });
+    }
+
+    /**
+     * Calculate ticket price for preview (before creating booking)
+     */
+    public function calculateTicketPrice(array $data, int $userId): array
+    {
+        // Validate seats availability
+        $this->validationService->validateSeatsAvailable($data['showtime_id'], $data['seat_ids']);
+
+        // Load showtime with movie
+        $showtime = Showtime::with(['movie'])->findOrFail($data['showtime_id']);
+
+        // Check if showtime is available
+        if (!$this->validationService->isShowtimeAvailable($data['showtime_id'])) {
+            throw new \Exception(__('errors.SHOWTIME_INVALID_STATUS'));
+        }
+
+        // Load seats
+        $seats = Seat::whereIn('id', $data['seat_ids'])
+            ->orderBy('row')
+            ->orderBy('number')
+            ->get();
+
+        // Calculate price
+        $seatCount = count($data['seat_ids']);
+        $price = (float) $showtime->price * $seatCount;
+        $voucherAmount = 0;
+        $totalPrice = $price;
+        $voucherCode = null;
+
+        // Apply voucher if provided (validate but don't update usage count)
+        if (isset($data['voucher_code']) && $data['voucher_code']) {
+            $voucher = Voucher::where('code', $data['voucher_code'])->first();
+
+            if (!$voucher) {
+                throw new \Exception(__('errors.VOUCHER_NOT_FOUND'));
+            }
+
+            // Validate voucher using VoucherValidationService (but don't increment usage)
+            $this->voucherValidationService->validateVoucherForUser(
+                $voucher,
+                $userId,
+                $showtime->movie_id
+            );
+
+            // Calculate discount amount
+            $voucherAmount = $this->voucherValidationService->calculateDiscountAmount(
+                $voucher,
+                $price
+            );
+
+            $totalPrice = max(0, $price - $voucherAmount);
+            $voucherCode = $voucher->code;
+        }
+
+        return [
+            'showtime' => $showtime,
+            'seats' => $seats,
+            'seat_count' => $seatCount,
+            'price' => $price,
+            'voucher_code' => $voucherCode,
+            'voucher_discount' => $voucherAmount,
+            'total_price' => $totalPrice,
+        ];
     }
 
     /**

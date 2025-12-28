@@ -7,6 +7,7 @@ return [
     'LOGOUT_SUCCESS' => 'Đăng xuất thành công',
     'BOOKING_CREATED_SUCCESS' => 'Đặt vé thành công',
     'BOOKING_CANCELLED_SUCCESS' => 'Hủy đặt vé thành công',
+    'TICKET_PRICE_CALCULATED_SUCCESS' => 'Tính giá vé thành công',
     'MOVIE_CREATED_SUCCESS' => 'Tạo phim thành công',
     'MOVIE_UPDATED_SUCCESS' => 'Cập nhật phim thành công',
     'MOVIE_DELETED_SUCCESS' => 'Xóa phim thành công',
@@ -36,5 +37,8 @@ return [
     'VOUCHER_UPDATED_SUCCESS' => 'Cập nhật voucher thành công',
     'VOUCHER_DELETED_SUCCESS' => 'Xóa voucher thành công',
     'VOUCHERS_FETCHED_SUCCESS' => 'Lấy danh sách voucher thành công',
+    'HOME_DATA_FETCHED_SUCCESS' => 'Lấy dữ liệu trang chủ thành công',
+    'MOVIE_SHOWTIMES_FETCHED_SUCCESS' => 'Lấy lịch chiếu phim thành công',
+    'SHOWTIME_SEATS_FETCHED_SUCCESS' => 'Lấy danh sách ghế thành công',
 ];
 

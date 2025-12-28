@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏠 Home API - API Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #4a9eff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4a9eff;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #6bc46b;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #252525;
+            border-left: 4px solid #6bc46b;
+            border-radius: 6px;
+        }
+
+        h3 {
+            color: #ffa94d;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-left: 3px solid #ffa94d;
+            border-radius: 4px;
+        }
+
+        h4 {
+            color: #9d9dff;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .section-box {
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-box {
+            background: #1e3a5f;
+            border-left: 4px solid #4a9eff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #5a3a1e;
+            border-left: 4px solid #ffa94d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .success-box {
+            background: #1e3a2e;
+            border-left: 4px solid #6bc46b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        code {
+            background: #2a2a2a;
+            color: #ff6b9d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        pre code {
+            background: transparent;
+            color: #e0e0e0;
+            padding: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #222222;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            background: #2a2a2a;
+            color: #4a9eff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #333333;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #333333;
+            color: #d0d0d0;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .badge-success {
+            background: #1e3a2e;
+            color: #6bc46b;
+        }
+
+        .badge-warning {
+            background: #5a3a1e;
+            color: #ffa94d;
+        }
+
+        .badge-error {
+            background: #5a1e1e;
+            color: #ff6b9d;
+        }
+
+        .badge-info {
+            background: #1e3a5f;
+            color: #4a9eff;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: #4a9eff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #6bc46b;
+            text-decoration: underline;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .method-get {
+            background: #1e3a2e;
+            color: #6bc46b;
+        }
+
+        .method-post {
+            background: #1e3a5f;
+            color: #4a9eff;
+        }
+
+        .method-put {
+            background: #5a3a1e;
+            color: #ffa94d;
+        }
+
+        .method-delete {
+            background: #5a1e1e;
+            color: #ff6b9d;
+        }
+
+        .json-key {
+            color: #9d9dff;
+        }
+
+        .json-string {
+            color: #6bc46b;
+        }
+
+        .json-number {
+            color: #ffa94d;
+        }
+
+        .json-boolean {
+            color: #4a9eff;
+        }
+
+        .json-null {
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 Home API</h1>
+        
+        <p style="text-align: center; color: #888; margin-bottom: 30px;">
+            API endpoint để lấy dữ liệu cho màn hình home của mobile app.
+        </p>
+
+        <div class="section-box">
+            <h2>📋 Thông Tin Endpoint</h2>
+            <p><strong>URL:</strong> <code>GET /api/home</code></p>
+            <p><strong>Method:</strong> <span class="method-badge method-get">GET</span></p>
+            <p><strong>Authentication:</strong> <span class="badge badge-info">Không cần</span></p>
+        </div>
+
+        <div class="section-box">
+            <h2>📤 Headers</h2>
+            <p><strong>Bắt buộc</strong> ✓</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Header</th>
+                        <th>Mô tả</th>
+                        <th>Ví dụ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>X-Api-Key</code></td>
+                        <td>API key do server cấp</td>
+                        <td><code>your-api-key-here</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Language</code></td>
+                        <td>Ngôn ngữ (en hoặc vi)</td>
+                        <td><code>vi</code> hoặc <code>en</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Accept</code></td>
+                        <td>Content type chấp nhận</td>
+                        <td><code>application/json</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-box">
+            <h2>🔍 Query Parameters</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                        <th>Mặc định</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>coming_soon_limit</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>Number</td>
+                        <td>Số lượng phim sắp chiếu</td>
+                        <td><code>10</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>room_limit</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>Number</td>
+                        <td>Số lượng phòng chiếu</td>
+                        <td><code>10</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>showtime_limit</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>Number</td>
+                        <td>Số lượng suất chiếu sắp tới</td>
+                        <td><code>10</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>news_limit</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>Number</td>
+                        <td>Số lượng tin tức</td>
+                        <td><code>10</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-box">
+            <h2>✅ Response Success</h2>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"HOME_DATA_FETCHED_SUCCESS"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Home data fetched successfully"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"coming_soon"</span>: [...],
+    <span class="json-key">"rooms"</span>: [...],
+    <span class="json-key">"upcoming_showtimes"</span>: [...],
+    <span class="json-key">"news"</span>: [...]
+  }
+}</code></pre>
+        </div>
+
+        <div class="section-box">
+            <h2>📊 Response Fields</h2>
+            <h3>Main Response</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>success</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>Boolean</td>
+                        <td>Trạng thái thành công (<code>true</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>String</td>
+                        <td>Mã response (<code>HOME_DATA_FETCHED_SUCCESS</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>String</td>
+                        <td>Thông báo theo ngôn ngữ client yêu cầu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>Object</td>
+                        <td>Dữ liệu trang chủ</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.coming_soon</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>Array</td>
+                        <td>Danh sách phim sắp chiếu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.rooms</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>Array</td>
+                        <td>Danh sách phòng chiếu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.upcoming_showtimes</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>Array</td>
+                        <td>Danh sách suất chiếu sắp tới (7 ngày tới)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.news</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>Array</td>
+                        <td>Danh sách tin tức đã xuất bản</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-box">
+            <h2>❌ Response Error</h2>
+            <h3>Validation Error</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">false</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"VALIDATION_ERROR"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Dữ liệu không hợp lệ"</span>,
+  <span class="json-key">"errors"</span>: {
+    <span class="json-key">"banner_limit"</span>: <span class="json-string">"The banner limit must be between 1 and 20."</span>
+  }
+}</code></pre>
+        </div>
+
+        <div class="section-box">
+            <h2>📝 Success Codes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>HOME_DATA_FETCHED_SUCCESS</code></td>
+                        <td><span class="badge badge-success">200</span></td>
+                        <td>Lấy dữ liệu trang chủ thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-box">
+            <h2>⚠️ Error Codes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td><span class="badge badge-error">422</span></td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>INVALID_API_KEY</code></td>
+                        <td><span class="badge badge-error">401</span></td>
+                        <td>API key không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>INTERNAL_SERVER_ERROR</code></td>
+                        <td><span class="badge badge-error">500</span></td>
+                        <td>Lỗi server</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-box">
+            <h2>📮 Postman Example</h2>
+            <h3>Request</h3>
+            <pre><code>GET {{base_url}}/api/home?coming_soon_limit=10&room_limit=10&showtime_limit=10&news_limit=10
+
+Headers:
+  X-Api-Key: {{api_key}}
+  Language: vi
+  Accept: application/json</code></pre>
+        </div>
+
+        <div class="info-box">
+            <h3>ℹ️ Notes</h3>
+            <ul>
+                <li>API này là <strong>public route</strong>, không cần authentication</li>
+                <li>Upcoming showtimes chỉ lấy suất chiếu trong 7 ngày tới và không bao gồm suất chiếu đã hủy</li>
+                <li>News chỉ lấy tin tức có <code>status = 'published'</code></li>
+                <li>Dữ liệu được sắp xếp theo:
+                    <ul>
+                        <li>Coming soon: <code>release_date</code> ASC (sắp chiếu trước)</li>
+                        <li>Rooms: <code>name</code> ASC (theo tên)</li>
+                        <li>Showtimes: <code>date</code> ASC, <code>start_time</code> ASC (ngày và giờ sớm nhất trước)</li>
+                        <li>News: <code>created_at</code> DESC (mới nhất trước)</li>
+                    </ul>
+                </li>
+                <li>News title, summary, content sẽ được trả về theo ngôn ngữ client yêu cầu (vi hoặc en) dựa vào header <code>Language</code></li>
+                <li>Tất cả dữ liệu trả về đã được format qua API Resources</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+

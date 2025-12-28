@@ -7,6 +7,7 @@ return [
     'LOGOUT_SUCCESS' => 'Logout successful',
     'BOOKING_CREATED_SUCCESS' => 'Booking created successfully',
     'BOOKING_CANCELLED_SUCCESS' => 'Booking cancelled successfully',
+    'TICKET_PRICE_CALCULATED_SUCCESS' => 'Ticket price calculated successfully',
     'MOVIE_CREATED_SUCCESS' => 'Movie created successfully',
     'MOVIE_UPDATED_SUCCESS' => 'Movie updated successfully',
     'MOVIE_DELETED_SUCCESS' => 'Movie deleted successfully',
@@ -36,5 +37,8 @@ return [
     'VOUCHER_UPDATED_SUCCESS' => 'Voucher updated successfully',
     'VOUCHER_DELETED_SUCCESS' => 'Voucher deleted successfully',
     'VOUCHERS_FETCHED_SUCCESS' => 'Vouchers fetched successfully',
+    'HOME_DATA_FETCHED_SUCCESS' => 'Home data fetched successfully',
+    'MOVIE_SHOWTIMES_FETCHED_SUCCESS' => 'Movie showtimes fetched successfully',
+    'SHOWTIME_SEATS_FETCHED_SUCCESS' => 'Showtime seats fetched successfully',
 ];
 

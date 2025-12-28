@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💰 [BOOKING] - Tính Giá Vé - API Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #4a9eff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4a9eff;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #6bc46b;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #252525;
+            border-left: 4px solid #6bc46b;
+            border-radius: 6px;
+        }
+
+        h3 {
+            color: #ffa94d;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-left: 3px solid #ffa94d;
+            border-radius: 4px;
+        }
+
+        h4 {
+            color: #9d9dff;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .section-box {
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-box {
+            background: #1e3a5f;
+            border-left: 4px solid #4a9eff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #5a3a1e;
+            border-left: 4px solid #ffa94d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        code {
+            background: #2a2a2a;
+            color: #ff6b9d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        pre code {
+            background: transparent;
+            color: #e0e0e0;
+            padding: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #222222;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            background: #2a2a2a;
+            color: #4a9eff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #4a9eff;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #333333;
+            color: #d0d0d0;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        ul, ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 8px 0;
+            color: #d0d0d0;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px solid #333333;
+            margin: 40px 0;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .method-post {
+            background: #4a9eff;
+            color: #fff;
+        }
+
+        .required {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        .optional {
+            color: #9d9dff;
+        }
+
+        .url-box {
+            background: #1a1a1a;
+            border: 1px solid #4a9eff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #4a9eff;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 [BOOKING] - Tính Giá Vé</h1>
+
+        <div class="section-box">
+            <h2>URL</h2>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/bookings/calculate-price
+            </div>
+
+            <h2>Method</h2>
+            <p><span class="method-badge method-post">POST</span></p>
+
+            <h2>Headers</h2>
+            <div class="info-box">
+                <strong>Bắt buộc</strong> ✓
+            </div>
+            <ul>
+                <li><code>X-Api-Key</code>: API key do server cấp</li>
+                <li><code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)</li>
+                <li><code>Authorization</code>: <code>Bearer {token}</code> (bắt buộc - user phải đăng nhập)</li>
+                <li><code>Content-Type</code>: <code>application/json</code></li>
+                <li><code>Accept</code>: <code>application/json</code></li>
+            </ul>
+
+            <h2>Body</h2>
+            <pre><code>{
+  "showtime_id": 1,
+  "seat_ids": [1, 2, 3],
+  "voucher_code": "DISCOUNT10"
+}</code></pre>
+
+            <h2>Request Parameters</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Miêu tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>showtime_id</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>ID của suất chiếu muốn tính giá vé</td>
+                    </tr>
+                    <tr>
+                        <td><code>seat_ids</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Array</td>
+                        <td>Danh sách ID ghế ngồi (tối thiểu 1 ghế)</td>
+                    </tr>
+                    <tr>
+                        <td><code>seat_ids.*</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>ID của từng ghế ngồi trong mảng</td>
+                    </tr>
+                    <tr>
+                        <td><code>voucher_code</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Mã voucher giảm giá (nếu có)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Chi tiết các trường</h3>
+
+            <h4><code>showtime_id</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Có</li>
+                <li><strong>Kiểu</strong>: Number</li>
+                <li><strong>Mô tả</strong>: ID của suất chiếu muốn tính giá vé</li>
+                <li><strong>Validation</strong>:
+                    <ul>
+                        <li>Phải tồn tại trong bảng <code>showtimes</code></li>
+                        <li>Suất chiếu phải có status là <code>scheduled</code> hoặc <code>ongoing</code></li>
+                        <li>Suất chiếu chưa bị xóa (soft delete)</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4><code>seat_ids</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Có</li>
+                <li><strong>Kiểu</strong>: Array of Numbers</li>
+                <li><strong>Mô tả</strong>: Danh sách ID các ghế muốn tính giá</li>
+                <li><strong>Validation</strong>:
+                    <ul>
+                        <li>Phải là array</li>
+                        <li>Tối thiểu 1 phần tử</li>
+                        <li>Tất cả ID phải tồn tại trong bảng <code>seats</code></li>
+                        <li>Ghế phải thuộc phòng của suất chiếu</li>
+                        <li>Ghế chưa được đặt trong suất chiếu đó (chỉ tính ghế đã thanh toán)</li>
+                        <li>Ghế phải có status là <code>active</code></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h4><code>voucher_code</code></h4>
+            <ul>
+                <li><strong>Bắt buộc</strong>: Không</li>
+                <li><strong>Kiểu</strong>: String</li>
+                <li><strong>Mô tả</strong>: Mã voucher để giảm giá</li>
+                <li><strong>Validation</strong>:
+                    <ul>
+                        <li>Nếu có, phải tồn tại trong bảng <code>vouchers</code></li>
+                        <li>Voucher phải có status là <code>active</code></li>
+                        <li>Voucher phải còn trong thời gian hiệu lực (<code>valid_from</code> <= now <= <code>valid_to</code>)</li>
+                        <li>Voucher phải áp dụng được cho user (nếu <code>applies_to</code> = <code>specific_users</code>)</li>
+                        <li>Voucher phải áp dụng được cho movie (nếu <code>applies_to</code> = <code>specific_movies</code>)</li>
+                        <li>Voucher chưa vượt quá <code>usage_limit</code> (nếu có)</li>
+                        <li>User chưa vượt quá <code>per_user_limit</code> (nếu có)</li>
+                    </ul>
+                </li>
+                <li><strong>Lưu ý</strong>: API này chỉ tính toán preview, không cập nhật <code>used_count</code> của voucher</li>
+            </ul>
+
+            <h2>Response Success</h2>
+            <pre><code>{
+  "success": true,
+  "code": "TICKET_PRICE_CALCULATED_SUCCESS",
+  "message": "Tính giá vé thành công",
+  "data": {
+    "movie_title": "Avengers: Endgame",
+    "genre": "Hành động, Khoa học viễn tưởng",
+    "showtime": {
+      "date": "2024-01-15",
+      "start_time": "14:00:00"
+    },
+    "seats": [
+      {
+        "id": 1,
+        "row": "A",
+        "number": 5
+      },
+      {
+        "id": 2,
+        "row": "A",
+        "number": 6
+      },
+      {
+        "id": 3,
+        "row": "A",
+        "number": 7
+      }
+    ],
+    "seat_count": 3,
+    "price": 150000,
+    "voucher_code": "DISCOUNT10",
+    "voucher_discount": 15000,
+    "total_price": 135000
+  }
+}</code></pre>
+
+            <h2>Response Fields</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>success</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Boolean</td>
+                        <td>Trạng thái thành công (<code>true</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>code</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Mã response (<code>TICKET_PRICE_CALCULATED_SUCCESS</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>message</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thông báo theo ngôn ngữ client yêu cầu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Dữ liệu tính giá vé</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.movie_title</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Tên phim</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.genre</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Thể loại phim</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.showtime</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Object</td>
+                        <td>Thông tin suất chiếu</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.showtime.date</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Ngày chiếu (format: YYYY-MM-DD)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.showtime.start_time</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Giờ bắt đầu (format: HH:mm:ss)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.seats</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Array</td>
+                        <td>Danh sách ghế đã chọn</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.seats[].id</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>ID ghế</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.seats[].row</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>String</td>
+                        <td>Hàng ghế (A, B, C...)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.seats[].number</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>Số ghế</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.seat_count</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>Số lượng ghế đã chọn</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.price</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>Tổng giá tiền trước giảm (VND)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.voucher_code</code></td>
+                        <td><span class="optional">✗</span></td>
+                        <td>String</td>
+                        <td>Mã voucher (null nếu không dùng)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.voucher_discount</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>Số tiền được giảm từ voucher (VND, mặc định: 0)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data.total_price</code></td>
+                        <td><span class="required">✓</span></td>
+                        <td>Number</td>
+                        <td>Tổng giá tiền sau giảm (VND)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Response Error</h2>
+
+            <h3>Validation Error (422)</h3>
+            <pre><code>{
+  "success": false,
+  "code": "VALIDATION_ERROR",
+  "message": "Dữ liệu không hợp lệ",
+  "errors": {
+    "showtime_id": "Suất chiếu không tồn tại",
+    "seat_ids": "Vui lòng chọn ít nhất 1 ghế",
+    "seat_ids.0": "Ghế không tồn tại"
+  }
+}</code></pre>
+
+            <h3>Business Logic Error (400)</h3>
+            <pre><code>{
+  "success": false,
+  "code": "SEAT_ALREADY_BOOKED",
+  "message": "Ghế đã được đặt",
+  "errors": {
+    "error": "Some seats are already booked"
+  }
+}</code></pre>
+
+            <h3>Voucher Error (400)</h3>
+            <pre><code>{
+  "success": false,
+  "code": "VOUCHER_NOT_APPLICABLE",
+  "message": "Voucher không áp dụng được",
+  "errors": {
+    "error": "This voucher is not applicable for your account"
+  }
+}</code></pre>
+
+            <h3>Unauthorized (401)</h3>
+            <pre><code>{
+  "success": false,
+  "code": "UNAUTHORIZED",
+  "message": "Chưa đăng nhập",
+  "errors": {}
+}</code></pre>
+
+            <h2>Success Codes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>TICKET_PRICE_CALCULATED_SUCCESS</code></td>
+                        <td>200</td>
+                        <td>Tính giá vé thành công</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Error Codes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td>422</td>
+                        <td>Dữ liệu validation không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>TICKET_PRICE_CALCULATION_FAILED</code></td>
+                        <td>400</td>
+                        <td>Tính giá vé thất bại</td>
+                    </tr>
+                    <tr>
+                        <td><code>SHOWTIME_NOT_FOUND</code></td>
+                        <td>404</td>
+                        <td>Suất chiếu không tồn tại</td>
+                    </tr>
+                    <tr>
+                        <td><code>SHOWTIME_INVALID_STATUS</code></td>
+                        <td>400</td>
+                        <td>Suất chiếu không ở trạng thái cho phép đặt vé</td>
+                    </tr>
+                    <tr>
+                        <td><code>SEAT_NOT_FOUND</code></td>
+                        <td>404</td>
+                        <td>Ghế không tồn tại</td>
+                    </tr>
+                    <tr>
+                        <td><code>SEAT_ALREADY_BOOKED</code></td>
+                        <td>400</td>
+                        <td>Ghế đã được đặt trong suất chiếu này</td>
+                    </tr>
+                    <tr>
+                        <td><code>SEAT_INVALID_ROOM</code></td>
+                        <td>400</td>
+                        <td>Ghế không thuộc phòng của suất chiếu</td>
+                    </tr>
+                    <tr>
+                        <td><code>SEAT_INACTIVE</code></td>
+                        <td>400</td>
+                        <td>Ghế đang bảo trì hoặc vô hiệu</td>
+                    </tr>
+                    <tr>
+                        <td><code>VOUCHER_NOT_FOUND</code></td>
+                        <td>404</td>
+                        <td>Voucher không tồn tại</td>
+                    </tr>
+                    <tr>
+                        <td><code>VOUCHER_INVALID</code></td>
+                        <td>400</td>
+                        <td>Voucher không hợp lệ hoặc hết hạn</td>
+                    </tr>
+                    <tr>
+                        <td><code>VOUCHER_USAGE_LIMIT_EXCEEDED</code></td>
+                        <td>400</td>
+                        <td>Voucher đã vượt quá số lần sử dụng</td>
+                    </tr>
+                    <tr>
+                        <td><code>VOUCHER_NOT_APPLICABLE</code></td>
+                        <td>400</td>
+                        <td>Voucher không áp dụng được cho user/movie này</td>
+                    </tr>
+                    <tr>
+                        <td><code>VOUCHER_PER_USER_LIMIT_EXCEEDED</code></td>
+                        <td>400</td>
+                        <td>User đã đạt giới hạn sử dụng tối đa cho voucher này</td>
+                    </tr>
+                    <tr>
+                        <td><code>VOUCHER_USER_NOT_APPLICABLE</code></td>
+                        <td>400</td>
+                        <td>Voucher này không áp dụng cho tài khoản của bạn</td>
+                    </tr>
+                    <tr>
+                        <td><code>VOUCHER_MOVIE_NOT_APPLICABLE</code></td>
+                        <td>400</td>
+                        <td>Voucher này không áp dụng cho phim này</td>
+                    </tr>
+                    <tr>
+                        <td><code>UNAUTHORIZED</code></td>
+                        <td>401</td>
+                        <td>Chưa đăng nhập</td>
+                    </tr>
+                    <tr>
+                        <td><code>FORBIDDEN</code></td>
+                        <td>403</td>
+                        <td>Không có quyền truy cập</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>Postman</h2>
+
+            <h3>Collection</h3>
+            <p>Import collection từ: [Link hoặc file]</p>
+
+            <h3>Environment Variables</h3>
+            <ul>
+                <li><code>base_url</code>: <code>http://localhost:8000</code></li>
+                <li><code>api_key</code>: <code>your-api-key-here</code></li>
+                <li><code>token</code>: JWT token sau khi login</li>
+            </ul>
+
+            <h3>Example Request</h3>
+            <p><strong>Request:</strong></p>
+            <pre><code>POST {{base_url}}/api/bookings/calculate-price</code></pre>
+
+            <p><strong>Headers:</strong></p>
+            <pre><code>X-Api-Key: {{api_key}}
+Language: vi
+Authorization: Bearer {{token}}
+Content-Type: application/json
+Accept: application/json</code></pre>
+
+            <p><strong>Body:</strong></p>
+            <pre><code>{
+  "showtime_id": 1,
+  "seat_ids": [1, 2, 3],
+  "voucher_code": "DISCOUNT10"
+}</code></pre>
+
+            <h2>Notes</h2>
+            <ul>
+                <li>API này chỉ tính toán <strong>preview</strong> giá vé, không tạo booking thực sự</li>
+                <li>Voucher được validate nhưng <strong>KHÔNG</strong> cập nhật <code>used_count</code> khi gọi API này</li>
+                <li>Chỉ kiểm tra ghế đã được đặt và <strong>đã thanh toán</strong> (<code>is_paid = true</code>) - ghế chưa thanh toán vẫn có thể chọn</li>
+                <li>Giá vé được tính: <code>price = showtime->price * số lượng ghế</code></li>
+                <li>Nếu dùng voucher: <code>total_price = price - voucher_discount</code></li>
+                <li>Nếu không dùng voucher: <code>voucher_code = null</code>, <code>voucher_discount = 0</code>, <code>total_price = price</code></li>
+                <li>Seats được sắp xếp theo <code>row</code> và <code>number</code> (tăng dần)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+

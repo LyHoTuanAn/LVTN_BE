@@ -22,7 +22,6 @@ return new class extends Migration {
             $table->foreignId('thumbnail_id')->nullable()->constrained('media_files')->onDelete('set null');
             $table->foreignId('author_id')->constrained('users')->onDelete('restrict');
             $table->enum('status', ['draft', 'published'])->default('draft');
-            $table->json('inline_image_ids')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

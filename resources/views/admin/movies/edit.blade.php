@@ -77,23 +77,34 @@
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="status" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
-                    {{ __('Status') }} <span style="color: #e74c3c;">*</span>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                    {{ __('Status') }}
                 </label>
-                <select 
-                    name="status" 
-                    id="status" 
-                    required
-                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; background: white; box-sizing: border-box;"
-                >
-                    <option value="">{{ __('Select Status') }}</option>
-                    <option value="coming_soon" {{ old('status', $movie->status) == 'coming_soon' ? 'selected' : '' }}>{{ __('Coming Soon') }}</option>
-                    <option value="now_showing" {{ old('status', $movie->status) == 'now_showing' ? 'selected' : '' }}>{{ __('Now Showing') }}</option>
-                    <option value="trending" {{ old('status', $movie->status) == 'trending' ? 'selected' : '' }}>{{ __('Trending') }}</option>
-                </select>
-                @error('status')
-                    <span style="color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: block;">{{ $message }}</span>
-                @enderror
+                @php
+                    $computedStatus = $movie->getComputedStatus();
+                    $statusColors = [
+                        'COMING_SOON' => ['bg' => '#fff3e0', 'color' => '#e65100'],
+                        'UPCOMING' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
+                        'NOW_SHOWING' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
+                    ];
+                    $statusLabels = [
+                        'COMING_SOON' => __('Coming Soon'),
+                        'UPCOMING' => __('Upcoming'),
+                        'NOW_SHOWING' => __('Now Showing'),
+                    ];
+                @endphp
+                <div style="padding: 12px 15px; background: #f8f9fa; border-radius: 6px; border: 1px solid #dee2e6;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                        <span style="font-size: 0.9em; color: #666;">{{ __('Current Status:') }}</span>
+                        <span style="padding: 6px 14px; background: {{ $statusColors[$computedStatus]['bg'] ?? '#eee' }}; color: {{ $statusColors[$computedStatus]['color'] ?? '#666' }}; border-radius: 6px; font-size: 0.9em; font-weight: 600;">
+                            {{ $statusLabels[$computedStatus] ?? $computedStatus }}
+                        </span>
+                    </div>
+                    <p style="margin: 0; color: #6c757d; font-size: 0.85em; line-height: 1.5;">
+                        <strong>{{ __('Note:') }}</strong> {{ __('Status is automatically calculated based on showtimes.') }}
+                        <br>{{ __('To change the status, add or modify showtimes for this movie.') }}
+                    </p>
+                </div>
             </div>
 
             <div style="margin-bottom: 20px;">

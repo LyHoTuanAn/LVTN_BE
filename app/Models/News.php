@@ -21,11 +21,6 @@ class News extends Model
         'thumbnail_id',
         'author_id',
         'status',
-        'inline_image_ids',
-    ];
-
-    protected $casts = [
-        'inline_image_ids' => 'array',
     ];
 
     public function thumbnail(): BelongsTo

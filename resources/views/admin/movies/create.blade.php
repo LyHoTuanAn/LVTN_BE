@@ -76,23 +76,21 @@
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="status" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
-                    {{ __('Status') }} <span style="color: #e74c3c;">*</span>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                    {{ __('Status') }}
                 </label>
-                <select 
-                    name="status" 
-                    id="status" 
-                    required
-                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; background: white; box-sizing: border-box;"
-                >
-                    <option value="">{{ __('Select Status') }}</option>
-                    <option value="coming_soon" {{ old('status') == 'coming_soon' ? 'selected' : '' }}>{{ __('Coming Soon') }}</option>
-                    <option value="now_showing" {{ old('status') == 'now_showing' ? 'selected' : '' }}>{{ __('Now Showing') }}</option>
-                    <option value="trending" {{ old('status') == 'trending' ? 'selected' : '' }}>{{ __('Trending') }}</option>
-                </select>
-                @error('status')
-                    <span style="color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: block;">{{ $message }}</span>
-                @enderror
+                <div style="padding: 12px 15px; background: #e8f5e9; border-radius: 6px; border: 1px solid #c8e6c9;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <span style="padding: 4px 10px; background: #fff3e0; color: #e65100; border-radius: 4px; font-size: 0.85em; font-weight: 600;">{{ __('Coming Soon') }}</span>
+                        <span style="color: #666; font-size: 0.85em;">{{ __('(Default)') }}</span>
+                    </div>
+                    <p style="margin: 0; color: #2e7d32; font-size: 0.85em; line-height: 1.5;">
+                        <strong>{{ __('Note:') }}</strong> {{ __('Status is automatically calculated based on showtimes:') }}
+                        <br>• <strong>{{ __('Coming Soon') }}</strong>: {{ __('No showtimes') }}
+                        <br>• <strong>{{ __('Upcoming') }}</strong>: {{ __('Has scheduled showtimes in the future') }}
+                        <br>• <strong>{{ __('Now Showing') }}</strong>: {{ __('Has ongoing showtimes or scheduled today') }}
+                    </p>
+                </div>
             </div>
 
             <div style="margin-bottom: 20px;">

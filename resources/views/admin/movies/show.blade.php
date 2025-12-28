@@ -55,22 +55,23 @@
             <h2 style="color: #2c3e50; font-size: 2em; margin-bottom: 15px; font-weight: 700; line-height: 1.2;">{{ $movie->title }}</h2>
             
             @php
+                $computedStatus = $movie->getComputedStatus();
                 $statusColors = [
-                    'coming_soon' => ['bg' => '#fff3e0', 'color' => '#e65100'],
-                    'now_showing' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
-                    'trending' => ['bg' => '#fff8e1', 'color' => '#f57c00'],
+                    'COMING_SOON' => ['bg' => '#fff3e0', 'color' => '#e65100'],
+                    'UPCOMING' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
+                    'NOW_SHOWING' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
                 ];
                 $statusLabels = [
-                    'coming_soon' => __('Coming Soon'),
-                    'now_showing' => __('Now Showing'),
-                    'trending' => __('Trending'),
+                    'COMING_SOON' => __('Coming Soon'),
+                    'UPCOMING' => __('Upcoming'),
+                    'NOW_SHOWING' => __('Now Showing'),
                 ];
                 $ageLabels = \App\Models\Movie::getAgeClassifications();
             @endphp
 
             <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;">
-                <span style="padding: 6px 14px; background: {{ $statusColors[$movie->status]['bg'] ?? '#eee' }}; color: {{ $statusColors[$movie->status]['color'] ?? '#666' }}; border-radius: 6px; font-size: 0.85em; font-weight: 600;">
-                    {{ $statusLabels[$movie->status] ?? $movie->status }}
+                <span style="padding: 6px 14px; background: {{ $statusColors[$computedStatus]['bg'] ?? '#eee' }}; color: {{ $statusColors[$computedStatus]['color'] ?? '#666' }}; border-radius: 6px; font-size: 0.85em; font-weight: 600;">
+                    {{ $statusLabels[$computedStatus] ?? $computedStatus }}
                 </span>
                 @php
                     $ageCode = $movie->age_classification ?? 'P';

@@ -2,7 +2,9 @@
 
 namespace App\Services\Showtime;
 
+use App\Models\Seat;
 use App\Models\Showtime;
+use App\Models\Booking;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -67,6 +69,60 @@ class ShowtimeService
     }
 
     /**
+     * Get seats with booking status for a showtime
+     * 
+     * @param int $showtimeId
+     * @return array{showtime: Showtime|null, seats: Collection, booked_count: int, available_count: int, total_count: int}
+     */
+    public function getSeatsWithStatus(int $showtimeId): ?array
+    {
+        $showtime = Showtime::with(['movie', 'room.cinema'])->find($showtimeId);
+        
+        if (!$showtime) {
+            return null;
+        }
+
+        // Get all seats of the room
+        $seats = Seat::where('room_id', $showtime->room_id)
+            ->orderBy('row')
+            ->orderBy('number')
+            ->get();
+
+        // Get booked seat IDs for this showtime (only confirmed/pending bookings)
+        $bookedSeatIds = Booking::where('showtime_id', $showtimeId)
+            ->whereIn('status', ['pending', 'confirmed', 'paid'])
+            ->with('seats')
+            ->get()
+            ->pluck('seats')
+            ->flatten()
+            ->pluck('id')
+            ->unique()
+            ->toArray();
+
+        // Add booking status to each seat
+        $seats->each(function ($seat) use ($bookedSeatIds) {
+            $seat->booking_status = in_array($seat->id, $bookedSeatIds) ? 'booked' : 'available';
+        });
+
+        // Group seats by row
+        $seatsByRow = $seats->groupBy('row')->map(function ($rowSeats, $row) {
+            return [
+                'row' => $row,
+                'seats' => $rowSeats->values(),
+            ];
+        })->values();
+
+        return [
+            'showtime' => $showtime,
+            'seats' => $seats,
+            'seats_by_row' => $seatsByRow,
+            'booked_count' => count($bookedSeatIds),
+            'available_count' => $seats->count() - count($bookedSeatIds),
+            'total_count' => $seats->count(),
+        ];
+    }
+
+    /**
      * Create a new showtime
      */
     public function createShowtime(array $data): Showtime
@@ -102,5 +158,6 @@ class ShowtimeService
         return $showtime->delete();
     }
 }
+
 
 

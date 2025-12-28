@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Booking\CalculateTicketPriceRequest;
 use App\Http\Resources\BookingResource;
+use App\Http\Resources\TicketPriceResource;
 use App\Http\Traits\ApiResponseTrait;
 use App\Services\Booking\BookingService;
 use Illuminate\Http\Request;
@@ -18,6 +20,31 @@ class BookingController extends Controller
     public function __construct(BookingService $bookingService)
     {
         $this->bookingService = $bookingService;
+    }
+
+    /**
+     * Calculate ticket price for preview
+     */
+    public function calculatePrice(CalculateTicketPriceRequest $request)
+    {
+        try {
+            $data = $this->bookingService->calculateTicketPrice(
+                $request->validated(),
+                auth()->id()
+            );
+
+            return $this->successResponse(
+                'TICKET_PRICE_CALCULATED_SUCCESS',
+                new TicketPriceResource($data)
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'TICKET_PRICE_CALCULATION_FAILED',
+                ['error' => $e->getMessage()],
+                null,
+                400
+            );
+        }
     }
 
     /**
@@ -84,7 +111,7 @@ class BookingController extends Controller
      */
     public function show($id)
     {
-        $booking = $this->bookingService->getBookingById($id);
+        $booking = $this->bookingService->getBookingById((int) $id);
 
         if (!$booking || $booking->user_id !== auth()->id()) {
             return $this->errorResponse(
@@ -106,7 +133,7 @@ class BookingController extends Controller
      */
     public function cancel($id)
     {
-        $result = $this->bookingService->cancelBooking($id, auth()->id());
+        $result = $this->bookingService->cancelBooking((int) $id, auth()->id());
 
         if (!$result) {
             return $this->errorResponse(

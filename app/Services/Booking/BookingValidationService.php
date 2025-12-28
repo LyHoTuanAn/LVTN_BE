@@ -18,14 +18,26 @@ class BookingValidationService
         $showtime = Showtime::findOrFail($showtimeId);
         $roomId = $showtime->room_id;
 
-        // Check if seats exist and belong to the room
-        $seats = Seat::whereIn('id', $seatIds)
-            ->where('room_id', $roomId)
-            ->where('status', 'active')
-            ->get();
+        // Check if all seats exist
+        $allSeats = Seat::whereIn('id', $seatIds)->get();
+        if ($allSeats->count() !== count($seatIds)) {
+            $foundIds = $allSeats->pluck('id')->toArray();
+            $missingIds = array_diff($seatIds, $foundIds);
+            throw new \Exception(__('errors.SEAT_NOT_FOUND') . ' (IDs: ' . implode(', ', $missingIds) . ')');
+        }
 
-        if ($seats->count() !== count($seatIds)) {
-            throw new \Exception('Some seats are invalid or inactive');
+        // Check if seats belong to the room
+        $seatsInRoom = $allSeats->where('room_id', $roomId);
+        if ($seatsInRoom->count() !== count($seatIds)) {
+            $invalidIds = $allSeats->where('room_id', '!=', $roomId)->pluck('id')->toArray();
+            throw new \Exception(__('errors.SEAT_INVALID_ROOM') . ' (IDs: ' . implode(', ', $invalidIds) . ')');
+        }
+
+        // Check if seats are active
+        $activeSeats = $allSeats->where('status', 'active');
+        if ($activeSeats->count() !== count($seatIds)) {
+            $inactiveIds = $allSeats->where('status', '!=', 'active')->pluck('id')->toArray();
+            throw new \Exception(__('errors.SEAT_INACTIVE') . ' (IDs: ' . implode(', ', $inactiveIds) . ')');
         }
 
         // Check if seats are already booked (only paid bookings reserve seats)
@@ -39,7 +51,7 @@ class BookingValidationService
             ->toArray();
 
         if (!empty($bookedSeats)) {
-            throw new \Exception('Some seats are already booked');
+            throw new \Exception(__('errors.SEAT_ALREADY_BOOKED') . ' (IDs: ' . implode(', ', $bookedSeats) . ')');
         }
     }
 

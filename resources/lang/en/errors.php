@@ -26,6 +26,7 @@ return [
     'TOKEN_REFRESH_FAILED' => 'Token refresh failed',
     'BOOKING_CREATION_FAILED' => 'Failed to create booking',
     'BOOKING_CANCEL_FAILED' => 'Failed to cancel booking',
+    'TICKET_PRICE_CALCULATION_FAILED' => 'Failed to calculate ticket price',
     'OTP_INVALID' => 'Invalid OTP code',
     'OTP_EXPIRED' => 'OTP code has expired',
     'OTP_ALREADY_VERIFIED' => 'OTP code has already been verified',

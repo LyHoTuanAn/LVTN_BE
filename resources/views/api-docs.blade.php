@@ -232,6 +232,42 @@
                     <span class="doc-link">Xem tài liệu →</span>
                 </div>
             </a>
+
+            <a href="/api-docs/movies" class="doc-card">
+                <div class="doc-icon">🎬</div>
+                <div class="doc-title">Movies API</div>
+                <div class="doc-description">
+                    API endpoints để quản lý và lấy thông tin phim. Bao gồm: danh sách phim, chi tiết phim, 
+                    và lịch suất chiếu của phim. Hỗ trợ filter theo status, ngày và nhóm showtimes theo ngày. API này là public route.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
+
+            <a href="/api-docs/home" class="doc-card">
+                <div class="doc-icon">🏠</div>
+                <div class="doc-title">Home API</div>
+                <div class="doc-description">
+                    API endpoint để lấy dữ liệu cho màn hình home của mobile app. Bao gồm: banner movies, phim đang chiếu, 
+                    phim sắp chiếu, danh sách rạp chiếu, và suất chiếu sắp tới. API này là public route, không cần authentication.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
+
+            <a href="/api-docs/bookings-calculate-price" class="doc-card">
+                <div class="doc-icon">💰</div>
+                <div class="doc-title">Calculate Ticket Price</div>
+                <div class="doc-description">
+                    API để tính toán giá vé trước khi tạo booking. Cho phép người dùng xem preview giá vé bao gồm: thông tin phim, 
+                    vị trí ghế, thời gian chiếu, số lượng ghế, và tổng giá tiền (có hỗ trợ mã voucher giảm giá). API này yêu cầu authentication token.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
         </div>
 
         <div class="info-box" style="margin-top: 40px;">

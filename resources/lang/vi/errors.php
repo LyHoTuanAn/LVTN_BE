@@ -26,6 +26,7 @@ return [
     'TOKEN_REFRESH_FAILED' => 'Làm mới token thất bại',
     'BOOKING_CREATION_FAILED' => 'Tạo đặt vé thất bại',
     'BOOKING_CANCEL_FAILED' => 'Hủy đặt vé thất bại',
+    'TICKET_PRICE_CALCULATION_FAILED' => 'Tính giá vé thất bại',
     'OTP_INVALID' => 'Mã OTP không hợp lệ',
     'OTP_EXPIRED' => 'Mã OTP đã hết hạn',
     'OTP_ALREADY_VERIFIED' => 'Mã OTP đã được xác minh',
