@@ -66,7 +66,7 @@ class BookingService
      */
     public function getBookingById(int $id): ?Booking
     {
-        return Booking::with(['user', 'showtime.movie', 'showtime.room', 'seats', 'voucher'])->find($id);
+        return Booking::with(['user', 'showtime.movie', 'showtime.room.cinema', 'seats', 'voucher'])->find($id);
     }
 
     /**
