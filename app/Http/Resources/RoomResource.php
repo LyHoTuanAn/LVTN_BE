@@ -19,6 +19,7 @@ class RoomResource extends JsonResource
             'name' => $this->name,
             'seat_count' => $this->seat_count,
             'cinema' => new CinemaResource($this->whenLoaded('cinema')),
+            'room_type' => new RoomTypeResource($this->whenLoaded('roomType')),
             'seats' => SeatResource::collection($this->whenLoaded('seats')),
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),

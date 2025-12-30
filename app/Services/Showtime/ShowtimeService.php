@@ -15,7 +15,7 @@ class ShowtimeService
      */
     public function getAllShowtimes(array $filters = []): LengthAwarePaginator
     {
-        $query = Showtime::query()->with(['movie', 'room.cinema']);
+        $query = Showtime::query()->with(['movie', 'room.cinema', 'room.roomType']);
 
         if (isset($filters['movie_id'])) {
             $query->where('movie_id', $filters['movie_id']);
@@ -23,6 +23,12 @@ class ShowtimeService
 
         if (isset($filters['room_id'])) {
             $query->where('room_id', $filters['room_id']);
+        }
+
+        if (isset($filters['room_type_id'])) {
+            $query->whereHas('room', function ($q) use ($filters) {
+                $q->where('room_type_id', $filters['room_type_id']);
+            });
         }
 
         if (isset($filters['date'])) {
@@ -55,14 +61,20 @@ class ShowtimeService
     /**
      * Get showtimes by movie
      */
-    public function getShowtimesByMovie(int $movieId, ?string $date = null): Collection
+    public function getShowtimesByMovie(int $movieId, array $filters = []): Collection
     {
         $query = Showtime::where('movie_id', $movieId)
             ->with(['room.cinema'])
             ->where('status', '!=', 'cancelled');
 
-        if ($date) {
-            $query->where('date', $date);
+        if (isset($filters['date'])) {
+            $query->where('date', $filters['date']);
+        }
+
+        if (isset($filters['room_type_id'])) {
+            $query->whereHas('room', function ($q) use ($filters) {
+                $q->where('room_type_id', $filters['room_type_id']);
+            });
         }
 
         return $query->orderBy('date')->orderBy('start_time')->get();

@@ -19,6 +19,8 @@ class CinemaResource extends JsonResource
             'name' => $this->name,
             'location' => $this->location,
             'address' => $this->address,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
             'phone' => $this->phone,
             'user' => new UserResource($this->whenLoaded('user')),
             'rooms' => RoomResource::collection($this->whenLoaded('rooms')),

@@ -30,7 +30,7 @@ class HomeService
             'now_showing' => $this->getNowShowingMovies($nowShowingLimit),
             'coming_soon' => $this->getComingSoonMovies($comingSoonLimit),
             'upcoming' => $this->getUpcomingMovies($upcomingLimit),
-            'rooms' => $this->getRooms($roomLimit),
+            'room_types' => $this->getRoomTypes($roomLimit),
             'news' => $this->getNews($newsLimit),
         ];
     }
@@ -84,11 +84,12 @@ class HomeService
     }
 
     /**
-     * Get rooms with cinema information
+     * Get active room types
      */
-    protected function getRooms(int $limit): Collection
+    protected function getRoomTypes(int $limit): Collection
     {
-        return Room::with(['cinema'])
+        return \App\Models\RoomType::active()
+            ->with(['image'])
             ->orderBy('name')
             ->limit($limit)
             ->get();

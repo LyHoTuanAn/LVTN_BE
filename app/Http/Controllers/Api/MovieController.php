@@ -83,8 +83,11 @@ class MovieController extends Controller
         }
 
         // Get showtimes with filters
-        $date = $request->get('date');
-        $showtimes = $this->showtimeService->getShowtimesByMovie($id, $date);
+        $filters = [
+            'date' => $request->get('date'),
+            'room_type_id' => $request->get('room_type_id'),
+        ];
+        $showtimes = $this->showtimeService->getShowtimesByMovie($id, $filters);
 
         // Optional: Filter by date range
         if ($request->has('date_from')) {

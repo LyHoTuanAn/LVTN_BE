@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\ApiResponseTrait;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\NewsResource;
-use App\Http\Resources\RoomResource;
+use App\Http\Resources\RoomTypeResource;
 use App\Services\Home\HomeService;
 use Illuminate\Http\Request;
 
@@ -44,7 +44,7 @@ class HomeController extends Controller
             'now_showing' => MovieResource::collection($data['now_showing']),
             'coming_soon' => MovieResource::collection($data['coming_soon']),
             'upcoming' => MovieResource::collection($data['upcoming']),
-            'rooms' => RoomResource::collection($data['rooms']),
+            'room_types' => RoomTypeResource::collection($data['room_types']),
             'news' => NewsResource::collection($data['news']),
         ];
 
