@@ -124,7 +124,7 @@ class BookingController extends Controller
     {
         $booking = $this->bookingService->getBookingById((int) $id);
 
-        if (!$booking || $booking->user_id !== auth()->id()) {
+        if (!$booking || $booking->user_id != auth()->id()) {
             return $this->errorResponse(
                 'NOT_FOUND',
                 [],
