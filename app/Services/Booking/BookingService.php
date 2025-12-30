@@ -7,6 +7,7 @@ use App\Models\Seat;
 use App\Models\Showtime;
 use App\Models\Voucher;
 use App\Services\Booking\BookingValidationService;
+use App\Services\Payment\StripeService;
 use App\Services\Voucher\VoucherValidationService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +17,8 @@ class BookingService
 {
     public function __construct(
         protected BookingValidationService $validationService,
-        protected VoucherValidationService $voucherValidationService
+        protected VoucherValidationService $voucherValidationService,
+        protected StripeService $stripeService
     ) {
     }
 
@@ -76,15 +78,17 @@ class BookingService
     }
 
     /**
-     * Create a new booking
+     * Create a new booking with Stripe payment intent
+     *
+     * @return array{booking: Booking, payment: array}
      */
-    public function createBooking(array $data, int $userId): Booking
+    public function createBooking(array $data, int $userId): array
     {
         return DB::transaction(function () use ($data, $userId) {
             // Validate seats availability
             $this->validationService->validateSeatsAvailable($data['showtime_id'], $data['seat_ids']);
 
-            $showtime = Showtime::findOrFail($data['showtime_id']);
+            $showtime = Showtime::with('movie')->findOrFail($data['showtime_id']);
             
             // Calculate price
             $seatCount = count($data['seat_ids']);
@@ -135,12 +139,32 @@ class BookingService
                 'voucher_amount' => $voucherAmount,
                 'status' => 'pending',
                 'is_paid' => false,
+                'payment_method' => 'stripe',
             ]);
 
             // Attach seats
             $booking->seats()->attach($data['seat_ids']);
 
-            return $booking->load(['user', 'showtime', 'seats', 'voucher']);
+            // Load relationships
+            $booking->load(['user', 'showtime.movie', 'seats', 'voucher']);
+
+            // Create Stripe Checkout Session (returns direct payment URL)
+            $checkoutSession = $this->stripeService->createCheckoutSession($booking, [
+                'movie_title' => $showtime->movie->title ?? 'Movie Ticket',
+            ]);
+
+            // Update booking with checkout session ID
+            $booking->update([
+                'payment_intent_id' => $checkoutSession->id, // Store session ID for webhook tracking
+            ]);
+
+            return [
+                'booking' => $booking,
+                'payment' => [
+                    'checkout_url' => $checkoutSession->url, // Direct payment URL - just open this!
+                    'expires_at' => date('Y-m-d H:i:s', $checkoutSession->expires_at),
+                ],
+            ];
         });
     }
 

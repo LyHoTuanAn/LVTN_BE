@@ -40,5 +40,11 @@ return [
     'HOME_DATA_FETCHED_SUCCESS' => 'Home data fetched successfully',
     'MOVIE_SHOWTIMES_FETCHED_SUCCESS' => 'Movie showtimes fetched successfully',
     'SHOWTIME_SEATS_FETCHED_SUCCESS' => 'Showtime seats fetched successfully',
-];
 
+    // Stripe Payment Success
+    'PAYMENT_INTENT_CREATED_SUCCESS' => 'Payment intent created successfully',
+    'PAYMENT_CONFIRMED_SUCCESS' => 'Payment confirmed successfully',
+    'PAYMENT_STATUS_FETCHED_SUCCESS' => 'Payment status fetched successfully',
+    'PAYMENT_CANCELLED_SUCCESS' => 'Payment cancelled successfully',
+    'STRIPE_KEY_FETCHED_SUCCESS' => 'Stripe publishable key fetched successfully',
+];

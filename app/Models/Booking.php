@@ -19,6 +19,8 @@ class Booking extends Model
         'total_price',
         'status',
         'payment_method',
+        'payment_intent_id',
+        'paid_at',
     ];
 
     protected function casts(): array
@@ -28,6 +30,7 @@ class Booking extends Model
             'voucher_amount' => 'decimal:2',
             'price' => 'decimal:2',
             'total_price' => 'decimal:2',
+            'paid_at' => 'datetime',
         ];
     }
 

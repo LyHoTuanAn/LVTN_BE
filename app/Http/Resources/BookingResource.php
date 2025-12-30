@@ -23,6 +23,8 @@ class BookingResource extends JsonResource
             'total_price' => (float) $this->total_price,
             'voucher_amount' => (float) $this->voucher_amount,
             'payment_method' => $this->payment_method,
+            'payment_intent_id' => $this->payment_intent_id,
+            'paid_at' => $this->paid_at?->toDateTimeString(),
             'user' => new UserResource($this->whenLoaded('user')),
             'showtime' => new ShowtimeResource($this->whenLoaded('showtime')),
             'seats' => SeatResource::collection($this->whenLoaded('seats')),

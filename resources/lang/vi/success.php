@@ -40,5 +40,11 @@ return [
     'HOME_DATA_FETCHED_SUCCESS' => 'Lấy dữ liệu trang chủ thành công',
     'MOVIE_SHOWTIMES_FETCHED_SUCCESS' => 'Lấy lịch chiếu phim thành công',
     'SHOWTIME_SEATS_FETCHED_SUCCESS' => 'Lấy danh sách ghế thành công',
-];
 
+    // Stripe Payment Success
+    'PAYMENT_INTENT_CREATED_SUCCESS' => 'Tạo yêu cầu thanh toán thành công',
+    'PAYMENT_CONFIRMED_SUCCESS' => 'Xác nhận thanh toán thành công',
+    'PAYMENT_STATUS_FETCHED_SUCCESS' => 'Lấy trạng thái thanh toán thành công',
+    'PAYMENT_CANCELLED_SUCCESS' => 'Hủy thanh toán thành công',
+    'STRIPE_KEY_FETCHED_SUCCESS' => 'Lấy Stripe publishable key thành công',
+];

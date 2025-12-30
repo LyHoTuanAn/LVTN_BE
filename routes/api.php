@@ -6,7 +6,9 @@ use App\Http\Controllers\Api\CinemaController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\MovieController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ShowtimeController;
+use App\Http\Controllers\Api\StripeWebhookController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +20,10 @@ use Illuminate\Support\Facades\Route;
 | Order: LanguageMiddleware → ApiKeyMiddleware → JWT → Role → Permission
 |
 */
+
+// Stripe Webhook (no auth required, no API key required)
+// Must be before the middleware group
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
 
 // Public routes (no auth required)
 Route::middleware(['language', 'api.key'])->group(function () {
@@ -48,6 +54,9 @@ Route::middleware(['language', 'api.key'])->group(function () {
 
     // Home route
     Route::get('/home', [HomeController::class, 'index']);
+
+    // Stripe publishable key (public, no auth needed)
+    Route::get('/payments/stripe-key', [PaymentController::class, 'getPublishableKey']);
 });
 
 // Protected routes (require authentication)
@@ -69,10 +78,16 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
         Route::post('/{id}/cancel', [BookingController::class, 'cancel'])->where('id', '[0-9]+');
     });
 
+    // Payment routes (Stripe)
+    // Note: create-intent is now integrated into POST /api/bookings
+    Route::prefix('payments')->group(function () {
+        Route::post('/confirm', [PaymentController::class, 'confirmPayment']);
+        Route::get('/status/{booking_id}', [PaymentController::class, 'getPaymentStatus'])->where('booking_id', '[0-9]+');
+        Route::post('/cancel', [PaymentController::class, 'cancelPayment']);
+    });
+
     // Media routes
     Route::prefix('media')->group(function () {
         Route::post('/upload-image', [MediaController::class, 'uploadImage']);
     });
 });
-
-

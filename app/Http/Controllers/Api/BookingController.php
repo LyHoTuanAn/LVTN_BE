@@ -64,7 +64,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Create a new booking
+     * Create a new booking with payment intent
      */
     public function store(Request $request)
     {
@@ -85,14 +85,17 @@ class BookingController extends Controller
         }
 
         try {
-            $booking = $this->bookingService->createBooking(
+            $result = $this->bookingService->createBooking(
                 $validator->validated(),
                 auth()->id()
             );
 
             return $this->successResponse(
                 'BOOKING_CREATED_SUCCESS',
-                new BookingResource($booking),
+                [
+                    'booking' => new BookingResource($result['booking']),
+                    'payment' => $result['payment'],
+                ],
                 null,
                 201
             );

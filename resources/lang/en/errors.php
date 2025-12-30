@@ -40,5 +40,22 @@ return [
     'PASSWORD_CHANGE_FAILED' => 'Failed to change password',
     'PROFILE_UPDATE_FAILED' => 'Failed to update profile',
     'IMAGE_UPLOAD_FAILED' => 'Failed to upload image',
-];
 
+    // Stripe Payment Errors
+    'STRIPE_AMOUNT_TOO_SMALL' => 'Payment amount is too small. Minimum payment is 10,000 VND',
+    'STRIPE_PAYMENT_INTENT_FAILED' => 'Failed to create payment intent',
+    'STRIPE_PAYMENT_INTENT_NOT_FOUND' => 'Payment intent not found',
+    'STRIPE_PAYMENT_CONFIRM_FAILED' => 'Failed to confirm payment',
+    'STRIPE_PAYMENT_CANCEL_FAILED' => 'Failed to cancel payment',
+    'STRIPE_REFUND_FAILED' => 'Failed to process refund',
+    'STRIPE_WEBHOOK_SIGNATURE_INVALID' => 'Invalid webhook signature',
+    'STRIPE_CHECKOUT_SESSION_FAILED' => 'Failed to create checkout session',
+    'STRIPE_CHECKOUT_SESSION_NOT_FOUND' => 'Checkout session not found',
+    'BOOKING_ALREADY_PAID' => 'This booking has already been paid',
+    'BOOKING_INVALID_STATUS' => 'Booking is not in a valid status for this operation',
+    'PAYMENT_INTENT_MISMATCH' => 'Payment session does not match booking',
+    'PAYMENT_NOT_COMPLETED' => 'Payment has not been completed',
+    'PAYMENT_INTENT_CREATION_FAILED' => 'Failed to create payment intent',
+    'PAYMENT_CONFIRMATION_FAILED' => 'Failed to confirm payment',
+    'PAYMENT_CANCEL_FAILED' => 'Failed to cancel payment',
+];

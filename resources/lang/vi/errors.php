@@ -40,5 +40,22 @@ return [
     'PASSWORD_CHANGE_FAILED' => 'Đổi mật khẩu thất bại',
     'PROFILE_UPDATE_FAILED' => 'Cập nhật thông tin cá nhân thất bại',
     'IMAGE_UPLOAD_FAILED' => 'Tải ảnh lên thất bại',
-];
 
+    // Stripe Payment Errors
+    'STRIPE_AMOUNT_TOO_SMALL' => 'Số tiền thanh toán quá nhỏ. Tối thiểu là 10.000 VND',
+    'STRIPE_PAYMENT_INTENT_FAILED' => 'Không thể tạo yêu cầu thanh toán',
+    'STRIPE_PAYMENT_INTENT_NOT_FOUND' => 'Không tìm thấy yêu cầu thanh toán',
+    'STRIPE_PAYMENT_CONFIRM_FAILED' => 'Xác nhận thanh toán thất bại',
+    'STRIPE_PAYMENT_CANCEL_FAILED' => 'Hủy thanh toán thất bại',
+    'STRIPE_REFUND_FAILED' => 'Hoàn tiền thất bại',
+    'STRIPE_WEBHOOK_SIGNATURE_INVALID' => 'Chữ ký webhook không hợp lệ',
+    'STRIPE_CHECKOUT_SESSION_FAILED' => 'Không thể tạo phiên thanh toán',
+    'STRIPE_CHECKOUT_SESSION_NOT_FOUND' => 'Không tìm thấy phiên thanh toán',
+    'BOOKING_ALREADY_PAID' => 'Đặt vé này đã được thanh toán',
+    'BOOKING_INVALID_STATUS' => 'Đặt vé không ở trạng thái hợp lệ cho thao tác này',
+    'PAYMENT_INTENT_MISMATCH' => 'Phiên thanh toán không khớp với đặt vé',
+    'PAYMENT_NOT_COMPLETED' => 'Thanh toán chưa hoàn thành',
+    'PAYMENT_INTENT_CREATION_FAILED' => 'Không thể tạo yêu cầu thanh toán',
+    'PAYMENT_CONFIRMATION_FAILED' => 'Xác nhận thanh toán thất bại',
+    'PAYMENT_CANCEL_FAILED' => 'Hủy thanh toán thất bại',
+];
