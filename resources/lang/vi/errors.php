@@ -41,6 +41,12 @@ return [
     'PROFILE_UPDATE_FAILED' => 'Cập nhật thông tin cá nhân thất bại',
     'IMAGE_UPLOAD_FAILED' => 'Tải ảnh lên thất bại',
 
+    // Cinema errors
+    'CINEMA_CREATE_FAILED' => 'Tạo rạp chiếu thất bại',
+    'CINEMA_VALIDATION_FAILED' => 'Dữ liệu rạp chiếu không hợp lệ',
+    'CINEMA_DELETE_FAILED' => 'Xóa rạp chiếu thất bại',
+    'CINEMA_UPDATE_FAILED' => 'Cập nhật rạp chiếu thất bại',
+
     // Stripe Payment Errors
     'STRIPE_AMOUNT_TOO_SMALL' => 'Số tiền thanh toán quá nhỏ. Tối thiểu là 10.000 VND',
     'STRIPE_PAYMENT_INTENT_FAILED' => 'Không thể tạo yêu cầu thanh toán',

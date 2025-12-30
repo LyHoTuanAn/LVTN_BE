@@ -13,16 +13,16 @@ class Room extends Model
 
     protected $fillable = [
         'cinema_id',
+        'room_type_id',
         'name',
         'seat_count',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'seat_count' => 'integer',
-        ];
-    }
+    protected $casts = [
+        'seat_count' => 'integer',
+        'room_type_id' => 'integer',
+        'cinema_id' => 'integer',
+    ];
 
     /**
      * Get the cinema that owns this room
@@ -30,6 +30,14 @@ class Room extends Model
     public function cinema(): BelongsTo
     {
         return $this->belongsTo(Cinema::class);
+    }
+
+    /**
+     * Get the type of this room
+     */
+    public function roomType(): BelongsTo
+    {
+        return $this->belongsTo(RoomType::class);
     }
 
     /**

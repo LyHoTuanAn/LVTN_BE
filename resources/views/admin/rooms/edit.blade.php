@@ -13,15 +13,65 @@
 
     <h2 style="color: #2c3e50; font-size: 1.5em; margin-bottom: 30px;">{{ __('Edit Room') }}: {{ $room->name }}</h2>
 
-    <div style="margin-bottom: 20px; padding: 15px; background: #e3f2fd; border-radius: 6px;">
-        <strong style="color: #1976d2;">{{ __('Cinema') }}:</strong> {{ $room->cinema?->name ?? '-' }}
-    </div>
+    @if ($errors->any())
+        <div style="background: #fee2e2; border: 1px solid #f87171; color: #dc2626; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+            <ul style="margin: 0; padding-left: 20px;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <form method="POST" action="{{ route('admin.rooms.update', $room->id) }}">
         @csrf
         @method('PUT')
 
         <div class="room-grid-2" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            <div style="margin-bottom: 20px;">
+                <label for="cinema_id" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                    {{ __('Cinema') }} <span style="color: #e74c3c;">*</span>
+                </label>
+                <select 
+                    name="cinema_id" 
+                    id="cinema_id" 
+                    required
+                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box; background: white; cursor: pointer;"
+                >
+                    <option value="">{{ __('Select cinema') }}</option>
+                    @foreach ($cinemas as $cinema)
+                        <option value="{{ $cinema->id }}" {{ old('cinema_id', $room->cinema_id) == $cinema->id ? 'selected' : '' }}>
+                            {{ $cinema->name }} - {{ $cinema->location }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('cinema_id')
+                    <span style="color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: block;">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label for="room_type_id" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
+                    {{ __('Room Type') }} <span style="color: #e74c3c;">*</span>
+                </label>
+                <select 
+                    name="room_type_id" 
+                    id="room_type_id" 
+                    required
+                    style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 1em; box-sizing: border-box; background: white; cursor: pointer;"
+                >
+                    <option value="">{{ __('Select room type') }}</option>
+                    @foreach ($roomTypes as $roomType)
+                        <option value="{{ $roomType->id }}" {{ old('room_type_id', $room->room_type_id) == $roomType->id ? 'selected' : '' }}>
+                            {{ $roomType->name }}
+                        </option>
+                    @endforeach
+                </select>
+                @error('room_type_id')
+                    <span style="color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: block;">{{ $message }}</span>
+                @enderror
+            </div>
+
             <div style="margin-bottom: 20px;">
                 <label for="name" style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">
                     {{ __('Room Name') }} <span style="color: #e74c3c;">*</span>

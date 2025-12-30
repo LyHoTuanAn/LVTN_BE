@@ -53,12 +53,43 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('admin.rooms.index') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-200 transition-colors {{ request()->routeIs('admin.rooms.*') ? 'bg-gray-200 font-medium' : '' }}">
+                <a href="{{ route('admin.cinemas.index') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-200 transition-colors {{ request()->routeIs('admin.cinemas.*') ? 'bg-gray-200 font-medium' : '' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 15h1m-1 4h1m4-4h1m-1 4h1"></path>
                     </svg>
-                    {{ __('Rooms') }}
+                    {{ __('Cinemas') }}
                 </a>
+            </li>
+            <li x-data="{ open: {{ request()->routeIs('admin.rooms.*') || request()->routeIs('admin.room-types.*') ? 'true' : 'false' }} }">
+                <button @click="open = !open" class="flex items-center justify-between w-full px-4 py-3 text-gray-700 hover:bg-gray-200 transition-colors {{ request()->routeIs('admin.rooms.*') || request()->routeIs('admin.room-types.*') ? 'bg-gray-200 font-medium' : '' }}">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        {{ __('Rooms') }}
+                    </div>
+                    <svg class="w-4 h-4 transition-transform" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+                <ul x-show="open" x-collapse class="bg-gray-100">
+                    <li>
+                        <a href="{{ route('admin.rooms.index') }}" class="flex items-center pl-12 pr-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors {{ request()->routeIs('admin.rooms.*') ? 'bg-gray-200 font-medium text-gray-900' : '' }}">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                            </svg>
+                            {{ __('Room Manager') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.room-types.index') }}" class="flex items-center pl-12 pr-4 py-2 text-gray-600 hover:bg-gray-200 transition-colors {{ request()->routeIs('admin.room-types.*') ? 'bg-gray-200 font-medium text-gray-900' : '' }}">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                            {{ __('Room Types') }}
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="{{ route('admin.showtimes.index') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-200 transition-colors {{ request()->routeIs('admin.showtimes.*') ? 'bg-gray-200 font-medium' : '' }}">

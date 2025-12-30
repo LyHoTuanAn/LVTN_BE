@@ -15,6 +15,8 @@ return [
     'MOVIE_FETCHED_SUCCESS' => 'Movie fetched successfully',
     'CINEMA_CREATED_SUCCESS' => 'Cinema created successfully',
     'CINEMA_UPDATED_SUCCESS' => 'Cinema updated successfully',
+    'CINEMA_DELETED_SUCCESS' => 'Cinema deleted successfully',
+    'CINEMAS_CREATED_SUCCESS' => ':count cinemas created successfully',
     'SHOWTIME_CREATED_SUCCESS' => 'Showtime created successfully',
     'SHOWTIME_UPDATED_SUCCESS' => 'Showtime updated successfully',
     'SHOWTIMES_FETCHED_SUCCESS' => 'Showtimes fetched successfully',

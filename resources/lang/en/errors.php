@@ -41,6 +41,12 @@ return [
     'PROFILE_UPDATE_FAILED' => 'Failed to update profile',
     'IMAGE_UPLOAD_FAILED' => 'Failed to upload image',
 
+    // Cinema errors
+    'CINEMA_CREATE_FAILED' => 'Failed to create cinema',
+    'CINEMA_VALIDATION_FAILED' => 'Cinema validation failed',
+    'CINEMA_DELETE_FAILED' => 'Failed to delete cinema',
+    'CINEMA_UPDATE_FAILED' => 'Failed to update cinema',
+
     // Stripe Payment Errors
     'STRIPE_AMOUNT_TOO_SMALL' => 'Payment amount is too small. Minimum payment is 10,000 VND',
     'STRIPE_PAYMENT_INTENT_FAILED' => 'Failed to create payment intent',

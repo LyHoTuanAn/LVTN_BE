@@ -15,7 +15,7 @@ class RoomService
      */
     public function getAllRooms(array $filters = []): LengthAwarePaginator
     {
-        $query = Room::query()->with(['cinema', 'seats']);
+        $query = Room::query()->with(['cinema', 'roomType', 'seats']);
 
         if (isset($filters['search'])) {
             $query->where('name', 'like', '%' . $filters['search'] . '%');
@@ -23,6 +23,10 @@ class RoomService
 
         if (isset($filters['cinema_id'])) {
             $query->where('cinema_id', $filters['cinema_id']);
+        }
+        
+        if (isset($filters['room_type_id'])) {
+            $query->where('room_type_id', $filters['room_type_id']);
         }
 
         return $query->orderBy('name')->paginate($filters['per_page'] ?? 15);
@@ -43,7 +47,7 @@ class RoomService
      */
     public function getRoomById(int $id): ?Room
     {
-        return Room::with(['cinema', 'seats'])->find($id);
+        return Room::with(['cinema', 'roomType', 'seats'])->find($id);
     }
 
     /**

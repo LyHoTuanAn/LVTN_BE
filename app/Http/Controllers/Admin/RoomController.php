@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreRoomRequest;
 use App\Http\Requests\Admin\UpdateRoomRequest;
 use App\Models\Cinema;
+use App\Models\RoomType;
 use App\Services\Cinema\RoomService;
 use Illuminate\Http\Request;
 
@@ -24,19 +25,22 @@ class RoomController extends Controller
     public function index(Request $request)
     {
         $rooms = $this->roomService->getAllRooms($request->all());
+        $cinemas = Cinema::orderBy('name')->get();
+        $roomTypes = RoomType::active()->orderBy('name')->get();
 
-        return view('admin.rooms.index', compact('rooms'));
+        return view('admin.rooms.index', compact('rooms', 'cinemas', 'roomTypes'));
     }
 
     /**
      * Show the form for creating a new room
      */
-    public function create()
+    public function create(Request $request)
     {
-        // Get or create default cinema
-        $cinema = $this->getDefaultCinema();
+        $cinemas = Cinema::orderBy('name')->get();
+        $roomTypes = RoomType::active()->orderBy('name')->get();
+        $selectedCinemaId = $request->query('cinema_id');
 
-        return view('admin.rooms.create', compact('cinema'));
+        return view('admin.rooms.create', compact('cinemas', 'roomTypes', 'selectedCinemaId'));
     }
 
     /**
@@ -46,10 +50,6 @@ class RoomController extends Controller
     {
         try {
             $data = $request->validated();
-            
-            // Set default cinema
-            $cinema = $this->getDefaultCinema();
-            $data['cinema_id'] = $cinema->id;
 
             $room = $this->roomService->createRoom($data);
 
@@ -88,7 +88,10 @@ class RoomController extends Controller
             abort(404, __('Room not found'));
         }
 
-        return view('admin.rooms.edit', compact('room'));
+        $cinemas = Cinema::orderBy('name')->get();
+        $roomTypes = RoomType::active()->orderBy('name')->get();
+
+        return view('admin.rooms.edit', compact('room', 'cinemas', 'roomTypes'));
     }
 
     /**
@@ -142,25 +145,5 @@ class RoomController extends Controller
             return back()
                 ->withErrors(['error' => __('Failed to delete room: :message', ['message' => $e->getMessage()])]);
         }
-    }
-
-    /**
-     * Get or create default cinema
-     */
-    protected function getDefaultCinema(): Cinema
-    {
-        $cinema = Cinema::first();
-
-        if (!$cinema) {
-            $cinema = Cinema::create([
-                'user_id' => auth()->id(),
-                'name' => 'Rạp Phim Chính',
-                'location' => 'TP. Hồ Chí Minh',
-                'address' => '123 Đường ABC, Quận 1, TP.HCM',
-                'phone' => '0123456789',
-            ]);
-        }
-
-        return $cinema;
     }
 }

@@ -5,13 +5,16 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MovieController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\ShowtimeController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\Admin\CinemaController;
 use App\Http\Controllers\Web\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Admin\QrTicketController;
 use App\Http\Controllers\Admin\BookingController;
+
 
 Route::get('/api-docs', function () {
     return view('api-docs');
@@ -86,6 +89,19 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::delete('/{id}', [MovieController::class, 'destroy'])->name('destroy');
     });
 
+    // Admin Cinemas Management
+    Route::prefix('admin/cinemas')->name('admin.cinemas.')->group(function () {
+        Route::get('/', [CinemaController::class, 'index'])->name('index');
+        Route::get('/create', [CinemaController::class, 'create'])->name('create');
+        Route::post('/', [CinemaController::class, 'store'])->name('store');
+        Route::get('/create-many', [CinemaController::class, 'createMany'])->name('create-many');
+        Route::post('/store-many', [CinemaController::class, 'storeMany'])->name('store-many');
+        Route::get('/{id}', [CinemaController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [CinemaController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [CinemaController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CinemaController::class, 'destroy'])->name('destroy');
+    });
+
     // Admin Rooms Management
     Route::prefix('admin/rooms')->name('admin.rooms.')->group(function () {
         Route::get('/', [RoomController::class, 'index'])->name('index');
@@ -96,6 +112,18 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::put('/{id}', [RoomController::class, 'update'])->name('update');
         Route::delete('/{id}', [RoomController::class, 'destroy'])->name('destroy');
     });
+
+    // Admin Room Types Management
+    Route::prefix('admin/room-types')->name('admin.room-types.')->group(function () {
+        Route::get('/', [RoomTypeController::class, 'index'])->name('index');
+        Route::get('/create', [RoomTypeController::class, 'create'])->name('create');
+        Route::post('/', [RoomTypeController::class, 'store'])->name('store');
+        Route::get('/{roomType}', [RoomTypeController::class, 'show'])->name('show');
+        Route::get('/{roomType}/edit', [RoomTypeController::class, 'edit'])->name('edit');
+        Route::put('/{roomType}', [RoomTypeController::class, 'update'])->name('update');
+        Route::delete('/{roomType}', [RoomTypeController::class, 'destroy'])->name('destroy');
+    });
+
 
     // Admin Showtimes Management
     Route::prefix('admin/showtimes')->name('admin.showtimes.')->group(function () {

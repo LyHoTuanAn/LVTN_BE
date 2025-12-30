@@ -55,20 +55,22 @@
             <!-- Manual Input -->
             <div class="border-t pt-4 mt-4">
                 <h3 class="text-sm font-medium text-gray-700 mb-2">{{ __('Manual Input') }}</h3>
-                <div class="flex gap-2">
+                <div class="manual-input-container flex flex-wrap gap-2">
                     <input 
                         type="text" 
                         id="manual-code-input" 
-                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase"
+                        class="flex-1 min-w-0 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase"
                         placeholder="{{ __('Enter booking code...') }}"
                         maxlength="50"
                     >
-                    <button id="btn-lookup" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
-                        {{ __('Lookup') }}
-                    </button>
-                    <button id="btn-complete" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
-                        {{ __('Complete') }}
-                    </button>
+                    <div class="manual-input-buttons flex gap-2">
+                        <button id="btn-lookup" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                            {{ __('Lookup') }}
+                        </button>
+                        <button id="btn-complete" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                            {{ __('Complete') }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -191,6 +193,26 @@
         0% { top: 0; }
         50% { top: 100%; }
         100% { top: 0; }
+    }
+
+    /* Mobile responsive for manual input section */
+    @media (max-width: 520px) {
+        .manual-input-container {
+            flex-direction: column;
+        }
+        
+        .manual-input-container input {
+            width: 100%;
+            flex: none;
+        }
+        
+        .manual-input-buttons {
+            width: 100%;
+        }
+        
+        .manual-input-buttons button {
+            flex: 1;
+        }
     }
 </style>
 

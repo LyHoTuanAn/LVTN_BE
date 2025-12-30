@@ -15,6 +15,8 @@ return [
     'MOVIE_FETCHED_SUCCESS' => 'Lấy thông tin phim thành công',
     'CINEMA_CREATED_SUCCESS' => 'Tạo rạp chiếu thành công',
     'CINEMA_UPDATED_SUCCESS' => 'Cập nhật rạp chiếu thành công',
+    'CINEMA_DELETED_SUCCESS' => 'Xóa rạp chiếu thành công',
+    'CINEMAS_CREATED_SUCCESS' => 'Đã tạo thành công :count rạp chiếu',
     'SHOWTIME_CREATED_SUCCESS' => 'Tạo suất chiếu thành công',
     'SHOWTIME_UPDATED_SUCCESS' => 'Cập nhật suất chiếu thành công',
     'SHOWTIMES_FETCHED_SUCCESS' => 'Lấy danh sách suất chiếu thành công',

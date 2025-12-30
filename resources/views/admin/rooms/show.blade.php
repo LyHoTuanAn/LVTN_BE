@@ -28,7 +28,7 @@
 
     <h2 style="color: #2c3e50; font-size: 1.8em; margin-bottom: 30px;">{{ $room->name }}</h2>
 
-    <div class="room-show-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+    <div class="room-show-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
         <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
             <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; font-size: 0.9em;">{{ __('Cinema') }}</label>
             <p style="margin: 0; color: #2c3e50; font-size: 1.1em;">{{ $room->cinema?->name ?? '-' }}</p>
@@ -40,6 +40,16 @@
                 <span style="padding: 4px 12px; background: #e3f2fd; color: #1976d2; border-radius: 4px;">
                     {{ $room->seat_count }} {{ __('seats') }}
                 </span>
+            </p>
+        </div>
+
+        <div style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
+            <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; font-size: 0.9em;">{{ __('Room Type') }}</label>
+            <p style="margin: 0; color: #2c3e50; font-size: 1.1em; display: flex; align-items: center; gap: 8px;">
+                @if($room->roomType && $room->roomType->image)
+                    <img src="{{ Storage::url($room->roomType->image->file_path) }}" alt="{{ $room->roomType->name }}" style="width: 24px; height: 24px; object-fit: cover; border-radius: 4px;">
+                @endif
+                {{ $room->roomType?->name ?? '-' }}
             </p>
         </div>
 

@@ -97,4 +97,10 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
     Route::prefix('media')->group(function () {
         Route::post('/upload-image', [MediaController::class, 'uploadImage']);
     });
+
+    // Admin Cinema routes (require admin role)
+    Route::middleware(['role:admin'])->prefix('admin/cinemas')->group(function () {
+        Route::post('/bulk', [\App\Http\Controllers\Admin\CinemaController::class, 'apiStoreMany']);
+    });
 });
+

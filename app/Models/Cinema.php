@@ -16,7 +16,14 @@ class Cinema extends Model
         'name',
         'location',
         'address',
+        'latitude',
+        'longitude',
         'phone',
+    ];
+
+    protected $casts = [
+        'latitude' => 'decimal:8',
+        'longitude' => 'decimal:8',
     ];
 
     /**

@@ -20,6 +20,8 @@ class StoreRoomRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'cinema_id' => 'required|exists:cinemas,id',
+            'room_type_id' => 'required|exists:room_types,id,status,active',
             'name' => 'required|string|max:100',
             'seat_count' => 'required|integer|min:1|max:500',
         ];
@@ -31,6 +33,8 @@ class StoreRoomRequest extends FormRequest
     public function attributes(): array
     {
         return [
+            'cinema_id' => __('Cinema'),
+            'room_type_id' => __('Room Type'),
             'name' => __('Room Name'),
             'seat_count' => __('Seat Count'),
         ];
