@@ -85,6 +85,14 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('admin.qr-ticket.index') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-200 transition-colors {{ request()->routeIs('admin.qr-ticket.*') ? 'bg-gray-200 font-medium' : '' }}">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path>
+                    </svg>
+                    {{ __('QR Ticket') }}
+                </a>
+            </li>
+            <li>
                 <a href="{{ route('admin.vouchers.index') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-gray-200 transition-colors {{ request()->routeIs('admin.vouchers.*') ? 'bg-gray-200 font-medium' : '' }}">
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>

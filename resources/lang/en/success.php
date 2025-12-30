@@ -47,4 +47,8 @@ return [
     'PAYMENT_STATUS_FETCHED_SUCCESS' => 'Payment status fetched successfully',
     'PAYMENT_CANCELLED_SUCCESS' => 'Payment cancelled successfully',
     'STRIPE_KEY_FETCHED_SUCCESS' => 'Stripe publishable key fetched successfully',
+
+    // QR Ticket Scanner Success
+    'BOOKING_COMPLETED_SUCCESS' => 'Ticket verified and booking completed successfully',
+    'BOOKING_FOUND' => 'Booking found',
 ];

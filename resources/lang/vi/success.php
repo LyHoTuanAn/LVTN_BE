@@ -47,4 +47,8 @@ return [
     'PAYMENT_STATUS_FETCHED_SUCCESS' => 'Lấy trạng thái thanh toán thành công',
     'PAYMENT_CANCELLED_SUCCESS' => 'Hủy thanh toán thành công',
     'STRIPE_KEY_FETCHED_SUCCESS' => 'Lấy Stripe publishable key thành công',
+
+    // QR Ticket Scanner Success
+    'BOOKING_COMPLETED_SUCCESS' => 'Xác nhận vé thành công, đặt vé đã hoàn thành',
+    'BOOKING_FOUND' => 'Tìm thấy đặt vé',
 ];

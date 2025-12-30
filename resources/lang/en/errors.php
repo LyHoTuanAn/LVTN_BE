@@ -64,4 +64,10 @@ return [
     'VNPAY_INVALID_SIGNATURE' => 'Invalid VNPay signature',
     'VNPAY_PAYMENT_FAILED' => 'VNPay payment failed',
     'VNPAY_INVALID_AMOUNT' => 'Payment amount does not match',
+
+    // QR Ticket Scanner errors
+    'BOOKING_NOT_FOUND' => 'Booking not found',
+    'BOOKING_ALREADY_COMPLETED' => 'This ticket has already been used',
+    'BOOKING_CANCELED' => 'This booking has been canceled',
+    'BOOKING_NOT_PAID' => 'This booking has not been paid yet',
 ];

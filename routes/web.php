@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Web\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
+use App\Http\Controllers\Admin\QrTicketController;
+use App\Http\Controllers\Admin\BookingController;
 
 Route::get('/api-docs', function () {
     return view('api-docs');
@@ -122,10 +124,17 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
 
     // Admin Bookings Management
     Route::prefix('admin/bookings')->name('admin.bookings.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\BookingController::class, 'index'])->name('index');
-        Route::get('/{id}', [\App\Http\Controllers\Admin\BookingController::class, 'show'])->name('show');
-        Route::post('/{id}/update-status', [\App\Http\Controllers\Admin\BookingController::class, 'updateStatus'])->name('update-status');
-        Route::post('/{id}/update-payment', [\App\Http\Controllers\Admin\BookingController::class, 'updatePayment'])->name('update-payment');
+        Route::get('/', [BookingController::class, 'index'])->name('index');
+        Route::get('/{id}', [BookingController::class, 'show'])->name('show');
+        Route::post('/{id}/update-status', [BookingController::class, 'updateStatus'])->name('update-status');
+        Route::post('/{id}/update-payment', [BookingController::class, 'updatePayment'])->name('update-payment');
+    });
+
+    // Admin QR Ticket Scanner
+    Route::prefix('admin/qr-ticket')->name('admin.qr-ticket.')->group(function () {
+        Route::get('/', [QrTicketController::class, 'index'])->name('index');
+        Route::post('/scan', [QrTicketController::class, 'scan'])->name('scan');
+        Route::post('/lookup', [QrTicketController::class, 'lookup'])->name('lookup');
     });
 
     // Admin Vouchers Management

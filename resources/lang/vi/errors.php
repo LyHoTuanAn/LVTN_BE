@@ -64,4 +64,10 @@ return [
     'VNPAY_INVALID_SIGNATURE' => 'Chữ ký VNPay không hợp lệ',
     'VNPAY_PAYMENT_FAILED' => 'Thanh toán VNPay thất bại',
     'VNPAY_INVALID_AMOUNT' => 'Số tiền thanh toán không khớp',
+
+    // QR Ticket Scanner errors
+    'BOOKING_NOT_FOUND' => 'Không tìm thấy đặt vé',
+    'BOOKING_ALREADY_COMPLETED' => 'Vé này đã được sử dụng',
+    'BOOKING_CANCELED' => 'Đặt vé này đã bị hủy',
+    'BOOKING_NOT_PAID' => 'Đặt vé này chưa được thanh toán',
 ];
