@@ -58,4 +58,10 @@ return [
     'PAYMENT_INTENT_CREATION_FAILED' => 'Không thể tạo yêu cầu thanh toán',
     'PAYMENT_CONFIRMATION_FAILED' => 'Xác nhận thanh toán thất bại',
     'PAYMENT_CANCEL_FAILED' => 'Hủy thanh toán thất bại',
+
+    // VNPay errors
+    'VNPAY_NOT_CONFIGURED' => 'VNPay chưa được cấu hình',
+    'VNPAY_INVALID_SIGNATURE' => 'Chữ ký VNPay không hợp lệ',
+    'VNPAY_PAYMENT_FAILED' => 'Thanh toán VNPay thất bại',
+    'VNPAY_INVALID_AMOUNT' => 'Số tiền thanh toán không khớp',
 ];

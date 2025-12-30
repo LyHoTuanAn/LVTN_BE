@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ShowtimeController;
 use App\Http\Controllers\Api\StripeWebhookController;
+use App\Http\Controllers\Api\VNPayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,6 +25,12 @@ use Illuminate\Support\Facades\Route;
 // Stripe Webhook (no auth required, no API key required)
 // Must be before the middleware group
 Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+
+// VNPay Callbacks (no auth required, no API key required)
+// IPN: VNPay server-to-server notification
+Route::get('/vnpay/ipn', [VNPayController::class, 'ipn']);
+// Return URL: Redirect user after payment
+Route::get('/vnpay/return', [VNPayController::class, 'returnUrl']);
 
 // Public routes (no auth required)
 Route::middleware(['language', 'api.key'])->group(function () {

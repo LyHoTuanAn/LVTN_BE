@@ -64,7 +64,7 @@ class BookingController extends Controller
     }
 
     /**
-     * Create a new booking with payment intent
+     * Create a new booking with payment (Stripe or VNPay)
      */
     public function store(Request $request)
     {
@@ -73,6 +73,8 @@ class BookingController extends Controller
             'seat_ids' => 'required|array|min:1',
             'seat_ids.*' => 'exists:seats,id',
             'voucher_code' => 'nullable|exists:vouchers,code',
+            'payment_method' => 'nullable|in:stripe,vnpay',
+            'bank_code' => 'nullable|string', // VNPay bank code (optional)
         ]);
 
         if ($validator->fails()) {
@@ -85,9 +87,15 @@ class BookingController extends Controller
         }
 
         try {
+            $validated = $validator->validated();
+            $paymentMethod = $validated['payment_method'] ?? 'stripe';
+            $ipAddress = $request->ip();
+
             $result = $this->bookingService->createBooking(
-                $validator->validated(),
-                auth()->id()
+                $validated,
+                auth()->id(),
+                $paymentMethod,
+                $ipAddress
             );
 
             return $this->successResponse(

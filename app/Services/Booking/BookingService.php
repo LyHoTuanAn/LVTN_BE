@@ -8,6 +8,7 @@ use App\Models\Showtime;
 use App\Models\Voucher;
 use App\Services\Booking\BookingValidationService;
 use App\Services\Payment\StripeService;
+use App\Services\Payment\VNPayService;
 use App\Services\Voucher\VoucherValidationService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +19,8 @@ class BookingService
     public function __construct(
         protected BookingValidationService $validationService,
         protected VoucherValidationService $voucherValidationService,
-        protected StripeService $stripeService
+        protected StripeService $stripeService,
+        protected VNPayService $vnpayService
     ) {
     }
 
@@ -78,13 +80,17 @@ class BookingService
     }
 
     /**
-     * Create a new booking with Stripe payment intent
+     * Create a new booking with payment (Stripe or VNPay)
      *
+     * @param array $data
+     * @param int $userId
+     * @param string $paymentMethod 'stripe' hoặc 'vnpay'
+     * @param string|null $ipAddress IP của user (required for VNPay)
      * @return array{booking: Booking, payment: array}
      */
-    public function createBooking(array $data, int $userId): array
+    public function createBooking(array $data, int $userId, string $paymentMethod = 'stripe', ?string $ipAddress = null): array
     {
-        return DB::transaction(function () use ($data, $userId) {
+        return DB::transaction(function () use ($data, $userId, $paymentMethod, $ipAddress) {
             // Validate seats availability
             $this->validationService->validateSeatsAvailable($data['showtime_id'], $data['seat_ids']);
 
@@ -139,7 +145,7 @@ class BookingService
                 'voucher_amount' => $voucherAmount,
                 'status' => 'pending',
                 'is_paid' => false,
-                'payment_method' => 'stripe',
+                'payment_method' => $paymentMethod,
             ]);
 
             // Attach seats
@@ -148,24 +154,60 @@ class BookingService
             // Load relationships
             $booking->load(['user', 'showtime.movie', 'seats', 'voucher']);
 
-            // Create Stripe Checkout Session (returns direct payment URL)
-            $checkoutSession = $this->stripeService->createCheckoutSession($booking, [
-                'movie_title' => $showtime->movie->title ?? 'Movie Ticket',
-            ]);
-
-            // Update booking with checkout session ID
-            $booking->update([
-                'payment_intent_id' => $checkoutSession->id, // Store session ID for webhook tracking
-            ]);
-
-            return [
-                'booking' => $booking,
-                'payment' => [
-                    'checkout_url' => $checkoutSession->url, // Direct payment URL - just open this!
-                    'expires_at' => date('Y-m-d H:i:s', $checkoutSession->expires_at),
-                ],
-            ];
+            // Create payment based on method
+            if ($paymentMethod === 'vnpay') {
+                return $this->createVNPayPayment($booking, $ipAddress, $data['bank_code'] ?? null);
+            } else {
+                return $this->createStripePayment($booking, $showtime);
+            }
         });
+    }
+
+    /**
+     * Create Stripe Checkout Session payment
+     */
+    protected function createStripePayment(Booking $booking, Showtime $showtime): array
+    {
+        $checkoutSession = $this->stripeService->createCheckoutSession($booking, [
+            'movie_title' => $showtime->movie->title ?? 'Movie Ticket',
+        ]);
+
+        // Update booking with checkout session ID
+        $booking->update([
+            'payment_intent_id' => $checkoutSession->id,
+        ]);
+
+        return [
+            'booking' => $booking,
+            'payment' => [
+                'method' => 'stripe',
+                'checkout_url' => $checkoutSession->url,
+                'expires_at' => date('Y-m-d H:i:s', $checkoutSession->expires_at),
+            ],
+        ];
+    }
+
+    /**
+     * Create VNPay payment URL
+     */
+    protected function createVNPayPayment(Booking $booking, ?string $ipAddress, ?string $bankCode = null): array
+    {
+        if (empty($ipAddress)) {
+            $ipAddress = '127.0.0.1';
+        }
+
+        $paymentUrl = $this->vnpayService->createPaymentUrl($booking, $ipAddress, $bankCode);
+
+        $expireMinutes = config('vnpay.expire_minutes', 15);
+
+        return [
+            'booking' => $booking,
+            'payment' => [
+                'method' => 'vnpay',
+                'checkout_url' => $paymentUrl,
+                'expires_at' => date('Y-m-d H:i:s', strtotime("+{$expireMinutes} minutes")),
+            ],
+        ];
     }
 
     /**

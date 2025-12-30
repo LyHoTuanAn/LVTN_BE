@@ -58,4 +58,10 @@ return [
     'PAYMENT_INTENT_CREATION_FAILED' => 'Failed to create payment intent',
     'PAYMENT_CONFIRMATION_FAILED' => 'Failed to confirm payment',
     'PAYMENT_CANCEL_FAILED' => 'Failed to cancel payment',
+
+    // VNPay errors
+    'VNPAY_NOT_CONFIGURED' => 'VNPay is not configured',
+    'VNPAY_INVALID_SIGNATURE' => 'Invalid VNPay signature',
+    'VNPAY_PAYMENT_FAILED' => 'VNPay payment failed',
+    'VNPAY_INVALID_AMOUNT' => 'Payment amount does not match',
 ];
