@@ -81,4 +81,13 @@ return [
     'MOVIE_NOT_FOUND' => 'Không tìm thấy phim',
     'MOVIE_ALREADY_FAVORITED' => 'Phim đã có trong danh sách yêu thích',
     'FAVORITE_NOT_FOUND' => 'Phim không có trong danh sách yêu thích',
+
+    // Review errors
+    'REVIEW_NOT_FOUND' => 'Không tìm thấy đánh giá',
+    'ALREADY_REVIEWED' => 'Bạn đã đánh giá phim này rồi',
+    'BOOKING_NOT_BELONG_TO_USER' => 'Đặt vé này không thuộc về bạn',
+    'BOOKING_MOVIE_MISMATCH' => 'Đặt vé này không phải cho phim này',
+    'SHOWTIME_NOT_ENDED' => 'Bạn chỉ có thể đánh giá sau khi phim kết thúc',
+    'BOOKING_NOT_COMPLETED' => 'Đặt vé của bạn phải được hoàn thành để đánh giá',
+    'REVIEW_NOT_BELONG_TO_USER' => 'Đánh giá này không thuộc về bạn',
 ];

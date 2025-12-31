@@ -516,5 +516,8 @@
     "Search by title or slug...": "Tìm theo tiêu đề hoặc slug...",
     "Used as the main cover image (converted to WebP).": "Dùng làm ảnh bìa chính (sẽ được chuyển sang WebP).",
     "Uploaded images will be processed via MediaService; URLs will show after save to embed inside content.": "Ảnh tải lên sẽ được xử lý qua MediaService; sau khi lưu sẽ hiển thị URL để chèn vào nội dung.",
-    "optional": "không bắt buộc"
+    "optional": "không bắt buộc",
+    "All Ratings": "Tất cả đánh giá",
+    "Search by user or comment": "Tìm kiếm theo người dùng hoặc bình luận",
+    "No reviews found": "Không tìm thấy đánh giá"
 }

@@ -58,4 +58,8 @@ return [
     'FAVORITES_FETCHED_SUCCESS' => 'Lấy danh sách phim yêu thích thành công',
     'FAVORITE_ADDED_SUCCESS' => 'Đã thêm phim vào danh sách yêu thích',
     'FAVORITE_REMOVED_SUCCESS' => 'Đã xóa phim khỏi danh sách yêu thích',
+
+    // Review Success
+    'REVIEW_FETCHED_SUCCESS' => 'Lấy thông tin đánh giá thành công',
+    'REVIEW_CREATED_SUCCESS' => 'Đánh giá phim thành công',
 ];

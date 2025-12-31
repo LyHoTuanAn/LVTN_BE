@@ -9,11 +9,13 @@ use App\Http\Controllers\Admin\RoomTypeController;
 use App\Http\Controllers\Admin\ShowtimeController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\CinemaController;
+use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Web\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Admin\QrTicketController;
 use App\Http\Controllers\Admin\BookingController;
+
 
 
 Route::get('/api-docs', function () {
@@ -174,6 +176,14 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::get('/{id}/edit', [VoucherController::class, 'edit'])->name('edit');
         Route::put('/{id}', [VoucherController::class, 'update'])->name('update');
         Route::delete('/{id}', [VoucherController::class, 'destroy'])->name('destroy');
+    });
+
+    // Admin Reviews Management
+    Route::prefix('admin/reviews')->name('admin.reviews.')->group(function () {
+        Route::get('/', [ReviewController::class, 'index'])->name('index');
+        Route::get('/{id}', [ReviewController::class, 'show'])->name('show');
+        Route::post('/{id}/update-status', [ReviewController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{id}', [ReviewController::class, 'destroy'])->name('destroy');
     });
 });
 

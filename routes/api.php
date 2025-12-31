@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ShowtimeController;
 use App\Http\Controllers\Api\StripeWebhookController;
 use App\Http\Controllers\Api\FavoriteMovieController;
@@ -104,6 +105,12 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
         Route::get('/', [FavoriteMovieController::class, 'index']);
         Route::post('/{movieId}', [FavoriteMovieController::class, 'store'])->where('movieId', '[0-9]+');
         Route::delete('/{movieId}', [FavoriteMovieController::class, 'destroy'])->where('movieId', '[0-9]+');
+    });
+
+    // Review routes
+    Route::prefix('reviews')->group(function () {
+        Route::post('/', [ReviewController::class, 'store']);
+        Route::get('/{id}', [ReviewController::class, 'show'])->where('id', '[0-9]+');
     });
 
     // Admin Cinema routes (require admin role)

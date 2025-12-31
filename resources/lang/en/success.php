@@ -58,4 +58,8 @@ return [
     'FAVORITES_FETCHED_SUCCESS' => 'Favorite movies fetched successfully',
     'FAVORITE_ADDED_SUCCESS' => 'Movie added to favorites successfully',
     'FAVORITE_REMOVED_SUCCESS' => 'Movie removed from favorites successfully',
+
+    // Review Success
+    'REVIEW_FETCHED_SUCCESS' => 'Review fetched successfully',
+    'REVIEW_CREATED_SUCCESS' => 'Review created successfully',
 ];

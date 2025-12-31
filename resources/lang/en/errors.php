@@ -81,4 +81,13 @@ return [
     'MOVIE_NOT_FOUND' => 'Movie not found',
     'MOVIE_ALREADY_FAVORITED' => 'Movie is already in your favorites',
     'FAVORITE_NOT_FOUND' => 'Movie is not in your favorites',
+
+    // Review errors
+    'REVIEW_NOT_FOUND' => 'Review not found',
+    'ALREADY_REVIEWED' => 'You have already reviewed this movie',
+    'BOOKING_NOT_BELONG_TO_USER' => 'This booking does not belong to you',
+    'BOOKING_MOVIE_MISMATCH' => 'The booking is not for this movie',
+    'SHOWTIME_NOT_ENDED' => 'You can only review after the movie has ended',
+    'BOOKING_NOT_COMPLETED' => 'Your booking must be completed to review',
+    'REVIEW_NOT_BELONG_TO_USER' => 'This review does not belong to you',
 ];

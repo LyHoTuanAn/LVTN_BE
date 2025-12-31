@@ -16,10 +16,25 @@ class ReviewResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => new UserResource($this->whenLoaded('user')),
-            'movie_id' => $this->movie_id,
             'rating' => $this->rating,
             'comment' => $this->comment,
+            'status' => $this->status,
+            'user' => new UserResource($this->whenLoaded('user')),
+            'movie' => $this->when(
+                $this->relationLoaded('movie'),
+                fn() => [
+                    'id' => $this->movie->id,
+                    'title' => $this->movie->title,
+                    'poster' => new MediaFileResource($this->movie->whenLoaded('poster')),
+                ]
+            ),
+            'booking' => $this->when(
+                $this->relationLoaded('booking'),
+                fn() => $this->booking ? [
+                    'id' => $this->booking->id,
+                    'code' => $this->booking->code,
+                ] : null
+            ),
             'media' => new MediaFileResource($this->whenLoaded('media')),
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),

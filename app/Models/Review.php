@@ -10,8 +10,10 @@ class Review extends Model
     protected $fillable = [
         'user_id',
         'movie_id',
+        'booking_id',
         'rating',
         'comment',
+        'status',
         'media_id',
     ];
 
@@ -39,10 +41,26 @@ class Review extends Model
     }
 
     /**
+     * Get the booking associated with this review
+     */
+    public function booking(): BelongsTo
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
+    /**
      * Get the media file attached to this review
      */
     public function media(): BelongsTo
     {
         return $this->belongsTo(MediaFile::class, 'media_id');
+    }
+
+    /**
+     * Scope to filter only approved reviews
+     */
+    public function scopeApproved($query)
+    {
+        return $query->where('status', 'approved');
     }
 }
