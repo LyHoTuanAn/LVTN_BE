@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⭐ Reviews API - Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.6; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; background: #1a1a1a; border-radius: 12px; padding: 40px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); }
+        h1 { color: #4a9eff; font-size: 2.5em; margin-bottom: 20px; text-align: center; border-bottom: 3px solid #4a9eff; padding-bottom: 15px; }
+        h2 { color: #6bc46b; font-size: 2em; margin-top: 40px; margin-bottom: 20px; padding: 15px; background: #252525; border-left: 4px solid #6bc46b; border-radius: 6px; }
+        h3 { color: #ffa94d; font-size: 1.5em; margin-top: 30px; margin-bottom: 15px; padding: 10px; background: #2a2a2a; border-left: 3px solid #ffa94d; border-radius: 4px; }
+        h4 { color: #9d9dff; font-size: 1.2em; margin-top: 20px; margin-bottom: 10px; }
+        p { margin-bottom: 15px; color: #d0d0d0; }
+        .section-box { background: #222222; border: 1px solid #333333; border-radius: 8px; padding: 25px; margin: 25px 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .info-box { background: #1e3a5f; border-left: 4px solid #4a9eff; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .success-box { background: #1e3a2e; border-left: 4px solid #6bc46b; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .error-box { background: #3a1e1e; border-left: 4px solid #ff6b9d; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        code { background: #2a2a2a; color: #ff6b9d; padding: 3px 8px; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; }
+        pre { background: #1a1a1a; border: 1px solid #333333; border-radius: 8px; padding: 20px; overflow-x: auto; margin: 20px 0; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5); }
+        pre code { background: transparent; color: #e0e0e0; padding: 0; font-size: 0.95em; line-height: 1.5; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #222222; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        th { background: #2a2a2a; color: #4a9eff; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #4a9eff; }
+        td { padding: 12px 15px; border-bottom: 1px solid #333333; color: #d0d0d0; }
+        tr:hover { background: #2a2a2a; }
+        tr:last-child td { border-bottom: none; }
+        ul, ol { margin: 15px 0; padding-left: 30px; }
+        li { margin: 8px 0; color: #d0d0d0; }
+        hr { border: none; border-top: 2px solid #333333; margin: 40px 0; }
+        .method-badge { display: inline-block; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 0.9em; margin-right: 10px; }
+        .method-post { background: #4a9eff; color: #fff; }
+        .method-get { background: #6bc46b; color: #fff; }
+        .method-delete { background: #ff6b9d; color: #fff; }
+        .required { color: #ff6b9d; font-weight: bold; }
+        .url-box { background: #1a1a1a; border: 1px solid #4a9eff; border-radius: 6px; padding: 15px; margin: 15px 0; font-family: 'Consolas', 'Monaco', monospace; color: #4a9eff; font-size: 1.1em; }
+        @media (max-width: 768px) { .container { padding: 20px; } h1 { font-size: 2em; } h2 { font-size: 1.5em; } table { font-size: 0.9em; } th, td { padding: 10px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⭐ Reviews API</h1>
+        
+        <div class="section-box">
+            <h2 id="overview">Tổng quan</h2>
+            <p>API Reviews cho phép người dùng đánh giá phim sau khi đã xem. Hệ thống áp dụng thiết kế <strong>đánh giá theo PHIM với ràng buộc Booking</strong> để đảm bảo độ tin cậy của đánh giá.</p>
+            
+            <div class="info-box">
+                <h4>Đặc điểm:</h4>
+                <ul>
+                    <li>Mỗi user chỉ được đánh giá <strong>1 lần/phim</strong> (unique <code>[user_id, movie_id]</code>)</li>
+                    <li>Nếu có <code>booking_id</code>, chỉ được review <strong>sau khi suất chiếu kết thúc</strong></li>
+                    <li>Booking phải ở trạng thái <code>completed</code></li>
+                    <li>Rating từ 1-5 sao</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h2 id="endpoints">Endpoints</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Endpoint</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="method-badge method-post">POST</span></td>
+                        <td><code>/api/reviews</code></td>
+                        <td>Tạo đánh giá mới</td>
+                    </tr>
+                    <tr>
+                        <td><span class="method-badge method-get">GET</span></td>
+                        <td><code>/api/reviews/{id}</code></td>
+                        <td>Xem chi tiết đánh giá</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section-box">
+            <h2 id="create">1. Tạo đánh giá mới</h2>
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/reviews
+            </div>
+
+            <div class="info-box">
+                <p><strong>Headers bắt buộc:</strong></p>
+                <ul>
+                    <li><code>X-Api-Key</code>: your-api-key</li>
+                    <li><code>Authorization</code>: Bearer {access_token}</li>
+                    <li><code>Content-Type</code>: application/json</li>
+                    <li><code>Language</code>: vi</li>
+                </ul>
+            </div>
+
+            <h3>Body Parameters</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Kiểu</th>
+                        <th>Bắt buộc</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>movie_id</td>
+                        <td>integer</td>
+                        <td class="required">✅</td>
+                        <td>ID phim cần đánh giá</td>
+                    </tr>
+                    <tr>
+                        <td>booking_id</td>
+                        <td>integer</td>
+                        <td>❌</td>
+                        <td>ID đặt vé (tùy chọn, tăng độ tin cậy)</td>
+                    </tr>
+                    <tr>
+                        <td>rating</td>
+                        <td>integer</td>
+                        <td class="required">✅</td>
+                        <td>Số sao (1-5)</td>
+                    </tr>
+                    <tr>
+                        <td>comment</td>
+                        <td>string</td>
+                        <td>❌</td>
+                        <td>Nội dung đánh giá (tối đa 1000 ký tự)</td>
+                    </tr>
+                    <tr>
+                        <td>media_id</td>
+                        <td>integer</td>
+                        <td>❌</td>
+                        <td>ID file media đính kèm</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Example Request</h3>
+            <pre><code>{
+    "movie_id": 5,
+    "booking_id": 45,
+    "rating": 5,
+    "comment": "Phim rất hay, diễn xuất tuyệt vời!",
+    "media_id": null
+}</code></pre>
+
+            <h3>Response thành công (201 Created)</h3>
+            <pre><code>{
+    "success": true,
+    "code": "REVIEW_CREATED_SUCCESS",
+    "message": "Đánh giá phim thành công",
+    "data": {
+        "id": 25,
+        "rating": 5,
+        "comment": "Phim rất hay, diễn xuất tuyệt vời!",
+        "status": "approved",
+        "user": {
+            "id": 10,
+            "name": "Nguyễn Văn A"
+        },
+        "movie": {
+            "id": 5,
+            "title": "Avengers: Endgame",
+            "poster": {
+                "url": "https://example.com/poster.jpg"
+            }
+        },
+        "booking": {
+            "id": 45,
+            "code": "MWFMTIT9"
+        },
+        "media": null,
+        "created_at": "2025-12-31 10:30:00",
+        "updated_at": "2025-12-31 10:30:00"
+    }
+}</code></pre>
+
+            <h3>User đã đánh giá rồi</h3>
+            <div class="error-box">
+                <pre><code>{
+    "success": false,
+    "code": "ALREADY_REVIEWED",
+    "message": "Bạn đã đánh giá phim này rồi"
+}</code></pre>
+            </div>
+
+            <h3>Phim chưa chiếu xong</h3>
+            <div class="error-box">
+                <pre><code>{
+    "success": false,
+    "code": "SHOWTIME_NOT_ENDED",
+    "message": "Bạn chỉ có thể đánh giá sau khi phim kết thúc"
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h2 id="show">2. Xem chi tiết đánh giá</h2>
+            <div class="url-box">
+                <span class="method-badge method-get">GET</span> /api/reviews/{id}
+            </div>
+
+            <div class="info-box">
+                <p><strong>Headers bắt buộc:</strong></p>
+                <ul>
+                    <li><code>X-Api-Key</code>: your-api-key</li>
+                    <li><code>Authorization</code>: Bearer {access_token}</li>
+                    <li><code>Language</code>: vi</li>
+                </ul>
+            </div>
+
+            <h3>Response thành công (200 OK)</h3>
+            <pre><code>{
+    "success": true,
+    "code": "REVIEW_FETCHED_SUCCESS",
+    "message": "Lấy thông tin đánh giá thành công",
+    "data": {
+        "id": 25,
+        "rating": 5,
+        "comment": "Phim rất hay!",
+        "status": "approved",
+        "user": {
+            "id": 10,
+            "name": "Nguyễn Văn A"
+        },
+        "movie": {
+            "id": 5,
+            "title": "Avengers: Endgame",
+            "poster": {
+                "url": "https://example.com/poster.jpg"
+            }
+        },
+        "booking": {
+            "id": 45,
+            "code": "MWFMTIT9"
+        },
+        "media": null,
+        "created_at": "2025-12-31 10:30:00",
+        "updated_at": "2025-12-31 10:30:00"
+    }
+}</code></pre>
+
+            <h3>Không tìm thấy</h3>
+            <div class="error-box">
+                <pre><code>{
+    "success": false,
+    "code": "REVIEW_NOT_FOUND",
+    "message": "Không tìm thấy đánh giá"
+}</code></pre>
+            </div>
+        </div>
+
+        <div class="section-box">
+            <h2 id="errors">Error Codes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Message (EN)</th>
+                        <th>Message (VI)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>REVIEW_NOT_FOUND</code></td>
+                        <td>Review not found</td>
+                        <td>Không tìm thấy đánh giá</td>
+                    </tr>
+                    <tr>
+                        <td><code>ALREADY_REVIEWED</code></td>
+                        <td>You have already reviewed this movie</td>
+                        <td>Bạn đã đánh giá phim này rồi</td>
+                    </tr>
+                    <tr>
+                        <td><code>BOOKING_NOT_BELONG_TO_USER</code></td>
+                        <td>This booking does not belong to you</td>
+                        <td>Đặt vé này không thuộc về bạn</td>
+                    </tr>
+                    <tr>
+                        <td><code>BOOKING_MOVIE_MISMATCH</code></td>
+                        <td>The booking is not for this movie</td>
+                        <td>Đặt vé này không phải cho phim này</td>
+                    </tr>
+                    <tr>
+                        <td><code>SHOWTIME_NOT_ENDED</code></td>
+                        <td>You can only review after the movie has ended</td>
+                        <td>Bạn chỉ có thể đánh giá sau khi phim kết thúc</td>
+                    </tr>
+                    <tr>
+                        <td><code>BOOKING_NOT_COMPLETED</code></td>
+                        <td>Your booking must be completed to review</td>
+                        <td>Đặt vé của bạn phải được hoàn thành để đánh giá</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

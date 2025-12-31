@@ -292,6 +292,18 @@
                     <span class="doc-link">Xem tài liệu →</span>
                 </div>
             </a>
+
+            <a href="/api-docs/reviews" class="doc-card">
+                <div class="doc-icon">⭐</div>
+                <div class="doc-title">Reviews API</div>
+                <div class="doc-description">
+                    API đánh giá phim. Cho phép người dùng tạo đánh giá phim (1-5 sao) với nhận xét.
+                    Mỗi user chỉ được đánh giá 1 lần/phim. Có thể liên kết với booking để tăng độ tin cậy. API này yêu cầu authentication token.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
         </div>
 
         <div class="info-box" style="margin-top: 40px;">
