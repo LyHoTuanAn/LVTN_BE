@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤️ Favorite Movies API - Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.6; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; background: #1a1a1a; border-radius: 12px; padding: 40px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); }
+        h1 { color: #4a9eff; font-size: 2.5em; margin-bottom: 20px; text-align: center; border-bottom: 3px solid #4a9eff; padding-bottom: 15px; }
+        h2 { color: #6bc46b; font-size: 2em; margin-top: 40px; margin-bottom: 20px; padding: 15px; background: #252525; border-left: 4px solid #6bc46b; border-radius: 6px; }
+        h3 { color: #ffa94d; font-size: 1.5em; margin-top: 30px; margin-bottom: 15px; padding: 10px; background: #2a2a2a; border-left: 3px solid #ffa94d; border-radius: 4px; }
+        h4 { color: #9d9dff; font-size: 1.2em; margin-top: 20px; margin-bottom: 10px; }
+        p { margin-bottom: 15px; color: #d0d0d0; }
+        .section-box { background: #222222; border: 1px solid #333333; border-radius: 8px; padding: 25px; margin: 25px 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .info-box { background: #1e3a5f; border-left: 4px solid #4a9eff; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .success-box { background: #1e3a2e; border-left: 4px solid #6bc46b; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .error-box { background: #3a1e1e; border-left: 4px solid #ff6b9d; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        code { background: #2a2a2a; color: #ff6b9d; padding: 3px 8px; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; }
+        pre { background: #1a1a1a; border: 1px solid #333333; border-radius: 8px; padding: 20px; overflow-x: auto; margin: 20px 0; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5); }
+        pre code { background: transparent; color: #e0e0e0; padding: 0; font-size: 0.95em; line-height: 1.5; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #222222; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        th { background: #2a2a2a; color: #4a9eff; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #4a9eff; }
+        td { padding: 12px 15px; border-bottom: 1px solid #333333; color: #d0d0d0; }
+        tr:hover { background: #2a2a2a; }
+        tr:last-child td { border-bottom: none; }
+        ul, ol { margin: 15px 0; padding-left: 30px; }
+        li { margin: 8px 0; color: #d0d0d0; }
+        hr { border: none; border-top: 2px solid #333333; margin: 40px 0; }
+        .method-badge { display: inline-block; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 0.9em; margin-right: 10px; }
+        .method-post { background: #4a9eff; color: #fff; }
+        .method-get { background: #6bc46b; color: #fff; }
+        .method-delete { background: #ff6b9d; color: #fff; }
+        .required { color: #ff6b9d; font-weight: bold; }
+        .url-box { background: #1a1a1a; border: 1px solid #4a9eff; border-radius: 6px; padding: 15px; margin: 15px 0; font-family: 'Consolas', 'Monaco', monospace; color: #4a9eff; font-size: 1.1em; }
+        @media (max-width: 768px) { .container { padding: 20px; } h1 { font-size: 2em; } h2 { font-size: 1.5em; } table { font-size: 0.9em; } th, td { padding: 10px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❤️ Favorite Movies API</h1>
+        
+        <div class="section-box">
+            <p>API quản lý danh sách phim yêu thích của người dùng.</p>
+        </div>
+
+        <div class="info-box">
+            <strong>Headers bắt buộc:</strong><br>
+            <code>X-Api-Key</code>: API key do server cấp<br>
+            <code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)<br>
+            <code>Authorization</code>: <code>Bearer {token}</code> (JWT token từ login)
+        </div>
+
+        <h2>1. Lấy danh sách phim yêu thích</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-get">GET</span> /api/favorites
+            </div>
+
+            <h3>Query Parameters</h3>
+            <table>
+                <thead>
+                    <tr><th>Tham số</th><th>Kiểu</th><th>Bắt buộc</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>status</code></td><td>string</td><td>Không</td><td>Filter theo trạng thái phim (COMING_SOON, UPCOMING, NOW_SHOWING)</td></tr>
+                    <tr><td><code>search</code></td><td>string</td><td>Không</td><td>Tìm kiếm theo tên phim</td></tr>
+                    <tr><td><code>sort_by</code></td><td>string</td><td>Không</td><td>Cột sắp xếp (created_at, title, release_date). Mặc định: created_at</td></tr>
+                    <tr><td><code>sort_order</code></td><td>string</td><td>Không</td><td>Chiều sắp xếp (asc, desc). Mặc định: desc</td></tr>
+                    <tr><td><code>per_page</code></td><td>integer</td><td>Không</td><td>Số phim mỗi trang. Mặc định: 15</td></tr>
+                    <tr><td><code>page</code></td><td>integer</td><td>Không</td><td>Trang hiện tại</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response thành công</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "FAVORITES_FETCHED_SUCCESS",
+    "message": "Favorite movies fetched successfully",
+    "data": {
+        "data": [
+            {
+                "id": 1,
+                "title": "Avengers: Endgame",
+                "description": "After the devastating events...",
+                "duration": 181,
+                "release_date": "2019-04-26",
+                "status": "NOW_SHOWING",
+                "computed_status": "NOW_SHOWING",
+                "status_label": "Đang chiếu",
+                "genre": "Action, Adventure",
+                "age_classification": "T13",
+                "language": "English",
+                "poster": {
+                    "id": 1,
+                    "url": "https://example.com/poster.jpg"
+                },
+                "is_favorited": true,
+                "favorited_at": "2024-12-31 09:00:00"
+            }
+        ],
+        "meta": {
+            "current_page": 1,
+            "last_page": 5,
+            "per_page": 15,
+            "total": 72
+        }
+    }
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>2. Thêm phim vào danh sách yêu thích</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/favorites/{movieId}
+            </div>
+
+            <h3>Path Parameters</h3>
+            <table>
+                <thead>
+                    <tr><th>Tham số</th><th>Kiểu</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>movieId</code></td><td>integer</td><td>ID của phim cần thêm</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response thành công (201)</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "FAVORITE_ADDED_SUCCESS",
+    "message": "Movie added to favorites successfully",
+    "data": {
+        "movie_id": 1,
+        "is_favorited": true
+    }
+}</code></pre>
+            </div>
+
+            <h3>Response lỗi</h3>
+            <div class="error-box">
+                <pre><code>// Phim không tồn tại (404)
+{
+    "success": false,
+    "code": "MOVIE_NOT_FOUND",
+    "message": "Movie not found"
+}
+
+// Phim đã được yêu thích (400)
+{
+    "success": false,
+    "code": "MOVIE_ALREADY_FAVORITED",
+    "message": "Movie is already in your favorites"
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>3. Xóa phim khỏi danh sách yêu thích</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-delete">DELETE</span> /api/favorites/{movieId}
+            </div>
+
+            <h3>Path Parameters</h3>
+            <table>
+                <thead>
+                    <tr><th>Tham số</th><th>Kiểu</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>movieId</code></td><td>integer</td><td>ID của phim cần xóa</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response thành công (200)</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "FAVORITE_REMOVED_SUCCESS",
+    "message": "Movie removed from favorites successfully",
+    "data": {
+        "movie_id": 1,
+        "is_favorited": false
+    }
+}</code></pre>
+            </div>
+
+            <h3>Response lỗi</h3>
+            <div class="error-box">
+                <pre><code>// Phim không trong danh sách yêu thích (404)
+{
+    "success": false,
+    "code": "FAVORITE_NOT_FOUND",
+    "message": "Movie is not in your favorites"
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>Lưu ý</h2>
+        <div class="section-box">
+            <ul>
+                <li>Trường <code>is_favorited</code> cũng được trả về trong <code>MovieResource</code> khi gọi API lấy danh sách phim hoặc chi tiết phim</li>
+                <li>Nếu user chưa đăng nhập, <code>is_favorited</code> sẽ luôn là <code>false</code></li>
+            </ul>
+        </div>
+
+        <h2>Error Codes</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr><th>Code</th><th>HTTP Status</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>MOVIE_NOT_FOUND</code></td><td>404</td><td>Phim không tồn tại</td></tr>
+                    <tr><td><code>MOVIE_ALREADY_FAVORITED</code></td><td>400</td><td>Phim đã có trong danh sách yêu thích</td></tr>
+                    <tr><td><code>FAVORITE_NOT_FOUND</code></td><td>404</td><td>Phim không có trong danh sách yêu thích</td></tr>
+                    <tr><td><code>UNAUTHORIZED</code></td><td>401</td><td>Chưa đăng nhập hoặc token hết hạn</td></tr>
+                    <tr><td><code>INVALID_API_KEY</code></td><td>401</td><td>API key không hợp lệ</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

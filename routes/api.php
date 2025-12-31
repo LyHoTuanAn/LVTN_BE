@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\MovieController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ShowtimeController;
 use App\Http\Controllers\Api\StripeWebhookController;
+use App\Http\Controllers\Api\FavoriteMovieController;
 use App\Http\Controllers\Api\VNPayController;
 use Illuminate\Support\Facades\Route;
 
@@ -96,6 +97,13 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
     // Media routes
     Route::prefix('media')->group(function () {
         Route::post('/upload-image', [MediaController::class, 'uploadImage']);
+    });
+
+    // Favorite movies routes
+    Route::prefix('favorites')->group(function () {
+        Route::get('/', [FavoriteMovieController::class, 'index']);
+        Route::post('/{movieId}', [FavoriteMovieController::class, 'store'])->where('movieId', '[0-9]+');
+        Route::delete('/{movieId}', [FavoriteMovieController::class, 'destroy'])->where('movieId', '[0-9]+');
     });
 
     // Admin Cinema routes (require admin role)

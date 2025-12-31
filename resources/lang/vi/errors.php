@@ -76,4 +76,9 @@ return [
     'BOOKING_ALREADY_COMPLETED' => 'Vé này đã được sử dụng',
     'BOOKING_CANCELED' => 'Đặt vé này đã bị hủy',
     'BOOKING_NOT_PAID' => 'Đặt vé này chưa được thanh toán',
+
+    // Favorite Movie errors
+    'MOVIE_NOT_FOUND' => 'Không tìm thấy phim',
+    'MOVIE_ALREADY_FAVORITED' => 'Phim đã có trong danh sách yêu thích',
+    'FAVORITE_NOT_FOUND' => 'Phim không có trong danh sách yêu thích',
 ];

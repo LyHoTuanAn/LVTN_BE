@@ -268,6 +268,30 @@
                     <span class="doc-link">Xem tài liệu →</span>
                 </div>
             </a>
+
+            <a href="/api-docs/bookings" class="doc-card">
+                <div class="doc-icon">🎫</div>
+                <div class="doc-title">Bookings API</div>
+                <div class="doc-description">
+                    API quản lý đặt vé xem phim. Bao gồm: lấy danh sách đặt vé, tạo đặt vé mới (với Stripe hoặc VNPay), 
+                    xem chi tiết đặt vé, và hủy đặt vé. API này yêu cầu authentication token.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
+
+            <a href="/api-docs/favorite-movies" class="doc-card">
+                <div class="doc-icon">❤️</div>
+                <div class="doc-title">Favorite Movies API</div>
+                <div class="doc-description">
+                    API quản lý danh sách phim yêu thích của người dùng. Bao gồm: lấy danh sách phim yêu thích, 
+                    thêm phim vào yêu thích, và xóa phim khỏi danh sách yêu thích. API này yêu cầu authentication token.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
         </div>
 
         <div class="info-box" style="margin-top: 40px;">

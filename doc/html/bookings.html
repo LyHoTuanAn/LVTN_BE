@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎫 Bookings API - Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.6; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; background: #1a1a1a; border-radius: 12px; padding: 40px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); }
+        h1 { color: #4a9eff; font-size: 2.5em; margin-bottom: 20px; text-align: center; border-bottom: 3px solid #4a9eff; padding-bottom: 15px; }
+        h2 { color: #6bc46b; font-size: 2em; margin-top: 40px; margin-bottom: 20px; padding: 15px; background: #252525; border-left: 4px solid #6bc46b; border-radius: 6px; }
+        h3 { color: #ffa94d; font-size: 1.5em; margin-top: 30px; margin-bottom: 15px; padding: 10px; background: #2a2a2a; border-left: 3px solid #ffa94d; border-radius: 4px; }
+        h4 { color: #9d9dff; font-size: 1.2em; margin-top: 20px; margin-bottom: 10px; }
+        p { margin-bottom: 15px; color: #d0d0d0; }
+        .section-box { background: #222222; border: 1px solid #333333; border-radius: 8px; padding: 25px; margin: 25px 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .info-box { background: #1e3a5f; border-left: 4px solid #4a9eff; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .success-box { background: #1e3a2e; border-left: 4px solid #6bc46b; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .error-box { background: #3a1e1e; border-left: 4px solid #ff6b9d; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        code { background: #2a2a2a; color: #ff6b9d; padding: 3px 8px; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; }
+        pre { background: #1a1a1a; border: 1px solid #333333; border-radius: 8px; padding: 20px; overflow-x: auto; margin: 20px 0; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5); }
+        pre code { background: transparent; color: #e0e0e0; padding: 0; font-size: 0.95em; line-height: 1.5; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #222222; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        th { background: #2a2a2a; color: #4a9eff; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #4a9eff; }
+        td { padding: 12px 15px; border-bottom: 1px solid #333333; color: #d0d0d0; }
+        tr:hover { background: #2a2a2a; }
+        tr:last-child td { border-bottom: none; }
+        ul, ol { margin: 15px 0; padding-left: 30px; }
+        li { margin: 8px 0; color: #d0d0d0; }
+        hr { border: none; border-top: 2px solid #333333; margin: 40px 0; }
+        .method-badge { display: inline-block; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 0.9em; margin-right: 10px; }
+        .method-post { background: #4a9eff; color: #fff; }
+        .method-get { background: #6bc46b; color: #fff; }
+        .method-delete { background: #ff6b9d; color: #fff; }
+        .required { color: #ff6b9d; font-weight: bold; }
+        .url-box { background: #1a1a1a; border: 1px solid #4a9eff; border-radius: 6px; padding: 15px; margin: 15px 0; font-family: 'Consolas', 'Monaco', monospace; color: #4a9eff; font-size: 1.1em; }
+        @media (max-width: 768px) { .container { padding: 20px; } h1 { font-size: 2em; } h2 { font-size: 1.5em; } table { font-size: 0.9em; } th, td { padding: 10px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎫 Bookings API</h1>
+        
+        <div class="section-box">
+            <p>API quản lý đặt vé xem phim cho người dùng.</p>
+        </div>
+
+        <div class="info-box">
+            <strong>Headers bắt buộc:</strong><br>
+            <code>X-Api-Key</code>: API key do server cấp<br>
+            <code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)<br>
+            <code>Authorization</code>: <code>Bearer {token}</code> (JWT token từ login)
+        </div>
+
+        <h2>1. Lấy danh sách đặt vé</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-get">GET</span> /api/bookings
+            </div>
+
+            <h3>Query Parameters</h3>
+            <table>
+                <thead>
+                    <tr><th>Tham số</th><th>Kiểu</th><th>Bắt buộc</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>status</code></td><td>string</td><td>Không</td><td>Filter theo trạng thái (pending, confirmed, completed, cancelled)</td></tr>
+                    <tr><td><code>page</code></td><td>integer</td><td>Không</td><td>Trang hiện tại</td></tr>
+                    <tr><td><code>per_page</code></td><td>integer</td><td>Không</td><td>Số booking mỗi trang. Mặc định: 15</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response thành công</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "BOOKINGS_FETCHED_SUCCESS",
+    "message": "Bookings fetched successfully",
+    "data": [
+        {
+            "id": 1,
+            "code": "MWFMTIT9",
+            "status": "confirmed",
+            "is_paid": true,
+            "price": 150000,
+            "total_price": 135000,
+            "voucher_amount": 15000,
+            "payment_method": "stripe",
+            "showtime": {...},
+            "seats": [...],
+            "voucher": {...}
+        }
+    ]
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>2. Tạo đặt vé mới</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/bookings
+            </div>
+
+            <h3>Request Body</h3>
+            <table>
+                <thead>
+                    <tr><th>Field</th><th>Kiểu</th><th>Bắt buộc</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>showtime_id</code></td><td>integer</td><td><span class="required">✓</span></td><td>ID của suất chiếu</td></tr>
+                    <tr><td><code>seat_ids</code></td><td>array</td><td><span class="required">✓</span></td><td>Mảng ID các ghế muốn đặt</td></tr>
+                    <tr><td><code>voucher_code</code></td><td>string</td><td>Không</td><td>Mã voucher giảm giá</td></tr>
+                    <tr><td><code>payment_method</code></td><td>string</td><td>Không</td><td>stripe hoặc vnpay. Mặc định: stripe</td></tr>
+                    <tr><td><code>bank_code</code></td><td>string</td><td>Không</td><td>Mã ngân hàng cho VNPay (optional)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Request Example</h3>
+            <pre><code>{
+    "showtime_id": 1,
+    "seat_ids": [1, 2, 3],
+    "voucher_code": "NEWYEAR2024",
+    "payment_method": "stripe"
+}</code></pre>
+
+            <h3>Response thành công (201)</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "BOOKING_CREATED_SUCCESS",
+    "message": "Booking created successfully",
+    "data": {
+        "booking": {
+            "id": 1,
+            "code": "MWFMTIT9",
+            "status": "pending",
+            "is_paid": false,
+            "price": 150000,
+            "total_price": 135000,
+            ...
+        },
+        "payment": {
+            "client_secret": "pi_xxx_secret_xxx",  // Stripe
+            "payment_url": "https://...",           // VNPay
+            ...
+        }
+    }
+}</code></pre>
+            </div>
+
+            <h3>Response lỗi</h3>
+            <div class="error-box">
+                <pre><code>// Ghế đã được đặt
+{
+    "success": false,
+    "code": "SEAT_ALREADY_BOOKED",
+    "message": "Seat already booked"
+}
+
+// Voucher không hợp lệ
+{
+    "success": false,
+    "code": "VOUCHER_INVALID",
+    "message": "Invalid or expired voucher"
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>3. Xem chi tiết đặt vé</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-get">GET</span> /api/bookings/{id}
+            </div>
+
+            <h3>Response thành công</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "BOOKING_FETCHED_SUCCESS",
+    "message": "Booking fetched successfully",
+    "data": {
+        "id": 1,
+        "code": "MWFMTIT9",
+        "status": "confirmed",
+        "is_paid": true,
+        "price": 150000,
+        "total_price": 135000,
+        "voucher_amount": 15000,
+        "payment_method": "stripe",
+        "showtime": {
+            "id": 1,
+            "date": "2024-12-31",
+            "start_time": "19:00",
+            "movie": {
+                "id": 1,
+                "title": "Avengers: Endgame",
+                "poster": {...}
+            },
+            "room": {
+                "id": 1,
+                "name": "Room A",
+                "cinema": {
+                    "name": "CGV Vincom",
+                    "address": "123 Nguyen Hue"
+                }
+            }
+        },
+        "seats": [
+            {"id": 1, "row": "A", "number": 5, "type": "standard"}
+        ],
+        "voucher": {...}
+    }
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>4. Hủy đặt vé</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-post">POST</span> /api/bookings/{id}/cancel
+            </div>
+
+            <h3>Response thành công</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "BOOKING_CANCELLED_SUCCESS",
+    "message": "Booking cancelled successfully",
+    "data": null
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>Booking Status</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr><th>Status</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>pending</code></td><td>Đang chờ thanh toán</td></tr>
+                    <tr><td><code>confirmed</code></td><td>Đã xác nhận (đã thanh toán)</td></tr>
+                    <tr><td><code>completed</code></td><td>Đã hoàn thành (đã sử dụng vé)</td></tr>
+                    <tr><td><code>cancelled</code></td><td>Đã hủy</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Error Codes</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr><th>Code</th><th>HTTP Status</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>SEAT_ALREADY_BOOKED</code></td><td>400</td><td>Ghế đã được đặt</td></tr>
+                    <tr><td><code>SHOWTIME_NOT_FOUND</code></td><td>404</td><td>Không tìm thấy suất chiếu</td></tr>
+                    <tr><td><code>SHOWTIME_INVALID_STATUS</code></td><td>400</td><td>Suất chiếu không ở trạng thái cho phép đặt vé</td></tr>
+                    <tr><td><code>SEAT_NOT_FOUND</code></td><td>404</td><td>Ghế không tồn tại</td></tr>
+                    <tr><td><code>VOUCHER_INVALID</code></td><td>400</td><td>Voucher không hợp lệ hoặc đã hết hạn</td></tr>
+                    <tr><td><code>BOOKING_NOT_FOUND</code></td><td>404</td><td>Không tìm thấy đặt vé</td></tr>
+                    <tr><td><code>BOOKING_CANCEL_FAILED</code></td><td>400</td><td>Hủy đặt vé thất bại</td></tr>
+                    <tr><td><code>UNAUTHORIZED</code></td><td>401</td><td>Chưa đăng nhập hoặc token hết hạn</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

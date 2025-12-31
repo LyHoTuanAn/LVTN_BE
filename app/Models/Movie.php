@@ -190,6 +190,15 @@ class Movie extends Model
     }
 
     /**
+     * Get all users who favorited this movie (with pivot data)
+     */
+    public function favoritedByUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'favorite_movies')
+            ->withPivot('created_at');
+    }
+
+    /**
      * Get all directors for this movie
      */
     public function directors(): HasMany

@@ -76,4 +76,9 @@ return [
     'BOOKING_ALREADY_COMPLETED' => 'This ticket has already been used',
     'BOOKING_CANCELED' => 'This booking has been canceled',
     'BOOKING_NOT_PAID' => 'This booking has not been paid yet',
+
+    // Favorite Movie errors
+    'MOVIE_NOT_FOUND' => 'Movie not found',
+    'MOVIE_ALREADY_FAVORITED' => 'Movie is already in your favorites',
+    'FAVORITE_NOT_FOUND' => 'Movie is not in your favorites',
 ];

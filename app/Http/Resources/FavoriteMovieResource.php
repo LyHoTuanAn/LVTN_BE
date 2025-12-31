@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MovieResource extends JsonResource
+class FavoriteMovieResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -28,27 +28,8 @@ class MovieResource extends JsonResource
             'language' => $this->language,
             'poster' => new MediaFileResource($this->whenLoaded('poster')),
             'trailer' => new MediaFileResource($this->whenLoaded('trailer')),
-            'showtimes' => ShowtimeResource::collection($this->whenLoaded('showtimes')),
-            'directors' => DirectorMovieResource::collection($this->whenLoaded('directors')),
-            'actors' => ActorMovieResource::collection($this->whenLoaded('actors')),
-            'reviews' => ReviewResource::collection($this->whenLoaded('reviews')),
-            'is_favorited' => $this->isFavoritedByCurrentUser(),
-            'created_at' => $this->created_at?->toDateTimeString(),
-            'updated_at' => $this->updated_at?->toDateTimeString(),
+            'is_favorited' => true,
+            'favorited_at' => $this->pivot?->created_at?->toDateTimeString(),
         ];
-    }
-
-    /**
-     * Check if movie is favorited by current authenticated user
-     */
-    protected function isFavoritedByCurrentUser(): bool
-    {
-        $user = auth('api')->user();
-        
-        if (!$user) {
-            return false;
-        }
-
-        return $this->favoritedBy()->where('user_id', $user->id)->exists();
     }
 }

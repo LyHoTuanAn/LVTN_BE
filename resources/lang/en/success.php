@@ -53,4 +53,9 @@ return [
     // QR Ticket Scanner Success
     'BOOKING_COMPLETED_SUCCESS' => 'Ticket verified and booking completed successfully',
     'BOOKING_FOUND' => 'Booking found',
+
+    // Favorite Movie Success
+    'FAVORITES_FETCHED_SUCCESS' => 'Favorite movies fetched successfully',
+    'FAVORITE_ADDED_SUCCESS' => 'Movie added to favorites successfully',
+    'FAVORITE_REMOVED_SUCCESS' => 'Movie removed from favorites successfully',
 ];
