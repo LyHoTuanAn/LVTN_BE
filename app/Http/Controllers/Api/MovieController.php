@@ -24,6 +24,31 @@ class MovieController extends Controller
     }
 
     /**
+     * Search movies with advanced filters
+     * 
+     * @param Request $request
+     *   - keyword: Search in title and description
+     *   - genre: Filter by genre
+     *   - status: Filter by computed status (COMING_SOON, UPCOMING, NOW_SHOWING)
+     *   - age_classification: Filter by age classification (P, K, T13, T16, T18, C)
+     *   - duration_min: Minimum duration in minutes
+     *   - duration_max: Maximum duration in minutes
+     *   - release_year: Filter by release year
+     *   - sort_by: Sort field (title, release_date, duration, created_at)
+     *   - sort_order: Sort order (asc, desc)
+     *   - per_page: Items per page (default 15)
+     */
+    public function search(Request $request)
+    {
+        $movies = $this->movieService->searchMovies($request->all());
+
+        return $this->successResponse(
+            'MOVIES_SEARCH_SUCCESS',
+            MovieResource::collection($movies)
+        );
+    }
+
+    /**
      * Get all movies
      */
     public function index(Request $request)

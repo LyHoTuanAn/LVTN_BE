@@ -48,6 +48,7 @@ Route::middleware(['language', 'api.key'])->group(function () {
     });
 
     // Public movie routes
+    Route::get('/movies/search', [MovieController::class, 'search']);
     Route::get('/movies', [MovieController::class, 'index']);
     Route::get('/movies/{id}', [MovieController::class, 'show']);
     Route::get('/movies/{id}/showtimes', [MovieController::class, 'showtimes']);

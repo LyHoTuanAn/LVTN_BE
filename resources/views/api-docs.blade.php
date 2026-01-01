@@ -245,6 +245,18 @@
                 </div>
             </a>
 
+            <a href="/api-docs/movies-search" class="doc-card">
+                <div class="doc-icon">🔍</div>
+                <div class="doc-title">Movies Search API</div>
+                <div class="doc-description">
+                    API tìm kiếm phim với nhiều bộ lọc nâng cao. Hỗ trợ tìm kiếm theo từ khóa (title, description), 
+                    thể loại, trạng thái, phân loại độ tuổi, thời lượng, năm phát hành, sắp xếp và phân trang. API này là public route.
+                </div>
+                <div class="doc-meta">
+                    <span class="doc-link">Xem tài liệu →</span>
+                </div>
+            </a>
+
             <a href="/api-docs/home" class="doc-card">
                 <div class="doc-icon">🏠</div>
                 <div class="doc-title">Home API</div>

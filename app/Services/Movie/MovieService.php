@@ -9,6 +9,86 @@ use Illuminate\Database\Eloquent\Collection;
 class MovieService
 {
     /**
+     * Search movies with advanced filters
+     * 
+     * @param array $filters
+     *   - keyword: Search in title and description
+     *   - genre: Filter by genre (exact match)
+     *   - status: Filter by computed status (COMING_SOON, UPCOMING, NOW_SHOWING)
+     *   - age_classification: Filter by age classification (P, K, T13, T16, T18, C)
+     *   - duration_min: Minimum duration in minutes
+     *   - duration_max: Maximum duration in minutes  
+     *   - release_year: Filter by release year
+     *   - sort_by: Sort field (title, release_date, duration, created_at)
+     *   - sort_order: Sort order (asc, desc)
+     *   - per_page: Items per page (default 15)
+     */
+    public function searchMovies(array $filters = []): LengthAwarePaginator
+    {
+        $query = Movie::query()->with(['poster', 'trailer', 'showtimes']);
+
+        // Search by keyword (title and description)
+        if (!empty($filters['keyword'])) {
+            $keyword = $filters['keyword'];
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', '%' . $keyword . '%')
+                  ->orWhere('description', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        // Filter by genre
+        if (!empty($filters['genre'])) {
+            $query->where('genre', $filters['genre']);
+        }
+
+        // Filter by age classification
+        if (!empty($filters['age_classification'])) {
+            $query->where('age_classification', $filters['age_classification']);
+        }
+
+        // Filter by duration range
+        if (!empty($filters['duration_min'])) {
+            $query->where('duration', '>=', (int) $filters['duration_min']);
+        }
+
+        if (!empty($filters['duration_max'])) {
+            $query->where('duration', '<=', (int) $filters['duration_max']);
+        }
+
+        // Filter by release year
+        if (!empty($filters['release_year'])) {
+            $query->whereYear('release_date', $filters['release_year']);
+        }
+
+        // Sorting
+        $sortBy = $filters['sort_by'] ?? 'release_date';
+        $sortOrder = $filters['sort_order'] ?? 'desc';
+        
+        // Validate sort fields
+        $allowedSortFields = ['title', 'release_date', 'duration', 'created_at'];
+        if (!in_array($sortBy, $allowedSortFields)) {
+            $sortBy = 'release_date';
+        }
+        
+        $sortOrder = strtolower($sortOrder) === 'asc' ? 'asc' : 'desc';
+        $query->orderBy($sortBy, $sortOrder);
+
+        $movies = $query->paginate($filters['per_page'] ?? 15);
+
+        // Filter theo computed status nếu có
+        if (!empty($filters['status'])) {
+            $statusFilter = strtoupper($filters['status']);
+            $movies->setCollection(
+                $movies->getCollection()->filter(function ($movie) use ($statusFilter) {
+                    return $movie->getComputedStatus() === $statusFilter;
+                })
+            );
+        }
+
+        return $movies;
+    }
+
+    /**
      * Get all movies with filters
      * 
      * Lưu ý: filter status sẽ lọc theo computed status (dựa trên showtimes)

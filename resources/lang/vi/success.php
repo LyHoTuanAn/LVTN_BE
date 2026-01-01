@@ -12,6 +12,7 @@ return [
     'MOVIE_UPDATED_SUCCESS' => 'Cập nhật phim thành công',
     'MOVIE_DELETED_SUCCESS' => 'Xóa phim thành công',
     'MOVIES_FETCHED_SUCCESS' => 'Lấy danh sách phim thành công',
+    'MOVIES_SEARCH_SUCCESS' => 'Tìm kiếm phim thành công',
     'MOVIE_FETCHED_SUCCESS' => 'Lấy thông tin phim thành công',
     'CINEMA_CREATED_SUCCESS' => 'Tạo rạp chiếu thành công',
     'CINEMA_UPDATED_SUCCESS' => 'Cập nhật rạp chiếu thành công',

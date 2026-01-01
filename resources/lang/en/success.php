@@ -12,6 +12,7 @@ return [
     'MOVIE_UPDATED_SUCCESS' => 'Movie updated successfully',
     'MOVIE_DELETED_SUCCESS' => 'Movie deleted successfully',
     'MOVIES_FETCHED_SUCCESS' => 'Movies fetched successfully',
+    'MOVIES_SEARCH_SUCCESS' => 'Movies search completed successfully',
     'MOVIE_FETCHED_SUCCESS' => 'Movie fetched successfully',
     'CINEMA_CREATED_SUCCESS' => 'Cinema created successfully',
     'CINEMA_UPDATED_SUCCESS' => 'Cinema updated successfully',

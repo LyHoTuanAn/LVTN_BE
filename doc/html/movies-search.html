@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Movies Search API - Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0a0a0a; color: #e0e0e0; line-height: 1.6; padding: 20px; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; background: #1a1a1a; border-radius: 12px; padding: 40px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5); }
+        h1 { color: #4a9eff; font-size: 2.5em; margin-bottom: 20px; text-align: center; border-bottom: 3px solid #4a9eff; padding-bottom: 15px; }
+        h2 { color: #6bc46b; font-size: 2em; margin-top: 40px; margin-bottom: 20px; padding: 15px; background: #252525; border-left: 4px solid #6bc46b; border-radius: 6px; }
+        h3 { color: #ffa94d; font-size: 1.5em; margin-top: 30px; margin-bottom: 15px; padding: 10px; background: #2a2a2a; border-left: 3px solid #ffa94d; border-radius: 4px; }
+        h4 { color: #9d9dff; font-size: 1.2em; margin-top: 20px; margin-bottom: 10px; }
+        p { margin-bottom: 15px; color: #d0d0d0; }
+        .section-box { background: #222222; border: 1px solid #333333; border-radius: 8px; padding: 25px; margin: 25px 0; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .info-box { background: #1e3a5f; border-left: 4px solid #4a9eff; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .success-box { background: #1e3a2e; border-left: 4px solid #6bc46b; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        .error-box { background: #3a1e1e; border-left: 4px solid #ff6b9d; padding: 15px; margin: 20px 0; border-radius: 6px; }
+        code { background: #2a2a2a; color: #ff6b9d; padding: 3px 8px; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; }
+        pre { background: #1a1a1a; border: 1px solid #333333; border-radius: 8px; padding: 20px; overflow-x: auto; margin: 20px 0; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5); }
+        pre code { background: transparent; color: #e0e0e0; padding: 0; font-size: 0.95em; line-height: 1.5; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #222222; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        th { background: #2a2a2a; color: #4a9eff; padding: 15px; text-align: left; font-weight: 600; border-bottom: 2px solid #4a9eff; }
+        td { padding: 12px 15px; border-bottom: 1px solid #333333; color: #d0d0d0; }
+        tr:hover { background: #2a2a2a; }
+        tr:last-child td { border-bottom: none; }
+        ul, ol { margin: 15px 0; padding-left: 30px; }
+        li { margin: 8px 0; color: #d0d0d0; }
+        hr { border: none; border-top: 2px solid #333333; margin: 40px 0; }
+        .method-badge { display: inline-block; padding: 5px 12px; border-radius: 4px; font-weight: bold; font-size: 0.9em; margin-right: 10px; }
+        .method-get { background: #6bc46b; color: #fff; }
+        .url-box { background: #1a1a1a; border: 1px solid #4a9eff; border-radius: 6px; padding: 15px; margin: 15px 0; font-family: 'Consolas', 'Monaco', monospace; color: #4a9eff; font-size: 1.1em; }
+        @media (max-width: 768px) { .container { padding: 20px; } h1 { font-size: 2em; } h2 { font-size: 1.5em; } table { font-size: 0.9em; } th, td { padding: 10px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Movies Search API</h1>
+        
+        <div class="section-box">
+            <p>API tìm kiếm phim với nhiều bộ lọc nâng cao. Hỗ trợ tìm kiếm theo từ khóa, thể loại, trạng thái, phân loại độ tuổi, thời lượng, và năm phát hành.</p>
+        </div>
+
+        <div class="info-box">
+            <strong>Headers bắt buộc:</strong><br>
+            <code>X-Api-Key</code>: API key do server cấp<br>
+            <code>Language</code>: <code>en</code> hoặc <code>vi</code> (mặc định: <code>en</code>)<br><br>
+            <strong>⚡ Public Route:</strong> API này không yêu cầu authentication
+        </div>
+
+        <h2>Tìm kiếm phim</h2>
+        <div class="section-box">
+            <div class="url-box">
+                <span class="method-badge method-get">GET</span> /api/movies/search
+            </div>
+
+            <h3>Query Parameters</h3>
+            <table>
+                <thead>
+                    <tr><th>Tham số</th><th>Kiểu</th><th>Bắt buộc</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>keyword</code></td><td>string</td><td>Không</td><td>Từ khóa tìm kiếm (tìm trong title và description)</td></tr>
+                    <tr><td><code>genre</code></td><td>string</td><td>Không</td><td>Thể loại phim (Action, Comedy, Drama, Horror, Romance, Sci-Fi, Animation, ...)</td></tr>
+                    <tr><td><code>status</code></td><td>string</td><td>Không</td><td>Trạng thái phim: <code>COMING_SOON</code>, <code>UPCOMING</code>, <code>NOW_SHOWING</code></td></tr>
+                    <tr><td><code>age_classification</code></td><td>string</td><td>Không</td><td>Phân loại độ tuổi: <code>P</code>, <code>K</code>, <code>T13</code>, <code>T16</code>, <code>T18</code>, <code>C</code></td></tr>
+                    <tr><td><code>duration_min</code></td><td>integer</td><td>Không</td><td>Thời lượng tối thiểu (phút)</td></tr>
+                    <tr><td><code>duration_max</code></td><td>integer</td><td>Không</td><td>Thời lượng tối đa (phút)</td></tr>
+                    <tr><td><code>release_year</code></td><td>integer</td><td>Không</td><td>Năm phát hành</td></tr>
+                    <tr><td><code>sort_by</code></td><td>string</td><td>Không</td><td>Sắp xếp theo: <code>title</code>, <code>release_date</code>, <code>duration</code>, <code>created_at</code>. Mặc định: <code>release_date</code></td></tr>
+                    <tr><td><code>sort_order</code></td><td>string</td><td>Không</td><td>Thứ tự sắp xếp: <code>asc</code>, <code>desc</code>. Mặc định: <code>desc</code></td></tr>
+                    <tr><td><code>per_page</code></td><td>integer</td><td>Không</td><td>Số phim mỗi trang. Mặc định: 15</td></tr>
+                    <tr><td><code>page</code></td><td>integer</td><td>Không</td><td>Trang hiện tại. Mặc định: 1</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Giải thích các giá trị</h3>
+            
+            <h4>Status (Trạng thái phim)</h4>
+            <table>
+                <thead>
+                    <tr><th>Giá trị</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>COMING_SOON</code></td><td>Sắp ra mắt - Chưa có suất chiếu</td></tr>
+                    <tr><td><code>UPCOMING</code></td><td>Sắp chiếu - Có suất chiếu trong tương lai (sau hôm nay)</td></tr>
+                    <tr><td><code>NOW_SHOWING</code></td><td>Đang chiếu - Có suất đang diễn ra hoặc còn suất trong hôm nay</td></tr>
+                </tbody>
+            </table>
+
+            <h4>Age Classification (Phân loại độ tuổi)</h4>
+            <table>
+                <thead>
+                    <tr><th>Giá trị</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>P</code></td><td>Mọi lứa tuổi (All Ages)</td></tr>
+                    <tr><td><code>K</code></td><td>Trẻ em (cần có phụ huynh hướng dẫn)</td></tr>
+                    <tr><td><code>T13</code></td><td>Từ 13 tuổi trở lên</td></tr>
+                    <tr><td><code>T16</code></td><td>Từ 16 tuổi trở lên</td></tr>
+                    <tr><td><code>T18</code></td><td>Từ 18 tuổi trở lên</td></tr>
+                    <tr><td><code>C</code></td><td>Phim cấm</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Ví dụ Request</h3>
+            <div class="info-box">
+                <pre><code>// Tìm kiếm theo từ khóa
+GET /api/movies/search?keyword=avengers
+
+// Tìm phim đang chiếu + thể loại Action
+GET /api/movies/search?status=NOW_SHOWING&genre=Action
+
+// Tìm phim phù hợp cho trẻ em, thời lượng dưới 120 phút
+GET /api/movies/search?age_classification=P&duration_max=120&sort_by=title&sort_order=asc
+
+// Tìm phim ra mắt năm 2024
+GET /api/movies/search?release_year=2024&per_page=20
+
+// Kết hợp nhiều bộ lọc
+GET /api/movies/search?keyword=marvel&genre=Action&status=NOW_SHOWING&age_classification=T13&duration_min=90&duration_max=180&release_year=2024&sort_by=release_date&sort_order=desc&per_page=10</code></pre>
+            </div>
+
+            <h3>Response thành công (200 OK)</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "MOVIES_SEARCH_SUCCESS",
+    "message": "Tìm kiếm phim thành công",
+    "data": [
+        {
+            "id": 1,
+            "title": "Avengers: Endgame",
+            "description": "Sau các sự kiện tàn khốc của Avengers: Infinity War...",
+            "duration": 181,
+            "release_date": "2019-04-22",
+            "status": "NOW_SHOWING",
+            "computed_status": "NOW_SHOWING",
+            "status_label": "Đang chiếu",
+            "genre": "Action",
+            "age_classification": "T13",
+            "language": "English",
+            "poster": {
+                "id": 123,
+                "url": "https://example.com/storage/movies/avengers-endgame-poster.jpg",
+                "thumbnail_url": "https://example.com/storage/movies/thumbnails/avengers-endgame-poster.jpg"
+            },
+            "trailer": {
+                "id": 124,
+                "url": "https://example.com/storage/movies/avengers-endgame-trailer.mp4"
+            },
+            "is_favorited": false,
+            "created_at": "2024-01-15 10:30:00",
+            "updated_at": "2024-01-20 15:45:00"
+        },
+        {
+            "id": 2,
+            "title": "Avengers: Infinity War",
+            "description": "Thanos đã thu thập đủ các viên đá vô cực...",
+            "duration": 149,
+            "release_date": "2018-04-25",
+            "status": "UPCOMING",
+            "computed_status": "UPCOMING",
+            "status_label": "Sắp chiếu",
+            "genre": "Action",
+            "age_classification": "T13",
+            "language": "English",
+            "poster": {
+                "id": 125,
+                "url": "https://example.com/storage/movies/infinity-war-poster.jpg"
+            },
+            "trailer": null,
+            "is_favorited": true,
+            "created_at": "2024-01-10 08:00:00",
+            "updated_at": "2024-01-18 12:30:00"
+        }
+    ],
+    "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 3,
+        "per_page": 15,
+        "to": 15,
+        "total": 42
+    },
+    "links": {
+        "first": "http://localhost/api/movies/search?page=1",
+        "last": "http://localhost/api/movies/search?page=3",
+        "prev": null,
+        "next": "http://localhost/api/movies/search?page=2"
+    }
+}</code></pre>
+            </div>
+
+            <h3>Response không tìm thấy kết quả (200 OK)</h3>
+            <div class="success-box">
+                <pre><code>{
+    "success": true,
+    "code": "MOVIES_SEARCH_SUCCESS",
+    "message": "Tìm kiếm phim thành công",
+    "data": [],
+    "meta": {
+        "current_page": 1,
+        "from": null,
+        "last_page": 1,
+        "per_page": 15,
+        "to": null,
+        "total": 0
+    },
+    "links": {
+        "first": "http://localhost/api/movies/search?page=1",
+        "last": "http://localhost/api/movies/search?page=1",
+        "prev": null,
+        "next": null
+    }
+}</code></pre>
+            </div>
+
+            <h3>Response lỗi</h3>
+            <div class="error-box">
+                <pre><code>// API key không hợp lệ (401)
+{
+    "success": false,
+    "code": "INVALID_API_KEY",
+    "message": "API key không hợp lệ"
+}</code></pre>
+            </div>
+        </div>
+
+        <h2>Lưu ý</h2>
+        <div class="section-box">
+            <ul>
+                <li><strong>Tìm kiếm keyword:</strong> Tìm kiếm không phân biệt hoa thường, hỗ trợ tìm kiếm một phần của từ</li>
+                <li><strong>Status filter:</strong> Lọc theo trạng thái được tính toán dựa trên suất chiếu (showtimes), không phải giá trị cố định trong database</li>
+                <li><strong>Phân trang:</strong> API trả về thông tin phân trang trong <code>meta</code> và <code>links</code></li>
+                <li><strong>Sắp xếp mặc định:</strong> Theo ngày phát hành giảm dần (phim mới nhất trước)</li>
+                <li><strong>is_favorited:</strong> Chỉ trả về <code>true</code> nếu user đã đăng nhập và đã thêm phim vào yêu thích</li>
+            </ul>
+        </div>
+
+        <h2>Error Codes</h2>
+        <div class="section-box">
+            <table>
+                <thead>
+                    <tr><th>Code</th><th>HTTP Status</th><th>Mô tả</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>INVALID_API_KEY</code></td><td>401</td><td>API key không hợp lệ</td></tr>
+                    <tr><td><code>SERVER_ERROR</code></td><td>500</td><td>Lỗi server</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
