@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Services\Notification\NotificationDispatcher;
 use App\Services\Payment\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -11,10 +12,12 @@ use Illuminate\Support\Facades\Log;
 class StripeWebhookController extends Controller
 {
     protected StripeService $stripeService;
+    protected NotificationDispatcher $notificationDispatcher;
 
-    public function __construct(StripeService $stripeService)
+    public function __construct(StripeService $stripeService, NotificationDispatcher $notificationDispatcher)
     {
         $this->stripeService = $stripeService;
+        $this->notificationDispatcher = $notificationDispatcher;
     }
 
     /**
@@ -102,6 +105,16 @@ class StripeWebhookController extends Controller
             ]);
 
             Log::info("Booking #{$booking->code} marked as paid via Checkout webhook");
+
+            // Gửi thông báo qua Telegram và FCM
+            try {
+                $this->notificationDispatcher->dispatchBookingPaid($booking);
+            } catch (\Exception $e) {
+                Log::error("Failed to send booking paid notification", [
+                    'booking_code' => $booking->code,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         }
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Services\Notification\NotificationDispatcher;
 use App\Services\Payment\VNPayService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -11,10 +12,12 @@ use Illuminate\Support\Facades\Log;
 class VNPayController extends Controller
 {
     protected VNPayService $vnpayService;
+    protected NotificationDispatcher $notificationDispatcher;
 
-    public function __construct(VNPayService $vnpayService)
+    public function __construct(VNPayService $vnpayService, NotificationDispatcher $notificationDispatcher)
     {
         $this->vnpayService = $vnpayService;
+        $this->notificationDispatcher = $notificationDispatcher;
     }
 
     /**
@@ -84,6 +87,16 @@ class VNPayController extends Controller
             ]);
 
             Log::info("VNPay IPN: Booking #{$bookingCode} marked as paid");
+
+            // Gửi thông báo qua Telegram và FCM
+            try {
+                $this->notificationDispatcher->dispatchBookingPaid($booking);
+            } catch (\Exception $e) {
+                Log::error("Failed to send booking paid notification", [
+                    'booking_code' => $bookingCode,
+                    'error' => $e->getMessage(),
+                ]);
+            }
         } else {
             // Thanh toán thất bại
             $responseCode = $transactionInfo['response_code'];
