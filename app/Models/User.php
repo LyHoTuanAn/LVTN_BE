@@ -114,6 +114,14 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Get all FCM tokens for this user
+     */
+    public function fcmTokens(): HasMany
+    {
+        return $this->hasMany(FcmToken::class);
+    }
+
+    /**
      * Check if user has a specific permission
      */
     public function hasPermission(string $permissionSlug): bool

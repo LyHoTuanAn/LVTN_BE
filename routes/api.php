@@ -76,6 +76,7 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::put('/me', [AuthController::class, 'updateProfile']);
         Route::post('/change-password', [AuthController::class, 'changePassword']);
+        Route::post('/fcm-token', [AuthController::class, 'fcmToken']);
     });
 
     // Booking routes (customer)
@@ -116,6 +117,15 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
     // Admin Cinema routes (require admin role)
     Route::middleware(['role:admin'])->prefix('admin/cinemas')->group(function () {
         Route::post('/bulk', [\App\Http\Controllers\Admin\CinemaController::class, 'apiStoreMany']);
+    });
+
+    // Admin Notification routes (require admin role)
+    Route::middleware(['role:admin'])->prefix('admin/notifications')->group(function () {
+        Route::get('/topics', [\App\Http\Controllers\Admin\NotificationController::class, 'getTopics']);
+        Route::post('/send-to-user', [\App\Http\Controllers\Admin\NotificationController::class, 'sendToUser']);
+        Route::post('/send-to-users', [\App\Http\Controllers\Admin\NotificationController::class, 'sendToUsers']);
+        Route::post('/send-to-all', [\App\Http\Controllers\Admin\NotificationController::class, 'sendToAllUsers']);
+        Route::post('/send-to-topic', [\App\Http\Controllers\Admin\NotificationController::class, 'sendToTopic']);
     });
 });
 

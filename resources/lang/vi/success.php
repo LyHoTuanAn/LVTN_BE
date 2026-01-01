@@ -62,4 +62,13 @@ return [
     // Review Success
     'REVIEW_FETCHED_SUCCESS' => 'Lấy thông tin đánh giá thành công',
     'REVIEW_CREATED_SUCCESS' => 'Đánh giá phim thành công',
+
+    // FCM Token Success
+    'FCM_TOKEN_REGISTERED_SUCCESS' => 'Đăng ký FCM token thành công',
+    'FCM_TOKEN_DELETED_SUCCESS' => 'Xóa FCM token thành công',
+
+    // Notification Success
+    'NOTIFICATION_SENT_SUCCESS' => 'Gửi thông báo thành công',
+    'NOTIFICATION_BROADCAST_SUCCESS' => 'Đã gửi thông báo đến tất cả người dùng',
+    'TOPIC_SUBSCRIPTION_SUCCESS' => 'Cập nhật đăng ký topic thành công',
 ];

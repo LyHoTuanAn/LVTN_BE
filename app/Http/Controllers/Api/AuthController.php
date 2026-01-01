@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ChangePasswordRequest;
+use App\Http\Requests\Auth\FcmTokenRequest;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RefreshTokenRequest;
@@ -17,6 +18,7 @@ use App\Http\Traits\ApiResponseTrait;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\OtpService;
 use App\Services\Auth\PasswordResetService;
+use App\Services\Notification\FcmTokenService;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -26,15 +28,18 @@ class AuthController extends Controller
     protected AuthService $authService;
     protected OtpService $otpService;
     protected PasswordResetService $passwordResetService;
+    protected FcmTokenService $fcmTokenService;
 
     public function __construct(
         AuthService $authService,
         OtpService $otpService,
-        PasswordResetService $passwordResetService
+        PasswordResetService $passwordResetService,
+        FcmTokenService $fcmTokenService
     ) {
         $this->authService = $authService;
         $this->otpService = $otpService;
         $this->passwordResetService = $passwordResetService;
+        $this->fcmTokenService = $fcmTokenService;
     }
 
     /**
@@ -114,6 +119,13 @@ class AuthController extends Controller
     {
         try {
             $refreshToken = $request->input('refresh_token');
+            $fcmToken = $request->input('fcm_token');
+
+            // Delete FCM token if provided
+            if ($fcmToken) {
+                $this->fcmTokenService->deleteToken($fcmToken);
+            }
+
             $this->authService->logout($refreshToken);
             return $this->successResponse('LOGOUT_SUCCESS');
         } catch (\Exception $e) {
@@ -121,6 +133,37 @@ class AuthController extends Controller
                 'LOGOUT_FAILED',
                 ['error' => $e->getMessage()],
                 null,
+                500
+            );
+        }
+    }
+
+    /**
+     * Register/Update FCM token for push notifications
+     */
+    public function fcmToken(FcmTokenRequest $request)
+    {
+        try {
+            $user = $request->user();
+            
+            $fcmToken = $this->fcmTokenService->registerToken(
+                $user->id,
+                $request->fcm_token
+            );
+
+            return $this->successResponse(
+                'FCM_TOKEN_REGISTERED_SUCCESS',
+                [
+                    'fcm_token' => $fcmToken->fcm_token,
+                    'is_active' => $fcmToken->is_active,
+                ],
+                __('success.FCM_TOKEN_REGISTERED_SUCCESS')
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                'FCM_TOKEN_REGISTRATION_FAILED',
+                ['error' => $e->getMessage()],
+                __('errors.FCM_TOKEN_REGISTRATION_FAILED'),
                 500
             );
         }

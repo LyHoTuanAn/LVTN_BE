@@ -90,4 +90,13 @@ return [
     'SHOWTIME_NOT_ENDED' => 'You can only review after the movie has ended',
     'BOOKING_NOT_COMPLETED' => 'Your booking must be completed to review',
     'REVIEW_NOT_BELONG_TO_USER' => 'This review does not belong to you',
+
+    // FCM Token errors
+    'FCM_TOKEN_REGISTRATION_FAILED' => 'Failed to register FCM token',
+    'FCM_TOKEN_NOT_FOUND' => 'FCM token not found',
+
+    // Notification errors
+    'NOTIFICATION_SEND_FAILED' => 'Failed to send notification',
+    'NOTIFICATION_USER_NOT_FOUND' => 'User not found for notification',
+    'NOTIFICATION_NO_TOKENS' => 'No active FCM tokens found for user(s)',
 ];

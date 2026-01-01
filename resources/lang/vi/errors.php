@@ -90,4 +90,13 @@ return [
     'SHOWTIME_NOT_ENDED' => 'Bạn chỉ có thể đánh giá sau khi phim kết thúc',
     'BOOKING_NOT_COMPLETED' => 'Đặt vé của bạn phải được hoàn thành để đánh giá',
     'REVIEW_NOT_BELONG_TO_USER' => 'Đánh giá này không thuộc về bạn',
+
+    // FCM Token errors
+    'FCM_TOKEN_REGISTRATION_FAILED' => 'Đăng ký FCM token thất bại',
+    'FCM_TOKEN_NOT_FOUND' => 'Không tìm thấy FCM token',
+
+    // Notification errors
+    'NOTIFICATION_SEND_FAILED' => 'Gửi thông báo thất bại',
+    'NOTIFICATION_USER_NOT_FOUND' => 'Không tìm thấy người dùng để gửi thông báo',
+    'NOTIFICATION_NO_TOKENS' => 'Không tìm thấy FCM token nào cho người dùng',
 ];

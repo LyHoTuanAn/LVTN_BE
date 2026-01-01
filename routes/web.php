@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\ShowtimeController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\CinemaController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\NotificationWebController;
 use App\Http\Controllers\Web\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
@@ -184,6 +185,14 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::get('/{id}', [ReviewController::class, 'show'])->name('show');
         Route::post('/{id}/update-status', [ReviewController::class, 'updateStatus'])->name('update-status');
         Route::delete('/{id}', [ReviewController::class, 'destroy'])->name('destroy');
+    });
+
+    // Admin Notifications Management
+    Route::prefix('admin/notifications')->name('admin.notifications.')->group(function () {
+        Route::get('/', [NotificationWebController::class, 'index'])->name('index');
+        Route::post('/send-to-user', [NotificationWebController::class, 'sendToUser'])->name('send-to-user');
+        Route::post('/send-to-all', [NotificationWebController::class, 'sendToAll'])->name('send-to-all');
+        Route::post('/send-to-topic', [NotificationWebController::class, 'sendToTopic'])->name('send-to-topic');
     });
 });
 

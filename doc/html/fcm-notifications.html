@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔔 FCM & Push Notifications API - API Documentation</title>
+    <link rel="icon" type="image/png" href="https://img.icons8.com/clouds/100/web.png">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #4a9eff;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4a9eff;
+            padding-bottom: 15px;
+        }
+
+        h2 {
+            color: #6bc46b;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #252525;
+            border-left: 4px solid #6bc46b;
+            border-radius: 6px;
+        }
+
+        h3 {
+            color: #ffa94d;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #2a2a2a;
+            border-left: 3px solid #ffa94d;
+            border-radius: 4px;
+        }
+
+        h4 {
+            color: #9d9dff;
+            font-size: 1.2em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        .section-box {
+            background: #222222;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .info-box {
+            background: #1e3a5f;
+            border-left: 4px solid #4a9eff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning-box {
+            background: #5a3a1e;
+            border-left: 4px solid #ffa94d;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .success-box {
+            background: #1e3a2e;
+            border-left: 4px solid #6bc46b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        code {
+            background: #2a2a2a;
+            color: #ff6b9d;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #1a1a1a;
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        pre code {
+            background: transparent;
+            color: #e0e0e0;
+            padding: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: #222222;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            background: #2a2a2a;
+            color: #4a9eff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #333333;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #333333;
+            color: #d0d0d0;
+        }
+
+        tr:hover {
+            background: #2a2a2a;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .badge-success {
+            background: #1e3a2e;
+            color: #6bc46b;
+        }
+
+        .badge-warning {
+            background: #5a3a1e;
+            color: #ffa94d;
+        }
+
+        .badge-error {
+            background: #5a1e1e;
+            color: #ff6b9d;
+        }
+
+        .badge-info {
+            background: #1e3a5f;
+            color: #4a9eff;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 15px;
+            color: #d0d0d0;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        a {
+            color: #4a9eff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #6bc46b;
+            text-decoration: underline;
+        }
+
+        .method-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .method-get {
+            background: #1e3a2e;
+            color: #6bc46b;
+        }
+
+        .method-post {
+            background: #1e3a5f;
+            color: #4a9eff;
+        }
+
+        .method-put {
+            background: #5a3a1e;
+            color: #ffa94d;
+        }
+
+        .method-delete {
+            background: #5a1e1e;
+            color: #ff6b9d;
+        }
+
+        .json-key {
+            color: #9d9dff;
+        }
+
+        .json-string {
+            color: #6bc46b;
+        }
+
+        .json-number {
+            color: #ffa94d;
+        }
+
+        .json-boolean {
+            color: #4a9eff;
+        }
+
+        .json-null {
+            color: #888;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔔 FCM & Push Notifications API</h1>
+        
+        <p style="text-align: center; color: #888; margin-bottom: 30px;">
+            API endpoints để quản lý FCM Token và gửi Push Notifications.
+        </p>
+
+        <div class="section-box">
+            <h2>📋 Mục Lục</h2>
+            <ul>
+                <li><a href="#fcm-token">Đăng ký FCM Token</a></li>
+                <li><a href="#logout">Logout với FCM Token</a></li>
+                <li><a href="#send-to-user">Admin: Gửi thông báo đến một user</a></li>
+                <li><a href="#send-to-users">Admin: Gửi thông báo đến nhiều users</a></li>
+                <li><a href="#send-to-all">Admin: Broadcast đến tất cả users</a></li>
+                <li><a href="#send-to-topic">Admin: Gửi đến topic cụ thể</a></li>
+                <li><a href="#get-topics">Admin: Lấy danh sách topics</a></li>
+                <li><a href="#topics">FCM Topics</a></li>
+            </ul>
+        </div>
+
+        <!-- FCM Token Section -->
+        <div id="fcm-token" class="section-box">
+            <h2>📱 Đăng Ký FCM Token</h2>
+            <p><strong>URL:</strong> <code>POST /api/auth/fcm-token</code></p>
+            <p><strong>Method:</strong> <span class="method-badge method-post">POST</span></p>
+            <p><strong>Authentication:</strong> <span class="badge badge-success">Bắt buộc</span></p>
+
+            <h3>Request Headers</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Header</th>
+                        <th>Mô tả</th>
+                        <th>Ví dụ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>X-Api-Key</code></td>
+                        <td>API key do server cấp</td>
+                        <td><code>your-api-key-here</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Authorization</code></td>
+                        <td>Bearer token</td>
+                        <td><code>Bearer eyJ0eXAi...</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>Language</code></td>
+                        <td>Ngôn ngữ (en hoặc vi)</td>
+                        <td><code>vi</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Request Body</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>fcm_token</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>String</td>
+                        <td>FCM token từ Firebase (100-500 ký tự)</td>
+                    </tr>
+                    <tr>
+                        <td><code>device_type</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>String</td>
+                        <td>Loại thiết bị: <code>ios</code>, <code>android</code>, <code>web</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>device_id</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>String</td>
+                        <td>ID duy nhất của thiết bị</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Request Example</h3>
+            <pre><code>{
+  <span class="json-key">"fcm_token"</span>: <span class="json-string">"dL8G2xK7qR5..."</span>,
+  <span class="json-key">"device_type"</span>: <span class="json-string">"android"</span>,
+  <span class="json-key">"device_id"</span>: <span class="json-string">"unique-device-id-123"</span>
+}</code></pre>
+
+            <h3>Response Success (200)</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"FCM_TOKEN_REGISTERED_SUCCESS"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Đăng ký FCM token thành công"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"fcm_token"</span>: <span class="json-string">"dL8G2xK7qR5..."</span>,
+    <span class="json-key">"device_type"</span>: <span class="json-string">"android"</span>,
+    <span class="json-key">"is_active"</span>: <span class="json-boolean">true</span>
+  }
+}</code></pre>
+        </div>
+
+        <!-- Logout Section -->
+        <div id="logout" class="section-box">
+            <h2>🚪 Logout với FCM Token</h2>
+            <p><strong>URL:</strong> <code>POST /api/auth/logout</code></p>
+            <p><strong>Method:</strong> <span class="method-badge method-post">POST</span></p>
+            <p><strong>Authentication:</strong> <span class="badge badge-success">Bắt buộc</span></p>
+
+            <h3>Request Body</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>refresh_token</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>String</td>
+                        <td>Refresh token để revoke</td>
+                    </tr>
+                    <tr>
+                        <td><code>fcm_token</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>String</td>
+                        <td>FCM token để xóa khỏi hệ thống</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Request Example</h3>
+            <pre><code>{
+  <span class="json-key">"refresh_token"</span>: <span class="json-string">"eyJ0eXAiOiJKV1QiLCJhbGci..."</span>,
+  <span class="json-key">"fcm_token"</span>: <span class="json-string">"dL8G2xK7qR5..."</span>
+}</code></pre>
+
+            <h3>Response Success (200)</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"LOGOUT_SUCCESS"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Đăng xuất thành công"</span>
+}</code></pre>
+        </div>
+
+        <!-- Admin: Send to User -->
+        <div id="send-to-user" class="section-box">
+            <h2>👤 Admin: Gửi Thông Báo Đến Một User</h2>
+            <p><strong>URL:</strong> <code>POST /api/admin/notifications/send-to-user</code></p>
+            <p><strong>Method:</strong> <span class="method-badge method-post">POST</span></p>
+            <p><strong>Authentication:</strong> <span class="badge badge-success">Bắt buộc (Admin)</span></p>
+
+            <h3>Request Body</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>user_id</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>Integer</td>
+                        <td>ID của user cần gửi thông báo</td>
+                    </tr>
+                    <tr>
+                        <td><code>title</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>String</td>
+                        <td>Tiêu đề thông báo (max 255)</td>
+                    </tr>
+                    <tr>
+                        <td><code>body</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>String</td>
+                        <td>Nội dung thông báo (max 1000)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>Object</td>
+                        <td>Dữ liệu tùy chỉnh (sẽ được stringify)</td>
+                    </tr>
+                    <tr>
+                        <td><code>image_url</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>String</td>
+                        <td>URL hình ảnh đính kèm</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Request Example</h3>
+            <pre><code>{
+  <span class="json-key">"user_id"</span>: <span class="json-number">123</span>,
+  <span class="json-key">"title"</span>: <span class="json-string">"Khuyến mãi đặc biệt"</span>,
+  <span class="json-key">"body"</span>: <span class="json-string">"Giảm 50% cho tất cả các phim trong tuần này!"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"type"</span>: <span class="json-string">"promotion"</span>,
+    <span class="json-key">"promotion_id"</span>: <span class="json-string">"PROMO123"</span>
+  },
+  <span class="json-key">"image_url"</span>: <span class="json-string">"https://example.com/promo.jpg"</span>
+}</code></pre>
+
+            <h3>Response Success (200)</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"NOTIFICATION_SENT_SUCCESS"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Gửi thông báo thành công"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+    <span class="json-key">"message"</span>: <span class="json-string">"All notifications sent successfully"</span>,
+    <span class="json-key">"sent_count"</span>: <span class="json-number">2</span>,
+    <span class="json-key">"failed_count"</span>: <span class="json-number">0</span>,
+    <span class="json-key">"failed_tokens"</span>: []
+  }
+}</code></pre>
+        </div>
+
+        <!-- Admin: Broadcast to All -->
+        <div id="send-to-all" class="section-box">
+            <h2>📢 Admin: Broadcast Đến Tất Cả Users</h2>
+            <p><strong>URL:</strong> <code>POST /api/admin/notifications/send-to-all</code></p>
+            <p><strong>Method:</strong> <span class="method-badge method-post">POST</span></p>
+            <p><strong>Authentication:</strong> <span class="badge badge-success">Bắt buộc (Admin)</span></p>
+
+            <div class="info-box">
+                <p><strong>📡 Topic Messaging</strong></p>
+                <p>API này sử dụng FCM Topic Messaging để gửi thông báo đến tất cả users đã đăng ký topic <code>celes_all_users</code>. Đây là cách hiệu quả nhất để gửi broadcast vì chỉ cần 1 request duy nhất.</p>
+            </div>
+
+            <h3>Request Body</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Trường</th>
+                        <th>Bắt buộc</th>
+                        <th>Kiểu dữ liệu</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>title</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>String</td>
+                        <td>Tiêu đề thông báo (max 255)</td>
+                    </tr>
+                    <tr>
+                        <td><code>body</code></td>
+                        <td><span class="badge badge-success">✓</span></td>
+                        <td>String</td>
+                        <td>Nội dung thông báo (max 1000)</td>
+                    </tr>
+                    <tr>
+                        <td><code>data</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>Object</td>
+                        <td>Dữ liệu tùy chỉnh</td>
+                    </tr>
+                    <tr>
+                        <td><code>image_url</code></td>
+                        <td><span class="badge badge-warning">✗</span></td>
+                        <td>String</td>
+                        <td>URL hình ảnh đính kèm</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response Success (200)</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"NOTIFICATION_BROADCAST_SUCCESS"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"Đã gửi thông báo đến tất cả người dùng"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+    <span class="json-key">"message"</span>: <span class="json-string">"Notification sent to topic successfully"</span>,
+    <span class="json-key">"topic"</span>: <span class="json-string">"celes_all_users"</span>
+  }
+}</code></pre>
+        </div>
+
+        <!-- Get Topics -->
+        <div id="get-topics" class="section-box">
+            <h2>📋 Admin: Lấy Danh Sách Topics</h2>
+            <p><strong>URL:</strong> <code>GET /api/admin/notifications/topics</code></p>
+            <p><strong>Method:</strong> <span class="method-badge method-get">GET</span></p>
+            <p><strong>Authentication:</strong> <span class="badge badge-success">Bắt buộc (Admin)</span></p>
+
+            <h3>Response Success (200)</h3>
+            <pre><code>{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"code"</span>: <span class="json-string">"TOPICS_FETCHED_SUCCESS"</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"topics"</span>: {
+      <span class="json-key">"all_users"</span>: <span class="json-string">"celes_all_users"</span>,
+      <span class="json-key">"new_movies"</span>: <span class="json-string">"celes_new_movies"</span>,
+      <span class="json-key">"promotions"</span>: <span class="json-string">"celes_promotions"</span>,
+      <span class="json-key">"booking_reminders"</span>: <span class="json-string">"celes_booking_reminders"</span>
+    },
+    <span class="json-key">"descriptions"</span>: {
+      <span class="json-key">"all_users"</span>: <span class="json-string">"Send to all app users"</span>,
+      <span class="json-key">"new_movies"</span>: <span class="json-string">"New movie announcements"</span>,
+      <span class="json-key">"promotions"</span>: <span class="json-string">"Promotions and discounts"</span>,
+      <span class="json-key">"booking_reminders"</span>: <span class="json-string">"Booking reminder notifications"</span>
+    }
+  }
+}</code></pre>
+        </div>
+
+        <!-- Topics Table -->
+        <div id="topics" class="section-box">
+            <h2>📡 FCM Topics</h2>
+            <p>Danh sách các topics có sẵn trong hệ thống:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Topic Key</th>
+                        <th>Topic Name</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>all_users</code></td>
+                        <td><code>celes_all_users</code></td>
+                        <td>Tất cả users - dùng cho broadcast</td>
+                    </tr>
+                    <tr>
+                        <td><code>new_movies</code></td>
+                        <td><code>celes_new_movies</code></td>
+                        <td>Thông báo phim mới</td>
+                    </tr>
+                    <tr>
+                        <td><code>promotions</code></td>
+                        <td><code>celes_promotions</code></td>
+                        <td>Khuyến mãi và giảm giá</td>
+                    </tr>
+                    <tr>
+                        <td><code>booking_reminders</code></td>
+                        <td><code>celes_booking_reminders</code></td>
+                        <td>Nhắc nhở lịch chiếu</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Error Codes -->
+        <div class="section-box">
+            <h2>⚠️ Error Codes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>HTTP Status</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>FCM_TOKEN_REGISTRATION_FAILED</code></td>
+                        <td><span class="badge badge-error">500</span></td>
+                        <td>Đăng ký FCM token thất bại</td>
+                    </tr>
+                    <tr>
+                        <td><code>FCM_TOKEN_NOT_FOUND</code></td>
+                        <td><span class="badge badge-error">404</span></td>
+                        <td>Không tìm thấy FCM token</td>
+                    </tr>
+                    <tr>
+                        <td><code>NOTIFICATION_SEND_FAILED</code></td>
+                        <td><span class="badge badge-error">400</span></td>
+                        <td>Gửi thông báo thất bại</td>
+                    </tr>
+                    <tr>
+                        <td><code>NOTIFICATION_USER_NOT_FOUND</code></td>
+                        <td><span class="badge badge-error">404</span></td>
+                        <td>Không tìm thấy user</td>
+                    </tr>
+                    <tr>
+                        <td><code>NOTIFICATION_NO_TOKENS</code></td>
+                        <td><span class="badge badge-error">400</span></td>
+                        <td>User không có FCM token nào</td>
+                    </tr>
+                    <tr>
+                        <td><code>VALIDATION_ERROR</code></td>
+                        <td><span class="badge badge-error">422</span></td>
+                        <td>Dữ liệu đầu vào không hợp lệ</td>
+                    </tr>
+                    <tr>
+                        <td><code>UNAUTHORIZED</code></td>
+                        <td><span class="badge badge-error">401</span></td>
+                        <td>Chưa đăng nhập</td>
+                    </tr>
+                    <tr>
+                        <td><code>FORBIDDEN</code></td>
+                        <td><span class="badge badge-error">403</span></td>
+                        <td>Không có quyền truy cập</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="info-box">
+            <h3>ℹ️ Notes</h3>
+            <ul>
+                <li>FCM Token API yêu cầu <strong>authentication</strong> (Bearer token)</li>
+                <li>Admin Notification APIs yêu cầu <strong>admin role</strong></li>
+                <li>Khi logout, nên gửi kèm <strong>fcm_token</strong> để xóa khỏi hệ thống</li>
+                <li>Client cần subscribe vào topic <code>celes_all_users</code> sau khi đăng nhập để nhận broadcast</li>
+                <li>Tất cả data values trong notification sẽ được stringify (FCM requirement)</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <h3>⚠️ Flutter Integration</h3>
+            <p>Để nhận broadcast notifications, Flutter app cần:</p>
+            <ol>
+                <li>Subscribe vào topic <code>celes_all_users</code> sau khi đăng nhập</li>
+                <li>Unsubscribe khỏi topics trước khi logout</li>
+                <li>Gửi FCM token mới khi token refresh</li>
+            </ol>
+            <pre><code>// Subscribe after login
+FirebaseMessaging.instance.subscribeToTopic('celes_all_users');
+
+// Unsubscribe before logout
+FirebaseMessaging.instance.unsubscribeFromTopic('celes_all_users');</code></pre>
+        </div>
+    </div>
+</body>
+</html>

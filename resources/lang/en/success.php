@@ -62,4 +62,13 @@ return [
     // Review Success
     'REVIEW_FETCHED_SUCCESS' => 'Review fetched successfully',
     'REVIEW_CREATED_SUCCESS' => 'Review created successfully',
+
+    // FCM Token Success
+    'FCM_TOKEN_REGISTERED_SUCCESS' => 'FCM token registered successfully',
+    'FCM_TOKEN_DELETED_SUCCESS' => 'FCM token deleted successfully',
+
+    // Notification Success
+    'NOTIFICATION_SENT_SUCCESS' => 'Notification sent successfully',
+    'NOTIFICATION_BROADCAST_SUCCESS' => 'Notification broadcast to all users successfully',
+    'TOPIC_SUBSCRIPTION_SUCCESS' => 'Topic subscription updated successfully',
 ];
