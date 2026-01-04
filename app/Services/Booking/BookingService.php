@@ -29,7 +29,7 @@ class BookingService
      */
     public function getAllBookings(array $filters = []): LengthAwarePaginator
     {
-        $query = Booking::query()->with(['user', 'showtime.movie', 'showtime.room', 'seats', 'voucher']);
+        $query = Booking::query()->with(['user', 'showtime.movie.poster', 'showtime.room', 'seats', 'voucher']);
 
         if (isset($filters['user_id'])) {
             $query->where('user_id', $filters['user_id']);
