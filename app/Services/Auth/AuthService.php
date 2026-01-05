@@ -12,8 +12,6 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class AuthService
 {
     protected OtpService $otpService;
-    protected int $accessTokenTtlMinutes = 60; // 1 hour
-    protected int $refreshTokenTtlDays = 30; // 30 days
 
     public function __construct(OtpService $otpService)
     {
@@ -63,9 +61,12 @@ class AuthService
             ];
         }
 
+        // Get TTL value and ensure it's an integer
+        $accessTokenTtl = intval(config('jwt.ttl'));
+
         // Generate access token (short-lived)
         $accessToken = JWTAuth::customClaims([
-            'exp' => now()->addMinutes($this->accessTokenTtlMinutes)->timestamp,
+            'exp' => now()->addMinutes($accessTokenTtl)->timestamp,
         ])->fromUser($user);
 
         // Generate refresh token (long-lived)
@@ -76,7 +77,7 @@ class AuthService
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
             'token_type' => 'bearer',
-            'expires_in' => $this->accessTokenTtlMinutes * 60,
+            'expires_in' => $accessTokenTtl * 60,
         ];
     }
 
@@ -186,15 +187,18 @@ class AuthService
                 return null;
             }
 
+            // Get TTL value and ensure it's an integer
+            $accessTokenTtl = intval(config('jwt.ttl'));
+
             // Generate new access token
             $accessToken = JWTAuth::customClaims([
-                'exp' => now()->addMinutes($this->accessTokenTtlMinutes)->timestamp,
+                'exp' => now()->addMinutes($accessTokenTtl)->timestamp,
             ])->fromUser($user);
 
             return [
                 'access_token' => $accessToken,
                 'token_type' => 'bearer',
-                'expires_in' => $this->accessTokenTtlMinutes * 60,
+                'expires_in' => $accessTokenTtl * 60,
             ];
         } catch (JWTException $e) {
             // Invalid or expired refresh token
@@ -268,18 +272,21 @@ class AuthService
         // Generate JTI (JWT ID) for refresh token
         $jti = bin2hex(random_bytes(32)); // 64 character hex string
 
+        // Get refresh token TTL and ensure it's an integer
+        $refreshTokenTtl = intval(config('jwt.refresh_ttl'));
+
         // Generate refresh token as JWT with custom claims
         $refreshToken = JWTAuth::customClaims([
             'jti' => $jti,
             'type' => 'refresh',
-            'exp' => now()->addDays($this->refreshTokenTtlDays)->timestamp,
+            'exp' => now()->addMinutes($refreshTokenTtl)->timestamp,
         ])->fromUser($user);
 
         // Store JTI in database for revocation
         RefreshToken::create([
             'user_id' => $user->id,
             'jti' => $jti,
-            'expires_at' => now()->addDays($this->refreshTokenTtlDays),
+            'expires_at' => now()->addMinutes($refreshTokenTtl),
         ]);
 
         return $refreshToken;
