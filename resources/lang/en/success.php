@@ -72,4 +72,10 @@ return [
     'NOTIFICATION_SENT_SUCCESS' => 'Notification sent successfully',
     'NOTIFICATION_BROADCAST_SUCCESS' => 'Notification broadcast to all users successfully',
     'TOPIC_SUBSCRIPTION_SUCCESS' => 'Topic subscription updated successfully',
+    'NOTIFICATIONS_FETCHED_SUCCESS' => 'Notifications fetched successfully',
+    'NOTIFICATION_FETCHED_SUCCESS' => 'Notification fetched successfully',
+    'UNREAD_COUNT_FETCHED_SUCCESS' => 'Unread count fetched successfully',
+    'NOTIFICATION_READ_SUCCESS' => 'Notification marked as read',
+    'NOTIFICATIONS_READ_ALL_SUCCESS' => 'All notifications marked as read',
+    'NOTIFICATION_DELETED_SUCCESS' => 'Notification deleted successfully',
 ];

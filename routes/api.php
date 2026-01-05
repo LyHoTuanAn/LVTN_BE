@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CinemaController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\MovieController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ShowtimeController;
@@ -114,6 +115,10 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
         Route::post('/', [ReviewController::class, 'store']);
         Route::get('/{id}', [ReviewController::class, 'show'])->where('id', '[0-9]+');
     });
+
+    // User Notification routes
+    // GET /api/notifications - Returns notifications with unread_count, auto marks all as read
+    Route::get('/notifications', [NotificationController::class, 'index']);
 
     // Admin Cinema routes (require admin role)
     Route::middleware(['role:admin'])->prefix('admin/cinemas')->group(function () {

@@ -99,4 +99,5 @@ return [
     'NOTIFICATION_SEND_FAILED' => 'Failed to send notification',
     'NOTIFICATION_USER_NOT_FOUND' => 'User not found for notification',
     'NOTIFICATION_NO_TOKENS' => 'No active FCM tokens found for user(s)',
+    'NOTIFICATION_NOT_FOUND' => 'Notification not found',
 ];

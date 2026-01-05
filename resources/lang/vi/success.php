@@ -72,4 +72,10 @@ return [
     'NOTIFICATION_SENT_SUCCESS' => 'Gửi thông báo thành công',
     'NOTIFICATION_BROADCAST_SUCCESS' => 'Đã gửi thông báo đến tất cả người dùng',
     'TOPIC_SUBSCRIPTION_SUCCESS' => 'Cập nhật đăng ký topic thành công',
+    'NOTIFICATIONS_FETCHED_SUCCESS' => 'Lấy danh sách thông báo thành công',
+    'NOTIFICATION_FETCHED_SUCCESS' => 'Lấy thông tin thông báo thành công',
+    'UNREAD_COUNT_FETCHED_SUCCESS' => 'Lấy số lượng thông báo chưa đọc thành công',
+    'NOTIFICATION_READ_SUCCESS' => 'Đã đánh dấu thông báo đã đọc',
+    'NOTIFICATIONS_READ_ALL_SUCCESS' => 'Đã đánh dấu tất cả thông báo đã đọc',
+    'NOTIFICATION_DELETED_SUCCESS' => 'Xóa thông báo thành công',
 ];
