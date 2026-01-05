@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\ShowtimeController;
 use App\Http\Controllers\Api\StripeWebhookController;
 use App\Http\Controllers\Api\FavoriteMovieController;
 use App\Http\Controllers\Api\VNPayController;
+use App\Http\Controllers\Api\VoucherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -119,6 +120,10 @@ Route::middleware(['language', 'api.key', 'auth:api'])->group(function () {
     // User Notification routes
     // GET /api/notifications - Returns notifications with unread_count, auto marks all as read
     Route::get('/notifications', [NotificationController::class, 'index']);
+
+    // User Voucher routes
+    // GET /api/vouchers - Returns available vouchers for the authenticated user
+    Route::get('/vouchers', [VoucherController::class, 'index']);
 
     // Admin Cinema routes (require admin role)
     Route::middleware(['role:admin'])->prefix('admin/cinemas')->group(function () {

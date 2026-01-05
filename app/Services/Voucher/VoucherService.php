@@ -180,5 +180,61 @@ class VoucherService
             $voucher->update(['status' => 'expired']);
         }
     }
+
+    /**
+     * Get all available vouchers for a specific user
+     * 
+     * This returns vouchers that:
+     * - Are active
+     * - Are within valid date range
+     * - Haven't exceeded usage limit
+     * - Apply to all users OR specifically to this user
+     * - User hasn't exceeded per_user_limit
+     *
+     * @param int $userId
+     * @param int|null $movieId Optional movie ID to filter vouchers applicable to that movie
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAvailableVouchersForUser(int $userId, ?int $movieId = null)
+    {
+        $now = now();
+
+        // Get all active vouchers within valid date range
+        $vouchers = Voucher::where('status', 'active')
+            ->where('valid_from', '<=', $now)
+            ->where('valid_to', '>=', $now)
+            ->where(function ($query) {
+                // Usage limit not exceeded
+                $query->whereNull('usage_limit')
+                    ->orWhereRaw('used_count < usage_limit');
+            })
+            ->orderBy('valid_to', 'asc') // Sắp xếp theo ngày hết hạn (sắp hết hạn trước)
+            ->get();
+
+        // Filter vouchers applicable to this user
+        $availableVouchers = $vouchers->filter(function ($voucher) use ($userId, $movieId) {
+            // Check if voucher applies to this user
+            if (!$voucher->isApplicableForUser($userId)) {
+                return false;
+            }
+
+            // Check if voucher applies to this movie (if movieId provided)
+            if ($movieId !== null && !$voucher->isApplicableForMovie($movieId)) {
+                return false;
+            }
+
+            // Check per_user_limit
+            if ($voucher->per_user_limit !== null) {
+                $userUsageCount = $voucher->getUserUsageCount($userId);
+                if ($userUsageCount >= $voucher->per_user_limit) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        return $availableVouchers->values();
+    }
 }
 
