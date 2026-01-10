@@ -23,7 +23,8 @@ class BookingConfirmationMail extends Mailable
     public function __construct(Booking $booking, ?string $locale = null)
     {
         $this->booking = $booking;
-        $this->locale = $locale ?? App::getLocale();
+        // Use default locale from notifications config, fallback to app locale
+        $this->locale = $locale ?? config('notifications.default_locale', App::getLocale());
     }
 
     /**

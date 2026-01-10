@@ -146,6 +146,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Default Locale for Notifications and Emails
+    |--------------------------------------------------------------------------
+    | 
+    | This determines the default language for notifications and emails
+    | when no locale is explicitly provided. Default: 'vi' (Vietnamese)
+    |
+    */
+    'default_locale' => env('NOTIFICATIONS_DEFAULT_LOCALE', 'vi'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Notification Templates
     |--------------------------------------------------------------------------
     | Define message templates for each notification type

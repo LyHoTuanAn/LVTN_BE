@@ -89,7 +89,8 @@ class NotificationDispatcher
     {
         try {
             $templates = config("notifications.templates.{$type}");
-            $locale = app()->getLocale();
+            // Use default locale from notifications config, fallback to app locale
+            $locale = config('notifications.default_locale', app()->getLocale());
 
             $title = $templates['title'][$locale] ?? $templates['title']['en'] ?? 'Notification';
             $body = $templates['body'][$locale] ?? $templates['body']['en'] ?? '';
@@ -211,7 +212,8 @@ class NotificationDispatcher
                 ];
             }
 
-            $locale = app()->getLocale();
+            // Use default locale from notifications config, fallback to app locale
+            $locale = config('notifications.default_locale', app()->getLocale());
 
             Mail::to($user->email)->send(new BookingConfirmationMail($booking, $locale));
 
