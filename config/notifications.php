@@ -29,6 +29,7 @@ return [
         'booking_paid' => [
             'fcm' => true,       // Gửi FCM cho user
             'telegram' => true,  // Gửi Telegram cho admin
+            'email' => true,     // Gửi Email cho user
             'sms' => false,
         ],
 
@@ -122,6 +123,15 @@ return [
             'sid' => env('TWILIO_SID'),
             'token' => env('TWILIO_TOKEN'),
         ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Email Configuration
+    |--------------------------------------------------------------------------
+    */
+    'email' => [
+        'enabled' => env('EMAIL_ENABLED', true),
     ],
 
     /*

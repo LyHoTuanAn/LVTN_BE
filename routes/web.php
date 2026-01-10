@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Admin\QrTicketController;
 use App\Http\Controllers\Admin\BookingController;
-
+use App\Http\Controllers\Web\DashboardController;
 
 
 Route::get('/api-docs', function () {
@@ -197,9 +197,7 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
 });
 
 // FinTech Dashboard Routes
-Route::get('/', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/api-management', function () {
     return view('api-management');

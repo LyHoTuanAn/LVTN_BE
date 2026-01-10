@@ -2,9 +2,11 @@
 
 namespace App\Services\Notification;
 
+use App\Mail\BookingConfirmationMail;
 use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class NotificationDispatcher
 {
@@ -46,6 +48,11 @@ class NotificationDispatcher
             $results['sms'] = $this->dispatchSms($type, $data, $userId);
         }
 
+        // Check if Email is enabled for this type
+        if ($this->isChannelEnabled($channels, 'email') && $userId) {
+            $results['email'] = $this->dispatchEmail($type, $data, $userId);
+        }
+
         Log::info("Notification dispatched", [
             'type' => $type,
             'user_id' => $userId,
@@ -70,6 +77,7 @@ class NotificationDispatcher
             'fcm' => config('notifications.fcm.enabled', true),
             'telegram' => config('notifications.telegram.enabled', true),
             'sms' => config('notifications.sms.enabled', false),
+            'email' => config('notifications.email.enabled', true),
             default => false,
         };
     }
@@ -146,6 +154,87 @@ class NotificationDispatcher
             'message' => 'SMS service not implemented',
         ];
     }
+     
+
+    /**
+     * Dispatch Email notification
+     */
+    protected function dispatchEmail(string $type, array $data, int $userId): array
+    {
+        try {
+            $user = User::find($userId);
+
+            if (!$user || !$user->email) {
+                return [
+                    'success' => false,
+                    'message' => 'User email not found',
+                ];
+            }
+
+            return match ($type) {
+                'booking_paid' => $this->sendBookingConfirmationEmail($data, $user),
+                default => [
+                    'success' => false,
+                    'message' => 'Email template not implemented for this type',
+                ],
+            };
+        } catch (\Exception $e) {
+            Log::error("Email dispatch failed", [
+                'type' => $type,
+                'error' => $e->getMessage(),
+            ]);
+
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * Send booking confirmation email
+     */
+    protected function sendBookingConfirmationEmail(array $data, User $user): array
+    {
+        try {
+            $booking = Booking::with([
+                'showtime.movie',
+                'showtime.room.cinema',
+                'seats',
+                'user'
+            ])->find($data['booking_id'] ?? null);
+
+            if (!$booking) {
+                return [
+                    'success' => false,
+                    'message' => 'Booking not found',
+                ];
+            }
+
+            $locale = app()->getLocale();
+
+            Mail::to($user->email)->send(new BookingConfirmationMail($booking, $locale));
+
+            Log::info("Booking confirmation email sent", [
+                'booking_code' => $booking->code,
+                'user_email' => $user->email,
+            ]);
+
+            return [
+                'success' => true,
+                'message' => 'Booking confirmation email sent successfully',
+            ];
+        } catch (\Exception $e) {
+            Log::error("Failed to send booking confirmation email", [
+                'error' => $e->getMessage(),
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Failed to send email: ' . $e->getMessage(),
+            ];
+        }
+    }
 
     /**
      * Replace placeholders in template
@@ -179,6 +268,7 @@ class NotificationDispatcher
         })->toArray();
 
         $data = [
+            'booking_id' => $booking->id,
             'code' => $booking->code,
             'movie_title' => $booking->showtime->movie->title ?? 'N/A',
             'cinema_name' => $booking->showtime->room->cinema->name ?? 'N/A',
