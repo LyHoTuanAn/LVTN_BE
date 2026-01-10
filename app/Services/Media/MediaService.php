@@ -225,5 +225,151 @@ class MediaService
         
         return $mediaFile;
     }
+
+    /**
+     * Convert base64 image to file and return URL
+     * Uses hash of base64 data to avoid duplicates
+     * 
+     * @param string $base64Data Base64 image data (with data:image/... prefix)
+     * @param int $userId User ID who owns the image
+     * @param int|null $folderId Folder ID (optional)
+     * @return string URL of the saved image
+     */
+    public function convertBase64ToUrl(string $base64Data, int $userId, ?int $folderId = null): string
+    {
+        // Extract base64 data (remove data:image/...;base64, prefix)
+        if (preg_match('/^data:image\/(\w+);base64,(.+)$/', $base64Data, $matches)) {
+            $mimeType = $matches[1];
+            $base64String = $matches[2];
+            $imageData = base64_decode($base64String);
+            
+            if ($imageData === false) {
+                return $base64Data; // Return original if decode fails
+            }
+
+            // Generate hash from base64 data to check for duplicates
+            $hash = md5($base64String);
+            
+            // Check if file already exists with this hash (based on file_path pattern)
+            // Use hash in filename to avoid duplicates
+            $directory = 'media/news/' . date('Y/m');
+            $fileName = 'content_' . $hash . '.webp';
+            $filePath = $directory . '/' . $fileName;
+            
+            // Check if file already exists
+            if (Storage::disk($this->disk)->exists($filePath)) {
+                // File exists, find or return URL
+                $existingMediaFile = MediaFile::where('file_path', $filePath)->first();
+                if ($existingMediaFile) {
+                    return $this->getUrl($existingMediaFile);
+                }
+            }
+            
+            // Create directory if not exists
+            Storage::disk($this->disk)->makeDirectory($directory);
+            
+            // Save image as WebP
+            try {
+                // Create image resource from decoded data
+                $image = imagecreatefromstring($imageData);
+                
+                if ($image === false) {
+                    return $base64Data; // Return original if image creation fails
+                }
+
+                // Get image dimensions
+                $width = imagesx($image);
+                $height = imagesy($image);
+
+                // Convert palette images to truecolor (required for WebP)
+                if (!imageistruecolor($image)) {
+                    $truecolorImage = imagecreatetruecolor($width, $height);
+                    
+                    // Preserve transparency
+                    if ($mimeType === 'png' || $mimeType === 'gif') {
+                        imagealphablending($truecolorImage, false);
+                        imagesavealpha($truecolorImage, true);
+                        $transparent = imagecolorallocatealpha($truecolorImage, 255, 255, 255, 127);
+                        imagefilledrectangle($truecolorImage, 0, 0, $width, $height, $transparent);
+                    }
+                    
+                    imagecopy($truecolorImage, $image, 0, 0, 0, 0, $width, $height);
+                    imagedestroy($image);
+                    $image = $truecolorImage;
+                }
+
+                // Get full path for saving
+                $fullPath = Storage::disk($this->disk)->path($filePath);
+                
+                // Ensure directory exists
+                $dir = dirname($fullPath);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+
+                // Convert and save as WebP
+                $success = imagewebp($image, $fullPath, 90);
+                imagedestroy($image);
+
+                if (!$success) {
+                    return $base64Data; // Return original if save fails
+                }
+
+                // Get file size
+                $fileSize = Storage::disk($this->disk)->size($filePath);
+
+                // Check if media file record already exists
+                $mediaFile = MediaFile::where('file_path', $filePath)->first();
+                
+                if (!$mediaFile) {
+                    // Create media file record
+                    $mediaFile = MediaFile::create([
+                        'folder_id' => $folderId,
+                        'user_id' => $userId,
+                        'file_name' => $fileName,
+                        'file_path' => $filePath,
+                        'mime_type' => 'image/webp',
+                        'size' => $fileSize,
+                        'type' => 'image',
+                    ]);
+                }
+
+                // Return full URL
+                return $this->getUrl($mediaFile);
+            } catch (\Exception $e) {
+                // Return original base64 if conversion fails
+                return $base64Data;
+            }
+        }
+
+        return $base64Data; // Return original if not a valid base64 image
+    }
+
+    /**
+     * Process HTML content and convert base64 images to URLs
+     * 
+     * @param string $content HTML content with base64 images
+     * @param int $userId User ID who owns the images
+     * @param int|null $folderId Folder ID (optional)
+     * @return string Processed HTML content with image URLs
+     */
+    public function processContentImages(string $content, int $userId, ?int $folderId = null): string
+    {
+        // Pattern to match base64 images in img src attributes
+        // Matches: <img ... src="data:image/..." ...>
+        $pattern = '/<img\s+([^>]*?)src=["\'](data:image\/[^"\']+)["\']([^>]*?)>/i';
+        
+        return preg_replace_callback($pattern, function ($matches) use ($userId, $folderId) {
+            $beforeSrc = $matches[1];
+            $base64Data = $matches[2];
+            $afterSrc = $matches[3];
+            
+            // Convert base64 to URL
+            $url = $this->convertBase64ToUrl($base64Data, $userId, $folderId);
+            
+            // Return img tag with URL (preserve other attributes)
+            return '<img ' . trim($beforeSrc) . ' src="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '"' . ($afterSrc ? ' ' . trim($afterSrc) : '') . '>';
+        }, $content);
+    }
 }
 
