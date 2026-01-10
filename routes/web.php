@@ -194,11 +194,11 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::post('/send-to-all', [NotificationWebController::class, 'sendToAll'])->name('send-to-all');
         Route::post('/send-to-topic', [NotificationWebController::class, 'sendToTopic'])->name('send-to-topic');
     });
+
+    // FinTech Dashboard Routes
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/settings', function () {
+        return view('settings');
+    })->name('settings');
 });
-
-// FinTech Dashboard Routes
-Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-Route::get('/settings', function () {
-    return view('settings');
-})->name('settings');
