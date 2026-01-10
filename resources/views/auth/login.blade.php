@@ -192,14 +192,14 @@
 
             <!-- Quick Actions -->
             <div class="grid grid-cols-2 gap-3">
-                <button type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/50 transition-colors">
+                <div class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800">
                     <i data-lucide="ticket" class="w-5 h-5 text-rose-500"></i>
                     <span class="text-zinc-300 text-sm font-medium">{{ __('My Tickets') }}</span>
-                </button>
-                <button type="button" class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 hover:bg-zinc-800/50 transition-colors">
+                </div>
+                <div class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-zinc-900 border border-zinc-800">
                     <i data-lucide="clock" class="w-5 h-5 text-rose-500"></i>
                     <span class="text-zinc-300 text-sm font-medium">{{ __('Showtimes') }}</span>
-                </button>
+                </div>
             </div>
 
             <!-- Login Form -->
@@ -257,20 +257,6 @@
                         <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
                     @enderror
                 </div>
-
-                <div class="flex items-center gap-3">
-                    <input
-                        type="checkbox"
-                        id="remember"
-                        name="remember"
-                        value="1"
-                        class="w-4 h-4 rounded bg-zinc-900 border-zinc-700 text-rose-600 focus:ring-rose-500/20 focus:ring-2"
-                    />
-                    <label for="remember" class="text-zinc-400 text-sm cursor-pointer">
-                        {{ __('Keep me signed in') }}
-                    </label>
-                </div>
-
                 <button
                     type="submit"
                     :disabled="isLoading"

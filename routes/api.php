@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\CinemaController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\MovieController;
+use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ReviewController;
@@ -66,6 +67,9 @@ Route::middleware(['language', 'api.key'])->group(function () {
 
     // Home route
     Route::get('/home', [HomeController::class, 'index']);
+
+    // Public news routes
+    Route::get('/news/{id}', [NewsController::class, 'show'])->where('id', '[0-9]+');
 
     // Stripe publishable key (public, no auth needed)
     Route::get('/payments/stripe-key', [PaymentController::class, 'getPublishableKey']);

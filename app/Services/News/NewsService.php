@@ -65,6 +65,16 @@ class NewsService
     }
 
     /**
+     * Get published news by ID (for public API)
+     */
+    public function getPublishedById(int $id): ?News
+    {
+        return News::with(['thumbnail', 'author'])
+            ->where('status', 'published')
+            ->find($id);
+    }
+
+    /**
      * Update a news item with optional media uploads.
      */
     public function update(int $id, array $data, ?UploadedFile $thumbnail = null): bool

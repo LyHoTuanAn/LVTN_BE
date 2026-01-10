@@ -100,4 +100,7 @@ return [
     'NOTIFICATION_USER_NOT_FOUND' => 'Không tìm thấy người dùng để gửi thông báo',
     'NOTIFICATION_NO_TOKENS' => 'Không tìm thấy FCM token nào cho người dùng',
     'NOTIFICATION_NOT_FOUND' => 'Không tìm thấy thông báo',
+
+    // News errors
+    'NEWS_NOT_FOUND' => 'Không tìm thấy bài viết',
 ];

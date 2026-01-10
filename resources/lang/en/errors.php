@@ -100,4 +100,7 @@ return [
     'NOTIFICATION_USER_NOT_FOUND' => 'User not found for notification',
     'NOTIFICATION_NO_TOKENS' => 'No active FCM tokens found for user(s)',
     'NOTIFICATION_NOT_FOUND' => 'Notification not found',
+
+    // News errors
+    'NEWS_NOT_FOUND' => 'News article not found',
 ];

@@ -78,4 +78,7 @@ return [
     'NOTIFICATION_READ_SUCCESS' => 'Đã đánh dấu thông báo đã đọc',
     'NOTIFICATIONS_READ_ALL_SUCCESS' => 'Đã đánh dấu tất cả thông báo đã đọc',
     'NOTIFICATION_DELETED_SUCCESS' => 'Xóa thông báo thành công',
+
+    // News Success
+    'NEWS_FETCHED_SUCCESS' => 'Lấy thông tin bài viết thành công',
 ];

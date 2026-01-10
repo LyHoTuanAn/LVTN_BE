@@ -78,4 +78,7 @@ return [
     'NOTIFICATION_READ_SUCCESS' => 'Notification marked as read',
     'NOTIFICATIONS_READ_ALL_SUCCESS' => 'All notifications marked as read',
     'NOTIFICATION_DELETED_SUCCESS' => 'Notification deleted successfully',
+
+    // News Success
+    'NEWS_FETCHED_SUCCESS' => 'News article fetched successfully',
 ];
