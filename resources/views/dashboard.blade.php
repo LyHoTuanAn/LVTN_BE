@@ -33,9 +33,9 @@
         </x-card-container>
     </div>
     
-    {{-- User Activity --}}
-    <x-card-container title="{{ __('User Activity') }}">
-        <x-chart-container id="userActivityChart" height="300" />
+    {{-- Popular Movies --}}
+    <x-card-container title="{{ __('Popular Movies') }}">
+        <x-chart-container id="popularMoviesChart" height="300" />
     </x-card-container>
 </div>
 
@@ -67,41 +67,44 @@
             });
         }
         
-        // User Activity Chart
-        const activityCtx = document.getElementById('userActivityChart');
-        if (activityCtx) {
-            new Chart(activityCtx.getContext('2d'), {
-                type: 'line',
+        // Popular Movies Chart
+        const moviesCtx = document.getElementById('popularMoviesChart');
+        if (moviesCtx) {
+            new Chart(moviesCtx.getContext('2d'), {
+                type: 'bar',
                 data: {
-                    labels: @json($activityData['labels']),
-                    datasets: [
-                        { 
-                            label: '{{ __('Logins') }}', 
-                            data: @json($activityData['datasets']['logins']), 
-                            borderColor: '#8884d8', 
-                            tension: 0.3, 
-                            fill: false 
-                        },
-                        { 
-                            label: '{{ __('Transactions') }}', 
-                            data: @json($activityData['datasets']['transactions']), 
-                            borderColor: '#82ca9d', 
-                            tension: 0.3, 
-                            fill: false 
-                        },
-                        { 
-                            label: '{{ __('API Calls') }}', 
-                            data: @json($activityData['datasets']['api_calls']), 
-                            borderColor: '#ffc658', 
-                            tension: 0.3, 
-                            fill: false 
-                        }
-                    ]
+                    labels: @json($moviesData['labels']),
+                    datasets: [{
+                        label: '{{ __('Number of Bookings') }}',
+                        data: @json($moviesData['data']),
+                        backgroundColor: [
+                            '#8884d8',
+                            '#82ca9d',
+                            '#ffc658',
+                            '#ff8042',
+                            '#a4de6c',
+                            '#d0ed57',
+                            '#83a6ed',
+                            '#8dd1e1',
+                            '#d084d8',
+                            '#ffbb96'
+                        ],
+                        borderRadius: 4,
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0
+                            }
+                        }
+                    }
                 }
             });
         }

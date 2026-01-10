@@ -20,10 +20,10 @@ class DashboardController extends Controller
         // Get revenue data for chart (last 12 months)
         $revenueData = $this->getRevenueData();
         
-        // Get user activity data (last 7 days)
-        $activityData = $this->getUserActivityData();
+        // Get popular movies data
+        $moviesData = $this->getPopularMoviesData();
         
-        return view('dashboard', compact('stats', 'revenueData', 'activityData'));
+        return view('dashboard', compact('stats', 'revenueData', 'moviesData'));
     }
     
     private function getStats()
@@ -118,44 +118,33 @@ class DashboardController extends Controller
         ];
     }
     
-    private function getUserActivityData()
+    private function getPopularMoviesData()
     {
-        $dates = [];
-        $logins = [];
-        $transactions = [];
-        $apiCalls = [];
+        // Get top 10 movies by booking count (last 30 days)
+        $popularMovies = Movie::withCount(['bookings' => function($query) {
+                $query->where('bookings.created_at', '>=', Carbon::now()->subDays(30))
+                      ->where('is_paid', true);
+            }])
+            ->having('bookings_count', '>', 0)
+            ->orderBy('bookings_count', 'desc')
+            ->limit(10)
+            ->get();
         
-        // Get data for last 7 days
-        for ($i = 6; $i >= 0; $i--) {
-            $date = Carbon::now()->subDays($i);
-            $dateKey = $date->format('Y-m-d');
-            
-            $dates[] = $dateKey;
-            
-            // Count unique users who made bookings (as proxy for logins)
-            $loginCount = Booking::whereDate('created_at', $dateKey)
-                ->distinct('user_id')
-                ->count('user_id');
-            $logins[] = $loginCount;
-            
-            // Count transactions (completed bookings)
-            $transactionCount = Booking::whereDate('created_at', $dateKey)
-                ->where('is_paid', true)
-                ->count();
-            $transactions[] = $transactionCount;
-            
-            // Count reviews as proxy for API calls
-            $reviewCount = Review::whereDate('created_at', $dateKey)->count();
-            $apiCalls[] = $reviewCount * 5; // Multiply for visual effect
+        $labels = [];
+        $data = [];
+        
+        foreach ($popularMovies as $movie) {
+            // Truncate long movie titles
+            $title = strlen($movie->title) > 30 
+                ? substr($movie->title, 0, 27) . '...' 
+                : $movie->title;
+            $labels[] = $title;
+            $data[] = $movie->bookings_count;
         }
         
         return [
-            'labels' => $dates,
-            'datasets' => [
-                'logins' => $logins,
-                'transactions' => $transactions,
-                'api_calls' => $apiCalls
-            ]
+            'labels' => $labels,
+            'data' => $data
         ];
     }
 }
