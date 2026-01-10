@@ -60,9 +60,14 @@ class ShowtimeService
 
     /**
      * Get showtimes by movie
+     * Filters out past showtimes (date < today OR date = today AND start_time < now)
      */
     public function getShowtimesByMovie(int $movieId, array $filters = []): Collection
     {
+        $now = now();
+        $today = $now->format('Y-m-d');
+        $currentTime = $now->format('H:i:s');
+
         $query = Showtime::where('movie_id', $movieId)
             ->with(['room.cinema'])
             ->where('status', '!=', 'cancelled');
@@ -77,7 +82,30 @@ class ShowtimeService
             });
         }
 
-        return $query->orderBy('date')->orderBy('start_time')->get();
+        $showtimes = $query->orderBy('date')->orderBy('start_time')->get();
+
+        // Filter out past showtimes
+        $showtimes = $showtimes->filter(function ($showtime) use ($today, $currentTime) {
+            $showtimeDate = $showtime->date->format('Y-m-d');
+            
+            // Remove showtimes from past dates
+            if ($showtimeDate < $today) {
+                return false;
+            }
+            
+            // For today's showtimes, remove those that have already started
+            if ($showtimeDate === $today) {
+                $startTime = is_string($showtime->start_time) 
+                    ? $showtime->start_time 
+                    : $showtime->start_time->format('H:i:s');
+                return $startTime > $currentTime;
+            }
+            
+            // Future dates: keep all
+            return true;
+        });
+
+        return $showtimes->values();
     }
 
     /**
