@@ -13,3 +13,11 @@ Schedule::command('movies:sync-status')
     ->everyMinute()
     ->description('Sync movie status based on showtimes (COMING_SOON, UPCOMING, NOW_SHOWING)')
     ->withoutOverlapping();
+
+Schedule::call(function () {
+    file_put_contents(
+        storage_path('logs/cron_test.log'),
+        now() . " - cron OK\n",
+        FILE_APPEND
+    );
+})->everyMinute();
