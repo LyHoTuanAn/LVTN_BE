@@ -199,10 +199,6 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
 // FinTech Dashboard Routes
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/api-management', function () {
-    return view('api-management');
-})->name('api-management');
-
 Route::get('/settings', function () {
     return view('settings');
 })->name('settings');
