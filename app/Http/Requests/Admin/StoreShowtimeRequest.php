@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
+use App\Models\Movie;
 
 class StoreShowtimeRequest extends FormRequest
 {
@@ -24,10 +26,60 @@ class StoreShowtimeRequest extends FormRequest
             'room_id' => 'required|exists:rooms,id',
             'date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            'end_time' => 'required|date_format:H:i',
             'price' => 'required|integer|min:0|max:999999999',
             'status' => 'required|in:scheduled,ongoing,completed',
         ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function ($validator) {
+            $startTime = $this->input('start_time');
+            $endTime = $this->input('end_time');
+            $movieId = $this->input('movie_id');
+
+            if (!$startTime || !$endTime) {
+                return;
+            }
+
+            // Parse times
+            $start = \Carbon\Carbon::createFromFormat('H:i', $startTime);
+            $end = \Carbon\Carbon::createFromFormat('H:i', $endTime);
+
+            // If end_time is less than start_time, it means end_time is next day
+            if ($end->lt($start)) {
+                // Add 24 hours to end_time to get the actual end time
+                $end->addDay();
+            }
+
+            // Calculate duration in minutes
+            $duration = $start->diffInMinutes($end);
+
+            // Get movie duration
+            $movie = Movie::find($movieId);
+            if ($movie && $movie->duration) {
+                // Allow some tolerance (±5 minutes) for rounding
+                $expectedDuration = $movie->duration;
+                $tolerance = 5;
+
+                if ($duration < $expectedDuration - $tolerance || $duration > $expectedDuration + $tolerance) {
+                    $validator->errors()->add(
+                        'end_time',
+                        __('End time does not match movie duration. Expected duration: :duration minutes', [
+                            'duration' => $expectedDuration
+                        ])
+                    );
+                }
+            } else {
+                // If no movie duration, just check that end_time is after start_time
+                // (either same day or next day)
+                // This case is already handled by the logic above
+            }
+        });
     }
 
     /**
@@ -79,7 +131,6 @@ class StoreShowtimeRequest extends FormRequest
             'start_time.date_format' => __('Invalid start time format (HH:MM)'),
             'end_time.required' => __('End time is required'),
             'end_time.date_format' => __('Invalid end time format (HH:MM)'),
-            'end_time.after' => __('End time must be after start time'),
             'price.required' => __('Price is required'),
             'price.integer' => __('Price must be a whole number'),
             'price.min' => __('Price cannot be negative'),
