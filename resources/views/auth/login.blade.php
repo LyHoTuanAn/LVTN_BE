@@ -174,7 +174,14 @@
                 <p class="text-zinc-500">{{ __('Sign in to book your next movie experience') }}</p>
             </div>
 
-            <!-- Error Messages -->
+            <!-- Error Messages from Session -->
+            @if (session('error'))
+                <div class="p-4 rounded-xl bg-red-950/50 border border-red-900/50">
+                    <p class="text-red-400 text-sm">{{ session('error') }}</p>
+                </div>
+            @endif
+
+            <!-- Error Messages from Validation -->
             @if ($errors->any())
                 <div class="p-4 rounded-xl bg-red-950/50 border border-red-900/50">
                     @foreach ($errors->all() as $error)

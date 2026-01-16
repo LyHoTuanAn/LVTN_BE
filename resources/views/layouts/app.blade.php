@@ -96,7 +96,14 @@
                     </div>
                 @endif
 
-                {{-- Error Messages --}}
+                {{-- Error Messages from Session --}}
+                @if (session('error'))
+                    <div style="background: #f8d7da; color: #721c24; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                {{-- Error Messages from Validation --}}
                 @if (isset($errors) && $errors->any())
                     <div style="background: #f8d7da; color: #721c24; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
                         <ul style="margin: 0; padding-left: 20px;">

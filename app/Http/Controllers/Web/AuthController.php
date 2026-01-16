@@ -20,8 +20,13 @@ class AuthController extends Controller
     /**
      * Show the login form
      */
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
+        // If there's an error message in session (e.g., from middleware), show login form with error
+        if ($request->session()->has('error')) {
+            return view('auth.login');
+        }
+
         // If already logged in, redirect to appropriate dashboard
         if (Auth::check()) {
             return $this->redirectToDashboard(Auth::user());

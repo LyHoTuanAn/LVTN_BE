@@ -31,7 +31,7 @@ class RoleMiddleware
             }
 
             // For web requests, redirect to login
-            return redirect()->route('web.login.form');
+            return redirect()->route('login');
         }
 
         // Eager load role to avoid N+1 query
@@ -52,8 +52,8 @@ class RoleMiddleware
             }
 
             // For web requests, redirect to login with error message
-            return redirect()->route('web.login.form')
-                ->withErrors(['role' => __('errors.FORBIDDEN')]);
+            return redirect()->route('login')
+                ->with('error', __('errors.FORBIDDEN'));
         }
 
         return $next($request);
