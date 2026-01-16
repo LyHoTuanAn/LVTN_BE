@@ -18,7 +18,7 @@
                 <select name="room_id" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9em; height: 38px; line-height: 1; box-sizing: border-box;">
                     <option value="">{{ __('All Rooms') }}</option>
                     @foreach ($rooms as $room)
-                        <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>{{ $room->name }}</option>
+                        <option value="{{ $room->id }}" {{ request('room_id') == $room->id ? 'selected' : '' }}>{{ $room->name }}{{ $room->cinema ? ' - ' . $room->cinema->name : '' }}</option>
                     @endforeach
                 </select>
                 <input 
@@ -61,7 +61,7 @@
                 <tr style="border-bottom: 1px solid #dee2e6;">
                     <td style="padding: 12px;" data-label="{{ __('ID') }}">{{ $showtime->id }}</td>
                     <td style="padding: 12px; font-weight: 500;" data-label="{{ __('Movie') }}">{{ $showtime->movie?->title ?? '-' }}</td>
-                    <td style="padding: 12px;" data-label="{{ __('Room') }}">{{ $showtime->room?->name ?? '-' }}</td>
+                    <td style="padding: 12px;" data-label="{{ __('Room') }}">{{ $showtime->room ? ($showtime->room->name . ($showtime->room->cinema ? ' - ' . $showtime->room->cinema->name : '')) : '-' }}</td>
                     <td style="padding: 12px;" data-label="{{ __('Date') }}">{{ $showtime->date->format('d/m/Y') }}</td>
                     <td style="padding: 12px;" data-label="{{ __('Time') }}">{{ $showtime->start_time }} - {{ $showtime->end_time }}</td>
                     <td style="padding: 12px;" data-label="{{ __('Price') }}">{{ number_format($showtime->price, 0, ',', '.') }} VNĐ</td>

@@ -53,7 +53,7 @@
                     <option value="">{{ __('Select Room') }}</option>
                     @foreach ($rooms as $room)
                         <option value="{{ $room->id }}" {{ old('room_id', $showtime->room_id) == $room->id ? 'selected' : '' }}>
-                            {{ $room->name }} ({{ $room->seat_count }} {{ __('seats') }})
+                            {{ $room->name }}{{ $room->cinema ? ' - ' . $room->cinema->name : '' }} ({{ $room->seat_count }} {{ __('seats') }})
                         </option>
                     @endforeach
                 </select>

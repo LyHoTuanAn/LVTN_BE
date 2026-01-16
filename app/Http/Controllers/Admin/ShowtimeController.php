@@ -27,7 +27,7 @@ class ShowtimeController extends Controller
     {
         $showtimes = $this->showtimeService->getAllShowtimes($request->all());
         $movies = Movie::orderBy('title')->get();
-        $rooms = Room::orderBy('name')->get();
+        $rooms = Room::with('cinema')->orderBy('name')->get();
 
         return view('admin.showtimes.index', compact('showtimes', 'movies', 'rooms'));
     }
@@ -39,7 +39,7 @@ class ShowtimeController extends Controller
     {
         // Get all movies (status 'ended' no longer exists, replaced by COMING_SOON/NOW_SHOWING)
         $movies = Movie::orderBy('title')->get();
-        $rooms = Room::orderBy('name')->get();
+        $rooms = Room::with('cinema')->orderBy('name')->get();
 
         return view('admin.showtimes.create', compact('movies', 'rooms'));
     }
@@ -220,7 +220,7 @@ class ShowtimeController extends Controller
         }
 
         $movies = Movie::orderBy('title')->get();
-        $rooms = Room::orderBy('name')->get();
+        $rooms = Room::with('cinema')->orderBy('name')->get();
 
         return view('admin.showtimes.edit', compact('showtime', 'movies', 'rooms'));
     }
