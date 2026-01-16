@@ -103,4 +103,8 @@ return [
 
     // News errors
     'NEWS_NOT_FOUND' => 'Không tìm thấy bài viết',
+
+    // Showtime errors
+    'SHOWTIME_DUPLICATE_SLOT' => 'Đã tồn tại suất chiếu cho phòng này, ngày và giờ bắt đầu này. Vui lòng chọn thời gian khác.',
+    'SHOWTIME_TIME_OVERLAP' => 'Suất chiếu này bị chồng lấn với suất chiếu khác trong cùng phòng và ngày. Vui lòng chọn thời gian khác.',
 ];

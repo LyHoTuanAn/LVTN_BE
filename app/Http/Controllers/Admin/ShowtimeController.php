@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateShowtimeRequest;
 use App\Models\Movie;
 use App\Models\Room;
 use App\Services\Showtime\ShowtimeService;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class ShowtimeController extends Controller
@@ -56,7 +57,25 @@ class ShowtimeController extends Controller
             return redirect()
                 ->route('admin.showtimes.show', $showtime->id)
                 ->with('success', __('Showtime created successfully'));
+        } catch (QueryException $e) {
+            // Check if it's a duplicate entry error for unique constraint
+            if ($e->getCode() === '23000' && str_contains($e->getMessage(), 'uk_showtimes_room_date_start')) {
+                return back()
+                    ->withErrors(['error' => __('errors.SHOWTIME_DUPLICATE_SLOT')])
+                    ->withInput();
+            }
+            
+            return back()
+                ->withErrors(['error' => __('Failed to create showtime: :message', ['message' => $e->getMessage()])])
+                ->withInput();
         } catch (\Exception $e) {
+            // Check if it's a time overlap error
+            if ($e->getMessage() === 'SHOWTIME_TIME_OVERLAP') {
+                return back()
+                    ->withErrors(['error' => __('errors.SHOWTIME_TIME_OVERLAP')])
+                    ->withInput();
+            }
+            
             return back()
                 ->withErrors(['error' => __('Failed to create showtime: :message', ['message' => $e->getMessage()])])
                 ->withInput();
@@ -224,7 +243,25 @@ class ShowtimeController extends Controller
             return redirect()
                 ->route('admin.showtimes.show', $id)
                 ->with('success', __('Showtime updated successfully'));
+        } catch (QueryException $e) {
+            // Check if it's a duplicate entry error for unique constraint
+            if ($e->getCode() === '23000' && str_contains($e->getMessage(), 'uk_showtimes_room_date_start')) {
+                return back()
+                    ->withErrors(['error' => __('errors.SHOWTIME_DUPLICATE_SLOT')])
+                    ->withInput();
+            }
+            
+            return back()
+                ->withErrors(['error' => __('Failed to update showtime: :message', ['message' => $e->getMessage()])])
+                ->withInput();
         } catch (\Exception $e) {
+            // Check if it's a time overlap error
+            if ($e->getMessage() === 'SHOWTIME_TIME_OVERLAP') {
+                return back()
+                    ->withErrors(['error' => __('errors.SHOWTIME_TIME_OVERLAP')])
+                    ->withInput();
+            }
+            
             return back()
                 ->withErrors(['error' => __('Failed to update showtime: :message', ['message' => $e->getMessage()])])
                 ->withInput();

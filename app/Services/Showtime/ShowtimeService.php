@@ -162,15 +162,120 @@ class ShowtimeService
     }
 
     /**
+     * Normalize time string to H:i:s format
+     * 
+     * @param string $time Can be H:i or H:i:s format
+     * @return string Time in H:i:s format
+     */
+    protected function normalizeTime(string $time): string
+    {
+        // If already in H:i:s format, return as is
+        if (preg_match('/^\d{2}:\d{2}:\d{2}$/', $time)) {
+            return $time;
+        }
+        
+        // If in H:i format, add :00 for seconds
+        if (preg_match('/^\d{2}:\d{2}$/', $time)) {
+            return $time . ':00';
+        }
+        
+        // Try to parse and format
+        try {
+            return \Carbon\Carbon::parse($time)->format('H:i:s');
+        } catch (\Exception $e) {
+            return $time; // Return original if parsing fails
+        }
+    }
+
+    /**
+     * Check if showtime overlaps with existing showtimes in the same room and date
+     * 
+     * Logic:
+     * - Only check showtimes in the same room (room_id)
+     * - Only check showtimes on the same date
+     * - Two showtimes overlap if:
+     *   - New start_time < Existing end_time AND
+     *   - New end_time > Existing start_time
+     * 
+     * Examples:
+     * ❌ Overlap: 09:00-10:36 and 10:00-11:36 (10:00-10:36 overlaps)
+     * ✅ No overlap: 09:00-10:36 and 10:36-12:00 (touching at 10:36, but not overlapping)
+     * 
+     * @param int $roomId
+     * @param string $date Format: Y-m-d
+     * @param string $startTime Format: H:i or H:i:s
+     * @param string $endTime Format: H:i or H:i:s
+     * @param int|null $excludeShowtimeId Exclude this showtime ID (for update)
+     * @return bool True if overlaps, False otherwise
+     */
+    public function checkTimeOverlap(int $roomId, string $date, string $startTime, string $endTime, ?int $excludeShowtimeId = null): bool
+    {
+        // Get all showtimes in the same room and date
+        $query = Showtime::where('room_id', $roomId)
+            ->where('date', $date);
+        
+        // Exclude current showtime when updating
+        if ($excludeShowtimeId) {
+            $query->where('id', '!=', $excludeShowtimeId);
+        }
+        
+        $existingShowtimes = $query->get();
+        
+        // Normalize and convert new times to Carbon for comparison
+        $newStartTime = $this->normalizeTime($startTime);
+        $newEndTime = $this->normalizeTime($endTime);
+        $newStart = \Carbon\Carbon::createFromFormat('H:i:s', $newStartTime);
+        $newEnd = \Carbon\Carbon::createFromFormat('H:i:s', $newEndTime);
+        
+        foreach ($existingShowtimes as $existing) {
+            // Get existing showtime times and normalize
+            $existingStartTime = is_string($existing->start_time) 
+                ? $existing->start_time 
+                : $existing->start_time->format('H:i:s');
+            $existingEndTime = is_string($existing->end_time) 
+                ? $existing->end_time 
+                : $existing->end_time->format('H:i:s');
+            
+            $existingStartTime = $this->normalizeTime($existingStartTime);
+            $existingEndTime = $this->normalizeTime($existingEndTime);
+            
+            $existingStart = \Carbon\Carbon::createFromFormat('H:i:s', $existingStartTime);
+            $existingEnd = \Carbon\Carbon::createFromFormat('H:i:s', $existingEndTime);
+            
+            // Check overlap: new start < existing end AND new end > existing start
+            // This means there's a time period where both showtimes are active
+            if ($newStart->lt($existingEnd) && $newEnd->gt($existingStart)) {
+                return true; // Overlaps
+            }
+        }
+        
+        return false; // No overlap
+    }
+
+    /**
      * Create a new showtime
+     * 
+     * @throws \Exception If showtime overlaps with existing showtime
      */
     public function createShowtime(array $data): Showtime
     {
+        // Check for time overlap
+        if ($this->checkTimeOverlap(
+            $data['room_id'],
+            $data['date'],
+            $data['start_time'],
+            $data['end_time']
+        )) {
+            throw new \Exception('SHOWTIME_TIME_OVERLAP');
+        }
+        
         return Showtime::create($data);
     }
 
     /**
      * Update showtime
+     * 
+     * @throws \Exception If showtime overlaps with existing showtime
      */
     public function updateShowtime(int $id, array $data): bool
     {
@@ -178,6 +283,27 @@ class ShowtimeService
         
         if (!$showtime) {
             return false;
+        }
+
+        // Get values for overlap check (use new data or existing showtime data)
+        $roomId = $data['room_id'] ?? $showtime->room_id;
+        $date = $data['date'] ?? $showtime->date->format('Y-m-d');
+        
+        // Normalize start_time and end_time
+        $startTime = $data['start_time'] ?? (
+            is_string($showtime->start_time) 
+                ? $showtime->start_time 
+                : $showtime->start_time->format('H:i:s')
+        );
+        $endTime = $data['end_time'] ?? (
+            is_string($showtime->end_time) 
+                ? $showtime->end_time 
+                : $showtime->end_time->format('H:i:s')
+        );
+        
+        // Check for time overlap (exclude current showtime)
+        if ($this->checkTimeOverlap($roomId, $date, $startTime, $endTime, $id)) {
+            throw new \Exception('SHOWTIME_TIME_OVERLAP');
         }
 
         return $showtime->update($data);

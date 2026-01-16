@@ -103,4 +103,8 @@ return [
 
     // News errors
     'NEWS_NOT_FOUND' => 'News article not found',
+
+    // Showtime errors
+    'SHOWTIME_DUPLICATE_SLOT' => 'A showtime already exists for this room, date, and start time. Please choose a different time slot.',
+    'SHOWTIME_TIME_OVERLAP' => 'This showtime overlaps with an existing showtime in the same room and date. Please choose a different time slot.',
 ];
