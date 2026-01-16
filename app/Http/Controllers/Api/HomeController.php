@@ -27,14 +27,12 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $nowShowingLimit = (int) $request->get('now_showing_limit', 10);
-        $upcomingLimit = (int) $request->get('upcoming_limit', 10);
         $comingSoonLimit = (int) $request->get('coming_soon_limit', 10);
         $roomLimit = (int) $request->get('room_limit', 10);
         $newsLimit = (int) $request->get('news_limit', 10);
 
         $data = $this->homeService->getHomeData(
             $nowShowingLimit,
-            $upcomingLimit,
             $comingSoonLimit,
             $roomLimit,
             $newsLimit
@@ -43,7 +41,6 @@ class HomeController extends Controller
         $formattedData = [
             'now_showing' => MovieResource::collection($data['now_showing']),
             'coming_soon' => MovieResource::collection($data['coming_soon']),
-            'upcoming' => MovieResource::collection($data['upcoming']),
             'room_types' => RoomTypeResource::collection($data['room_types']),
             'news' => NewsResource::collection($data['news']),
         ];

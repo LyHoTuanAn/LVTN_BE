@@ -69,8 +69,7 @@ class ShowtimeService
         $currentTime = $now->format('H:i:s');
 
         $query = Showtime::where('movie_id', $movieId)
-            ->with(['room.cinema'])
-            ->where('status', '!=', 'cancelled');
+            ->with(['room.cinema']);
 
         if (isset($filters['date'])) {
             $query->where('date', $filters['date']);

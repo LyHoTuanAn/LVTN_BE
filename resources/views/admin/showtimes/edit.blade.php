@@ -94,7 +94,6 @@
                     <option value="scheduled" {{ old('status', $showtime->status) == 'scheduled' ? 'selected' : '' }}>{{ __('Scheduled') }}</option>
                     <option value="ongoing" {{ old('status', $showtime->status) == 'ongoing' ? 'selected' : '' }}>{{ __('Ongoing') }}</option>
                     <option value="completed" {{ old('status', $showtime->status) == 'completed' ? 'selected' : '' }}>{{ __('Completed') }}</option>
-                    <option value="cancelled" {{ old('status', $showtime->status) == 'cancelled' ? 'selected' : '' }}>{{ __('Cancelled') }}</option>
                 </select>
                 @error('status')
                     <span style="color: #e74c3c; font-size: 0.85em; margin-top: 5px; display: block;">{{ $message }}</span>

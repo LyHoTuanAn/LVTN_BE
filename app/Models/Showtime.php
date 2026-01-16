@@ -17,12 +17,10 @@ class Showtime extends Model
      * SCHEDULED: Suất chiếu đã lên lịch, chưa bắt đầu
      * ONGOING: Suất chiếu đang diễn ra
      * COMPLETED: Suất chiếu đã kết thúc
-     * CANCELLED: Suất chiếu đã bị hủy
      */
     public const STATUS_SCHEDULED = 'scheduled';
     public const STATUS_ONGOING = 'ongoing';
     public const STATUS_COMPLETED = 'completed';
-    public const STATUS_CANCELLED = 'cancelled';
 
     /**
      * Get all available statuses
@@ -33,7 +31,6 @@ class Showtime extends Model
             self::STATUS_SCHEDULED => 'Đã lên lịch',
             self::STATUS_ONGOING => 'Đang chiếu',
             self::STATUS_COMPLETED => 'Đã hoàn thành',
-            self::STATUS_CANCELLED => 'Đã hủy',
         ];
     }
 

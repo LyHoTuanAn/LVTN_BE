@@ -19,7 +19,6 @@
                 <select name="status" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 0.9em;">
                     <option value="">{{ __('All Status') }}</option>
                     <option value="COMING_SOON" {{ request('status') == 'COMING_SOON' ? 'selected' : '' }}>{{ __('Coming Soon') }}</option>
-                    <option value="UPCOMING" {{ request('status') == 'UPCOMING' ? 'selected' : '' }}>{{ __('Upcoming') }}</option>
                     <option value="NOW_SHOWING" {{ request('status') == 'NOW_SHOWING' ? 'selected' : '' }}>{{ __('Now Showing') }}</option>
                 </select>
                 <button type="submit" style="padding: 0 20px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9em; line-height: 1; height: 38px; box-sizing: border-box;">
@@ -69,12 +68,10 @@
                             $computedStatus = $movie->getComputedStatus();
                             $statusColors = [
                                 'COMING_SOON' => ['bg' => '#fff3e0', 'color' => '#e65100'],
-                                'UPCOMING' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
                                 'NOW_SHOWING' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
                             ];
                             $statusLabels = [
                                 'COMING_SOON' => __('Coming Soon'),
-                                'UPCOMING' => __('Upcoming'),
                                 'NOW_SHOWING' => __('Now Showing'),
                             ];
                         @endphp

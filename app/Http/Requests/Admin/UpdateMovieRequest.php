@@ -24,7 +24,7 @@ class UpdateMovieRequest extends FormRequest
             'description' => 'nullable|string',
             'duration' => 'required|integer|min:1|max:600',
             'release_date' => 'required|date',
-            'status' => 'nullable|in:COMING_SOON,UPCOMING,NOW_SHOWING',
+            'status' => 'nullable|in:COMING_SOON,NOW_SHOWING',
             'genre' => 'nullable|string|max:255',
             'age_classification' => 'required|in:P,K,T13,T16,T18,C',
             'language' => 'nullable|string|max:100',

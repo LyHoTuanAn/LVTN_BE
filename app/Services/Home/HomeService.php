@@ -13,7 +13,6 @@ class HomeService
      * Get home page data
      * 
      * @param int $nowShowingLimit Number of now showing movies
-     * @param int $upcomingLimit Number of upcoming movies
      * @param int $comingSoonLimit Number of coming soon movies
      * @param int $roomLimit Number of rooms
      * @param int $newsLimit Number of news
@@ -21,7 +20,6 @@ class HomeService
      */
     public function getHomeData(
         int $nowShowingLimit = 10,
-        int $upcomingLimit = 10,
         int $comingSoonLimit = 10,
         int $roomLimit = 10,
         int $newsLimit = 10
@@ -29,7 +27,6 @@ class HomeService
         return [
             'now_showing' => $this->getNowShowingMovies($nowShowingLimit),
             'coming_soon' => $this->getComingSoonMovies($comingSoonLimit),
-            'upcoming' => $this->getUpcomingMovies($upcomingLimit),
             'room_types' => $this->getRoomTypes($roomLimit),
             'news' => $this->getNews($newsLimit),
         ];
@@ -37,11 +34,11 @@ class HomeService
 
     /**
      * Get now showing movies
-     * Phim có ít nhất 1 suất đang ONGOING hoặc có suất SCHEDULED hôm nay
+     * Phim có release_date <= today (không phụ thuộc vào showtimes)
      */
     protected function getNowShowingMovies(int $limit): Collection
     {
-        return Movie::with(['poster', 'showtimes'])
+        return Movie::with(['poster'])
             ->get()
             ->filter(function ($movie) {
                 return $movie->getComputedStatus() === Movie::STATUS_NOW_SHOWING;
@@ -52,28 +49,12 @@ class HomeService
     }
 
     /**
-     * Get upcoming movies
-     * Phim có suất SCHEDULED trong tương lai (sau hôm nay)
-     */
-    protected function getUpcomingMovies(int $limit): Collection
-    {
-        return Movie::with(['poster', 'showtimes'])
-            ->get()
-            ->filter(function ($movie) {
-                return $movie->getComputedStatus() === Movie::STATUS_UPCOMING;
-            })
-            ->sortBy('release_date')
-            ->take($limit)
-            ->values();
-    }
-
-    /**
      * Get coming soon movies
-     * Phim chưa có suất chiếu nào
+     * Phim có release_date > today (không phụ thuộc vào showtimes)
      */
     protected function getComingSoonMovies(int $limit): Collection
     {
-        return Movie::with(['poster', 'showtimes'])
+        return Movie::with(['poster'])
             ->get()
             ->filter(function ($movie) {
                 return $movie->getComputedStatus() === Movie::STATUS_COMING_SOON;

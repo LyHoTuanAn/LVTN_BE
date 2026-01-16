@@ -19,7 +19,7 @@ class SyncMovieStatusCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Sync movie status based on showtimes (COMING_SOON, UPCOMING, NOW_SHOWING)';
+    protected $description = 'Sync movie status based on release_date (COMING_SOON, NOW_SHOWING)';
 
     /**
      * Execute the console command.

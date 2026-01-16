@@ -84,12 +84,10 @@
                     $computedStatus = $movie->getComputedStatus();
                     $statusColors = [
                         'COMING_SOON' => ['bg' => '#fff3e0', 'color' => '#e65100'],
-                        'UPCOMING' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
                         'NOW_SHOWING' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
                     ];
                     $statusLabels = [
                         'COMING_SOON' => __('Coming Soon'),
-                        'UPCOMING' => __('Upcoming'),
                         'NOW_SHOWING' => __('Now Showing'),
                     ];
                 @endphp

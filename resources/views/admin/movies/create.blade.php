@@ -85,10 +85,10 @@
                         <span style="color: #666; font-size: 0.85em;">{{ __('(Default)') }}</span>
                     </div>
                     <p style="margin: 0; color: #2e7d32; font-size: 0.85em; line-height: 1.5;">
-                        <strong>{{ __('Note:') }}</strong> {{ __('Status is automatically calculated based on showtimes:') }}
-                        <br>• <strong>{{ __('Coming Soon') }}</strong>: {{ __('No showtimes') }}
-                        <br>• <strong>{{ __('Upcoming') }}</strong>: {{ __('Has scheduled showtimes in the future') }}
-                        <br>• <strong>{{ __('Now Showing') }}</strong>: {{ __('Has ongoing showtimes or scheduled today') }}
+                        <strong>{{ __('Note:') }}</strong> {{ __('Status is automatically calculated based on release_date:') }}
+                        <br>• <strong>{{ __('Coming Soon') }}</strong>: {{ __('release_date > today') }}
+                        <br>• <strong>{{ __('Now Showing') }}</strong>: {{ __('release_date <= today') }}
+                        <br><em style="color: #666;">{{ __('Status does not depend on showtimes') }}</em>
                     </p>
                 </div>
             </div>

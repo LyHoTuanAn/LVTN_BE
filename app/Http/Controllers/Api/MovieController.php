@@ -29,7 +29,7 @@ class MovieController extends Controller
      * @param Request $request
      *   - keyword: Search in title and description
      *   - genre: Filter by genre
-     *   - status: Filter by computed status (COMING_SOON, UPCOMING, NOW_SHOWING)
+     *   - status: Filter by computed status (COMING_SOON, NOW_SHOWING) - based on release_date
      *   - age_classification: Filter by age classification (P, K, T13, T16, T18, C)
      *   - duration_min: Minimum duration in minutes
      *   - duration_max: Maximum duration in minutes

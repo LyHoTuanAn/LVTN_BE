@@ -21,12 +21,9 @@ class FavoriteMovieService
             ->whereHas('favoritedByUsers', function ($q) use ($userId) {
                 $q->where('user_id', $userId);
             })
-            ->with(['poster', 'trailer']);
-
-        // Filter by status
-        if (isset($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
+            ->with(['poster', 'trailer', 'favoritedByUsers' => function ($q) use ($userId) {
+                $q->where('user_id', $userId)->withPivot('created_at');
+            }]);
 
         // Search by title
         if (isset($filters['search']) && !empty($filters['search'])) {
@@ -37,16 +34,39 @@ class FavoriteMovieService
         $sortBy = $filters['sort_by'] ?? 'created_at';
         $sortOrder = $filters['sort_order'] ?? 'desc';
         
-        if ($sortBy === 'favorited_at') {
-            $query->withPivot(['created_at as favorited_at'])
-                ->orderBy('favorite_movies.created_at', $sortOrder);
-        } else {
-            $query->orderBy($sortBy, $sortOrder);
-        }
-
-        $perPage = $filters['per_page'] ?? 15;
+        $movies = $query->get();
         
-        return $query->paginate($perPage);
+        // Filter by computed status if provided
+        if (isset($filters['status'])) {
+            $statusFilter = strtoupper($filters['status']);
+            $movies = $movies->filter(function ($movie) use ($statusFilter) {
+                return $movie->getComputedStatus() === $statusFilter;
+            });
+        }
+        
+        // Apply sorting
+        if ($sortBy === 'favorited_at') {
+            $movies = $movies->sortBy(function ($movie) use ($sortOrder) {
+                $favorite = $movie->favoritedByUsers->first();
+                return $favorite ? $favorite->pivot->created_at : null;
+            }, SORT_REGULAR, $sortOrder === 'desc');
+        } else {
+            $movies = $movies->sortBy($sortBy, SORT_REGULAR, $sortOrder === 'desc');
+        }
+        
+        // Manual pagination
+        $perPage = $filters['per_page'] ?? 15;
+        $currentPage = request()->get('page', 1);
+        $items = $movies->forPage($currentPage, $perPage);
+        $total = $movies->count();
+        
+        return new \Illuminate\Contracts\Pagination\LengthAwarePaginator(
+            $items,
+            $total,
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
     }
 
     /**

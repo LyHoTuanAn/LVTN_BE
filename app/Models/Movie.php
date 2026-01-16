@@ -16,12 +16,10 @@ class Movie extends Model
     /**
      * Movie status constants
      * 
-     * COMING_SOON: Sắp ra mắt - Chưa có suất chiếu
-     * UPCOMING: Sắp chiếu - Có suất chiếu trong tương lai, chưa có suất nào đang diễn ra  
-     * NOW_SHOWING: Đang chiếu - Có ít nhất 1 suất đang ONGOING hoặc còn suất trong hôm nay
+     * COMING_SOON: Sắp ra mắt - Khi release_date > today (không phụ thuộc vào showtimes)
+     * NOW_SHOWING: Đang chiếu - Khi release_date <= today (không phụ thuộc vào showtimes)
      */
     public const STATUS_COMING_SOON = 'COMING_SOON';
-    public const STATUS_UPCOMING = 'UPCOMING';
     public const STATUS_NOW_SHOWING = 'NOW_SHOWING';
 
     /**
@@ -30,7 +28,6 @@ class Movie extends Model
     public const SHOWTIME_SCHEDULED = 'scheduled';
     public const SHOWTIME_ONGOING = 'ongoing';
     public const SHOWTIME_COMPLETED = 'completed';
-    public const SHOWTIME_CANCELLED = 'cancelled';
 
     protected $fillable = [
         'title',
@@ -60,71 +57,35 @@ class Movie extends Model
     {
         return [
             self::STATUS_COMING_SOON => 'Sắp ra mắt',
-            self::STATUS_UPCOMING => 'Sắp chiếu',
             self::STATUS_NOW_SHOWING => 'Đang chiếu',
         ];
     }
 
     /**
-     * Get computed status based on showtimes
+     * Get computed status based on release_date
      * 
      * Logic:
-     * - NOW_SHOWING: Có ít nhất 1 suất đang ONGOING hoặc có suất SCHEDULED trong ngày hôm nay
-     * - UPCOMING: Có suất SCHEDULED trong tương lai (sau hôm nay)
-     * - COMING_SOON: Không có suất chiếu nào (hoặc tất cả đã COMPLETED/CANCELLED)
+     * - NOW_SHOWING: Khi release_date <= today (không phụ thuộc vào showtimes)
+     * - COMING_SOON: Khi release_date > today (không phụ thuộc vào showtimes)
+     * 
+     * Status của phim chỉ dựa trên ngày phát hành so với thời điểm hiện tại,
+     * không phụ thuộc vào việc có hay không có suất chiếu.
      */
     public function getComputedStatus(): string
     {
+        if (!$this->release_date) {
+            // Nếu không có release_date, mặc định là COMING_SOON
+            return self::STATUS_COMING_SOON;
+        }
+
         $today = now()->startOfDay();
-        
-        // Load showtimes nếu chưa load
-        if (!$this->relationLoaded('showtimes')) {
-            $this->load('showtimes');
-        }
+        $releaseDate = \Carbon\Carbon::parse($this->release_date)->startOfDay();
 
-        // Kiểm tra có suất ONGOING không
-        $hasOngoing = $this->showtimes
-            ->where('status', self::SHOWTIME_ONGOING)
-            ->isNotEmpty();
-
-        if ($hasOngoing) {
-            return self::STATUS_NOW_SHOWING;
-        }
-
-        // Kiểm tra có suất SCHEDULED trong ngày hôm nay không
-        $hasTodayScheduled = $this->showtimes
-            ->where('status', self::SHOWTIME_SCHEDULED)
-            ->filter(function ($showtime) use ($today) {
-                // Convert date to Carbon if it's a string
-                $showtimeDate = $showtime->date instanceof \Carbon\Carbon 
-                    ? $showtime->date 
-                    : \Carbon\Carbon::parse($showtime->date);
-                return $showtimeDate->startOfDay()->equalTo($today);
-            })
-            ->isNotEmpty();
-
-        if ($hasTodayScheduled) {
-            return self::STATUS_NOW_SHOWING;
-        }
-
-        // Kiểm tra có suất SCHEDULED trong tương lai không
-        $hasFutureScheduled = $this->showtimes
-            ->where('status', self::SHOWTIME_SCHEDULED)
-            ->filter(function ($showtime) use ($today) {
-                // Convert date to Carbon if it's a string
-                $showtimeDate = $showtime->date instanceof \Carbon\Carbon 
-                    ? $showtime->date 
-                    : \Carbon\Carbon::parse($showtime->date);
-                return $showtimeDate->startOfDay()->greaterThan($today);
-            })
-            ->isNotEmpty();
-
-        if ($hasFutureScheduled) {
-            return self::STATUS_UPCOMING;
-        }
-
-        // Không có suất chiếu nào hoặc tất cả đã hoàn thành/hủy
-        return self::STATUS_COMING_SOON;
+        // Nếu release_date <= today → NOW_SHOWING
+        // Nếu release_date > today → COMING_SOON
+        return $releaseDate->lessThanOrEqualTo($today) 
+            ? self::STATUS_NOW_SHOWING 
+            : self::STATUS_COMING_SOON;
     }
 
     /**

@@ -82,13 +82,11 @@
                                 'scheduled' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
                                 'ongoing' => ['bg' => '#fff3e0', 'color' => '#e65100'],
                                 'completed' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
-                                'cancelled' => ['bg' => '#ffebee', 'color' => '#c62828'],
                             ];
                             $statusLabels = [
                                 'scheduled' => __('Scheduled'),
                                 'ongoing' => __('Ongoing'),
                                 'completed' => __('Completed'),
-                                'cancelled' => __('Cancelled'),
                             ];
                         @endphp
                         <tr style="border-bottom: 1px solid #dee2e6;">

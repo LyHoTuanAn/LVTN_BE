@@ -26,7 +26,7 @@ class StoreShowtimeRequest extends FormRequest
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'price' => 'required|integer|min:0|max:999999999',
-            'status' => 'required|in:scheduled,ongoing,completed,cancelled',
+            'status' => 'required|in:scheduled,ongoing,completed',
         ];
     }
 

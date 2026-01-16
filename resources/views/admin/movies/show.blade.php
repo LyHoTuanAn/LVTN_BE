@@ -58,12 +58,10 @@
                 $computedStatus = $movie->getComputedStatus();
                 $statusColors = [
                     'COMING_SOON' => ['bg' => '#fff3e0', 'color' => '#e65100'],
-                    'UPCOMING' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
                     'NOW_SHOWING' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
                 ];
                 $statusLabels = [
                     'COMING_SOON' => __('Coming Soon'),
-                    'UPCOMING' => __('Upcoming'),
                     'NOW_SHOWING' => __('Now Showing'),
                 ];
                 $ageLabels = \App\Models\Movie::getAgeClassifications();
@@ -225,13 +223,11 @@
                                     'scheduled' => ['bg' => '#e3f2fd', 'color' => '#1976d2'],
                                     'ongoing' => ['bg' => '#fff3e0', 'color' => '#e65100'],
                                     'completed' => ['bg' => '#e8f5e9', 'color' => '#2e7d32'],
-                                    'cancelled' => ['bg' => '#ffebee', 'color' => '#c62828'],
                                 ];
                                 $showtimeStatusLabels = [
                                     'scheduled' => __('Scheduled'),
                                     'ongoing' => __('Ongoing'),
                                     'completed' => __('Completed'),
-                                    'cancelled' => __('Cancelled'),
                                 ];
                             @endphp
                             <tr style="border-bottom: 1px solid #e9ecef; transition: background 0.2s;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='transparent'">

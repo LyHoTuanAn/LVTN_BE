@@ -14,7 +14,7 @@ class MovieService
      * @param array $filters
      *   - keyword: Search in title and description
      *   - genre: Filter by genre (exact match)
-     *   - status: Filter by computed status (COMING_SOON, UPCOMING, NOW_SHOWING)
+     *   - status: Filter by computed status (COMING_SOON, NOW_SHOWING) - dựa trên release_date
      *   - age_classification: Filter by age classification (P, K, T13, T16, T18, C)
      *   - duration_min: Minimum duration in minutes
      *   - duration_max: Maximum duration in minutes  
@@ -25,7 +25,7 @@ class MovieService
      */
     public function searchMovies(array $filters = []): LengthAwarePaginator
     {
-        $query = Movie::query()->with(['poster', 'trailer', 'showtimes']);
+        $query = Movie::query()->with(['poster', 'trailer']);
 
         // Search by keyword (title and description)
         if (!empty($filters['keyword'])) {
@@ -91,11 +91,11 @@ class MovieService
     /**
      * Get all movies with filters
      * 
-     * Lưu ý: filter status sẽ lọc theo computed status (dựa trên showtimes)
+     * Lưu ý: filter status sẽ lọc theo computed status (dựa trên release_date)
      */
     public function getAllMovies(array $filters = []): LengthAwarePaginator
     {
-        $query = Movie::query()->with(['poster', 'trailer', 'showtimes']);
+        $query = Movie::query()->with(['poster', 'trailer']);
 
         if (isset($filters['search'])) {
             $query->where('title', 'like', '%' . $filters['search'] . '%');
@@ -127,11 +127,11 @@ class MovieService
     /**
      * Get movies by computed status
      * 
-     * @param string $status COMING_SOON, UPCOMING, NOW_SHOWING  
+     * @param string $status COMING_SOON, NOW_SHOWING  
      */
     public function getMoviesByComputedStatus(string $status): Collection
     {
-        $movies = Movie::with(['poster', 'trailer', 'showtimes'])->get();
+        $movies = Movie::with(['poster', 'trailer'])->get();
 
         return $movies->filter(function ($movie) use ($status) {
             return $movie->getComputedStatus() === strtoupper($status);
@@ -140,7 +140,7 @@ class MovieService
 
     /**
      * Get now showing movies
-     * Phim có ít nhất 1 suất đang ONGOING hoặc có suất SCHEDULED trong ngày hôm nay
+     * Phim có release_date <= today (không phụ thuộc vào showtimes)
      */
     public function getNowShowingMovies(): Collection
     {
@@ -148,17 +148,8 @@ class MovieService
     }
 
     /**
-     * Get upcoming movies 
-     * Phim có suất SCHEDULED trong tương lai (sau hôm nay)
-     */
-    public function getUpcomingMovies(): Collection
-    {
-        return $this->getMoviesByComputedStatus(Movie::STATUS_UPCOMING);
-    }
-
-    /**
      * Get coming soon movies
-     * Phim chưa có suất chiếu nào
+     * Phim có release_date > today (không phụ thuộc vào showtimes)
      */
     public function getComingSoonMovies(): Collection
     {
@@ -183,11 +174,21 @@ class MovieService
 
     /**
      * Create a new movie
+     * 
+     * Status sẽ được tính tự động từ release_date (getComputedStatus)
+     * Nếu có truyền status vào, sẽ lưu vào DB nhưng logic vẫn dùng computed status
      */
     public function createMovie(array $data): Movie
     {
-        // Mặc định status là COMING_SOON khi tạo mới
-        if (!isset($data['status'])) {
+        // Nếu không có status, tính từ release_date
+        if (!isset($data['status']) && isset($data['release_date'])) {
+            $releaseDate = \Carbon\Carbon::parse($data['release_date'])->startOfDay();
+            $today = now()->startOfDay();
+            $data['status'] = $releaseDate->lessThanOrEqualTo($today) 
+                ? Movie::STATUS_NOW_SHOWING 
+                : Movie::STATUS_COMING_SOON;
+        } elseif (!isset($data['status'])) {
+            // Nếu không có cả status và release_date, mặc định COMING_SOON
             $data['status'] = Movie::STATUS_COMING_SOON;
         }
         
@@ -196,6 +197,8 @@ class MovieService
 
     /**
      * Update movie
+     * 
+     * Nếu release_date thay đổi, status sẽ được tính lại tự động
      */
     public function updateMovie(int $id, array $data): bool
     {
@@ -203,6 +206,15 @@ class MovieService
         
         if (!$movie) {
             return false;
+        }
+
+        // Nếu release_date thay đổi, cập nhật status theo computed status
+        if (isset($data['release_date'])) {
+            $releaseDate = \Carbon\Carbon::parse($data['release_date'])->startOfDay();
+            $today = now()->startOfDay();
+            $data['status'] = $releaseDate->lessThanOrEqualTo($today) 
+                ? Movie::STATUS_NOW_SHOWING 
+                : Movie::STATUS_COMING_SOON;
         }
 
         return $movie->update($data);
@@ -223,14 +235,14 @@ class MovieService
     }
 
     /**
-     * Sync movie status based on showtimes
+     * Sync movie status based on release_date
      * 
-     * Cập nhật cột status trong database dựa trên computed status
-     * Có thể gọi từ scheduler hoặc khi showtime thay đổi
+     * Cập nhật cột status trong database dựa trên computed status (release_date)
+     * Có thể gọi từ scheduler hoặc khi release_date thay đổi
      */
     public function syncMovieStatus(int $movieId): bool
     {
-        $movie = Movie::with('showtimes')->find($movieId);
+        $movie = Movie::find($movieId);
         
         if (!$movie) {
             return false;
@@ -249,12 +261,12 @@ class MovieService
     /**
      * Sync all movies status
      * 
-     * Cập nhật status cho tất cả phim dựa trên showtimes
-     * Nên chạy bằng scheduler mỗi phút hoặc khi có thay đổi showtime
+     * Cập nhật status cho tất cả phim dựa trên release_date
+     * Nên chạy bằng scheduler mỗi ngày hoặc khi có thay đổi release_date
      */
     public function syncAllMoviesStatus(): int
     {
-        $movies = Movie::with('showtimes')->get();
+        $movies = Movie::all();
         $updated = 0;
 
         foreach ($movies as $movie) {

@@ -36,7 +36,8 @@ class ShowtimeController extends Controller
      */
     public function create()
     {
-        $movies = Movie::where('status', '!=', 'ended')->orderBy('title')->get();
+        // Get all movies (status 'ended' no longer exists, replaced by COMING_SOON/NOW_SHOWING)
+        $movies = Movie::orderBy('title')->get();
         $rooms = Room::orderBy('name')->get();
 
         return view('admin.showtimes.create', compact('movies', 'rooms'));
