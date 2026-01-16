@@ -160,12 +160,16 @@
     </nav>
 
     @auth
+        @php
+            // Cache user to avoid multiple queries
+            $currentUser = auth()->user();
+        @endphp
         <div class="p-4 border-t border-gray-200 mt-auto">
             <div class="flex items-center justify-between">
                 <div class="text-sm text-gray-700">
-                    <div class="font-medium">{{ auth()->user()->name }}</div>
-                    @if (auth()->user()->email)
-                        <div class="text-gray-500 text-xs">{{ auth()->user()->email }}</div>
+                    <div class="font-medium">{{ $currentUser->name }}</div>
+                    @if ($currentUser->email)
+                        <div class="text-gray-500 text-xs">{{ $currentUser->email }}</div>
                     @endif
                 </div>
                 <form method="POST" action="{{ route('web.logout') }}">

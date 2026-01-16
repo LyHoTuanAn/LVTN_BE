@@ -34,6 +34,11 @@ class RoleMiddleware
             return redirect()->route('web.login.form');
         }
 
+        // Eager load role to avoid N+1 query
+        if (!$user->relationLoaded('role')) {
+            $user->load('role');
+        }
+
         $userRole = $user->role;
 
         if (!$userRole || !in_array($userRole->slug, $roles)) {

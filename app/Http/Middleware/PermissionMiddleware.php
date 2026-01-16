@@ -26,6 +26,13 @@ class PermissionMiddleware
             ], 401);
         }
 
+        // Eager load role with permissions to avoid N+1 queries
+        if (!$user->relationLoaded('role')) {
+            $user->load('role.permissions');
+        } elseif ($user->role && !$user->role->relationLoaded('permissions')) {
+            $user->role->load('permissions');
+        }
+
         $userRole = $user->role;
 
         if (!$userRole) {
@@ -36,7 +43,8 @@ class PermissionMiddleware
             ], 403);
         }
 
-        $userPermissions = $userRole->permissions()->pluck('slug')->toArray();
+        // Get permissions from already loaded relationship (no additional query)
+        $userPermissions = $userRole->permissions->pluck('slug')->toArray();
 
         foreach ($permissions as $permission) {
             if (!in_array($permission, $userPermissions)) {
