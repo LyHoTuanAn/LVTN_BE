@@ -299,6 +299,55 @@ class BookingService
     }
 
     /**
+     * Sync booking status based on showtime status
+     * 
+     * Khi showtime status = 'completed', tự động update tất cả bookings của showtime đó
+     * (chỉ update bookings đã paid và confirmed, không update canceled hoặc pending)
+     * 
+     * @param int $showtimeId
+     * @return int Number of updated bookings
+     */
+    public function syncBookingsStatusByShowtime(int $showtimeId): int
+    {
+        $showtime = Showtime::find($showtimeId);
+        
+        if (!$showtime || $showtime->status !== Showtime::STATUS_COMPLETED) {
+            return 0;
+        }
+
+        // Update all confirmed and paid bookings for this showtime to completed
+        // Chỉ update những booking chưa completed (status = 'confirmed')
+        $updated = Booking::where('showtime_id', $showtimeId)
+            ->where('status', 'confirmed')
+            ->where('is_paid', true)
+            ->update(['status' => 'completed']);
+
+        return $updated;
+    }
+
+    /**
+     * Sync all bookings status based on their showtime status
+     * 
+     * Tự động sync booking status cho tất cả showtimes đã completed
+     * 
+     * @return int Number of updated bookings
+     */
+    public function syncAllBookingsStatusByShowtime(): int
+    {
+        // Get all completed showtimes
+        $completedShowtimes = Showtime::where('status', Showtime::STATUS_COMPLETED)->get();
+        
+        $totalUpdated = 0;
+        
+        foreach ($completedShowtimes as $showtime) {
+            $updated = $this->syncBookingsStatusByShowtime($showtime->id);
+            $totalUpdated += $updated;
+        }
+
+        return $totalUpdated;
+    }
+
+    /**
      * Generate unique booking code
      */
     protected function generateBookingCode(): string

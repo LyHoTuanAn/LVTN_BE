@@ -322,6 +322,132 @@ class ShowtimeService
 
         return $showtime->delete();
     }
+
+    /**
+     * Get computed status for a showtime based on current time
+     * 
+     * Logic:
+     * - SCHEDULED: now < date + start_time
+     * - ONGOING: date + start_time <= now < date + end_time
+     * - COMPLETED: now >= date + end_time
+     * 
+     * @param Showtime $showtime
+     * @return string
+     */
+    public function getComputedStatus(Showtime $showtime): string
+    {
+        $now = now();
+        
+        // Normalize times
+        $startTime = is_string($showtime->start_time) 
+            ? $showtime->start_time 
+            : $showtime->start_time->format('H:i:s');
+        $endTime = is_string($showtime->end_time) 
+            ? $showtime->end_time 
+            : $showtime->end_time->format('H:i:s');
+        
+        // Create datetime objects for comparison
+        $showtimeDate = $showtime->date->format('Y-m-d');
+        $startDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $showtimeDate . ' ' . $startTime);
+        $endDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $showtimeDate . ' ' . $endTime);
+        
+        // Compare with current time
+        if ($now->lt($startDateTime)) {
+            return Showtime::STATUS_SCHEDULED;
+        } elseif ($now->gte($endDateTime)) {
+            return Showtime::STATUS_COMPLETED;
+        } else {
+            return Showtime::STATUS_ONGOING;
+        }
+    }
+
+    /**
+     * Sync showtime status based on current time
+     * 
+     * @param int $showtimeId
+     * @return array{success: bool, showtime_updated: bool, bookings_updated: int}|bool
+     */
+    public function syncShowtimeStatus(int $showtimeId, bool $returnDetails = false)
+    {
+        $showtime = Showtime::find($showtimeId);
+        
+        if (!$showtime) {
+            return $returnDetails ? ['success' => false, 'showtime_updated' => false, 'bookings_updated' => 0] : false;
+        }
+
+        $computedStatus = $this->getComputedStatus($showtime);
+        $statusChanged = false;
+        $bookingsUpdated = 0;
+        
+        if ($showtime->status !== $computedStatus) {
+            $showtime->status = $computedStatus;
+            $statusChanged = $showtime->save();
+            
+            // Nếu showtime vừa chuyển sang completed, sync booking status
+            if ($statusChanged && $computedStatus === Showtime::STATUS_COMPLETED) {
+                $bookingService = app(\App\Services\Booking\BookingService::class);
+                $bookingsUpdated = $bookingService->syncBookingsStatusByShowtime($showtimeId);
+            }
+        }
+
+        if ($returnDetails) {
+            return [
+                'success' => true,
+                'showtime_updated' => $statusChanged,
+                'bookings_updated' => $bookingsUpdated,
+            ];
+        }
+
+        return $statusChanged || true;
+    }
+
+    /**
+     * Sync all showtimes status
+     * 
+     * Cập nhật status cho tất cả suất chiếu dựa trên thời gian hiện tại
+     * Nên chạy bằng scheduler mỗi phút
+     * 
+     * @return int Number of updated showtimes
+     */
+    public function syncAllShowtimesStatus(): int
+    {
+        $showtimes = Showtime::all();
+        $updated = 0;
+
+        foreach ($showtimes as $showtime) {
+            $computedStatus = $this->getComputedStatus($showtime);
+            
+            if ($showtime->status !== $computedStatus) {
+                $showtime->status = $computedStatus;
+                $showtime->save();
+                $updated++;
+            }
+        }
+
+        return $updated;
+    }
+
+    /**
+     * Sync all showtimes status and update related bookings
+     * 
+     * Cập nhật status cho tất cả suất chiếu và tự động update booking status
+     * khi showtime completed
+     * 
+     * @return array{showtimes_updated: int, bookings_updated: int}
+     */
+    public function syncAllShowtimesStatusWithBookings(): array
+    {
+        $showtimesUpdated = $this->syncAllShowtimesStatus();
+        
+        // Sync bookings status for completed showtimes
+        $bookingService = app(\App\Services\Booking\BookingService::class);
+        $bookingsUpdated = $bookingService->syncAllBookingsStatusByShowtime();
+
+        return [
+            'showtimes_updated' => $showtimesUpdated,
+            'bookings_updated' => $bookingsUpdated,
+        ];
+    }
 }
 
 
