@@ -10,9 +10,9 @@
             change="{{ $stats['total_users']['change'] }} {{ __('from last month') }}"
         />
         <x-stats-card 
-            title="{{ __('Active Users') }}" 
-            value="{{ $stats['active_users']['value'] }}" 
-            change="{{ $stats['active_users']['change'] }} {{ __('from last month') }}"
+            title="{{ __('Total Movies') }}" 
+            value="{{ $stats['total_movies']['value'] }}" 
+            change="{{ $stats['total_movies']['change'] }} {{ __('from last month') }}"
         />
         <x-stats-card 
             title="{{ __('Total Transactions') }}" 

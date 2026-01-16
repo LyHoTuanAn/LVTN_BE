@@ -38,20 +38,11 @@ class DashboardController extends Controller
             ? round((($totalUsers - $totalUsersLastMonth) / $totalUsersLastMonth) * 100, 1)
             : 0;
         
-        // Active Users (users who made bookings in last 30 days)
-        $activeUsers = User::whereHas('bookings', function($query) use ($now) {
-            $query->where('created_at', '>=', $now->copy()->subDays(30));
-        })->count();
-        
-        $activeUsersLastPeriod = User::whereHas('bookings', function($query) use ($lastMonth) {
-            $query->whereBetween('created_at', [
-                $lastMonth->copy()->subDays(30),
-                $lastMonth
-            ]);
-        })->count();
-        
-        $activeUsersChange = $activeUsersLastPeriod > 0
-            ? round((($activeUsers - $activeUsersLastPeriod) / $activeUsersLastPeriod) * 100, 1)
+        // Total Movies
+        $totalMovies = Movie::count();
+        $totalMoviesLastMonth = Movie::where('created_at', '<', $lastMonth)->count();
+        $moviesChange = $totalMoviesLastMonth > 0
+            ? round((($totalMovies - $totalMoviesLastMonth) / $totalMoviesLastMonth) * 100, 1)
             : 0;
         
         // Total Bookings
@@ -78,9 +69,9 @@ class DashboardController extends Controller
                 'value' => number_format($totalUsers),
                 'change' => ($usersChange >= 0 ? '+' : '') . $usersChange . '%'
             ],
-            'active_users' => [
-                'value' => number_format($activeUsers),
-                'change' => ($activeUsersChange >= 0 ? '+' : '') . $activeUsersChange . '%'
+            'total_movies' => [
+                'value' => number_format($totalMovies),
+                'change' => ($moviesChange >= 0 ? '+' : '') . $moviesChange . '%'
             ],
             'total_bookings' => [
                 'value' => number_format($totalBookings),
