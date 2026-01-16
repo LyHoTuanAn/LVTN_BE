@@ -188,6 +188,8 @@
     "Confirmed": "Đã xác nhận",
     "Yes": "Có",
     "No": "Không",
+    "Checked In": "Đã check-in",
+    "Checked In At": "Thời gian check-in",
     "Movie Details": "Chi tiết phim",
     "Booking created successfully": "Tạo đặt vé thành công",
     "Booking updated successfully": "Cập nhật đặt vé thành công",
@@ -719,7 +721,7 @@
     "Preferred Times": "Giờ Ưa Thích",
     "Preferred Cinemas": "Rạp Ưa Thích",
     "AI Retention Strategies": "Chiến Lược Giữ Chân AI",
-    "Recommendation Factors": "Yếu Tố Đề Xuất"
-
+    "Recommendation Factors": "Yếu Tố Đề Xuất",
+    "Check in": "Kiểm tra vào rạp"
             
 }

@@ -159,7 +159,7 @@
                         <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                         </svg>
-                        {{ __('Mark as Completed') }}
+                        {{ __('Check in') }}
                     </button>
                 </div>
             </div>
@@ -238,6 +238,36 @@ document.addEventListener('DOMContentLoaded', function() {
     let scanning = false;
     let currentBookingCode = null;
     let recentScansList = [];
+
+    // Load recent scans from server on page load
+    async function loadRecentScans() {
+        try {
+            const response = await fetch('{{ route("admin.qr-ticket.recent-scans") }}', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+            });
+
+            const data = await response.json();
+            
+            if (data.success && data.data.scans) {
+                recentScansList = data.data.scans.map(scan => ({
+                    ...scan,
+                    scannedAt: scan.checked_in_at || '-',
+                    success: true
+                }));
+                renderRecentScans();
+            }
+        } catch (err) {
+            console.error('Error loading recent scans:', err);
+        }
+    }
+
+    // Load recent scans when page loads
+    loadRecentScans();
 
     // Start camera
     btnStartCamera.addEventListener('click', async function() {
@@ -414,6 +444,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayBookingDetails(data.data.booking, true);
                 addToRecentScans(data.data.booking, true);
                 
+                // Reload recent scans from server
+                loadRecentScans();
+                
                 // Play success sound
                 playSound('success');
             } else {
@@ -528,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         recentScansList.unshift({
             ...booking,
-            scannedAt: new Date().toLocaleTimeString(),
+            scannedAt: booking.checked_in_at || new Date().toLocaleTimeString(),
             success: success
         });
         
@@ -546,21 +579,29 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        recentScans.innerHTML = recentScansList.map(scan => `
+        recentScans.innerHTML = recentScansList.map(scan => {
+            const statusText = scan.status ? scan.status.charAt(0).toUpperCase() + scan.status.slice(1) : '-';
+            const movieTitle = scan.showtime?.movie?.title || '-';
+            const seatsText = scan.seats || '-';
+            const scannedAtText = scan.scannedAt || scan.checked_in_at || '-';
+            const success = scan.success !== false; // Default to true if not specified
+            
+            return `
             <div class="flex items-center justify-between py-3">
                 <div class="flex items-center">
-                    <span class="w-3 h-3 rounded-full mr-3 ${scan.success ? 'bg-green-500' : 'bg-red-500'}"></span>
+                    <span class="w-3 h-3 rounded-full mr-3 ${success ? 'bg-green-500' : 'bg-red-500'}"></span>
                     <div>
-                        <p class="font-medium text-gray-800">${scan.code}</p>
-                        <p class="text-sm text-gray-500">${scan.showtime?.movie?.title || '-'} - ${scan.seats}</p>
+                        <p class="font-medium text-gray-800">${scan.code || '-'}</p>
+                        <p class="text-sm text-gray-500">${movieTitle} - ${seatsText}</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <span class="px-2 py-1 rounded text-xs font-medium ${getStatusClass(scan.status)}">${scan.status}</span>
-                    <p class="text-xs text-gray-400 mt-1">${scan.scannedAt}</p>
+                    <span class="px-2 py-1 rounded text-xs font-medium ${getStatusClass(scan.status || '')}">${statusText}</span>
+                    <p class="text-xs text-gray-400 mt-1">${scannedAtText}</p>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
     }
 
     function playSound(type) {

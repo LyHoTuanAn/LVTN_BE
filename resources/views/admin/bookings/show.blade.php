@@ -66,6 +66,24 @@
                     <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; font-size: 0.8em; text-transform: uppercase;">{{ __('Created At') }}</label>
                     <p style="margin: 0; color: #2c3e50; font-size: 1em;">{{ $booking->created_at->format('d/m/Y H:i:s') }}</p>
                 </div>
+                <div>
+                    <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; font-size: 0.8em; text-transform: uppercase;">{{ __('Checked In') }}</label>
+                    @if($booking->checked_in)
+                        <span style="padding: 6px 16px; background: #27ae60; color: white; border-radius: 12px; font-size: 0.9em; font-weight: 600; display: inline-block;">
+                            {{ __('Yes') }}
+                        </span>
+                    @else
+                        <span style="padding: 6px 16px; background: #95a5a6; color: white; border-radius: 12px; font-size: 0.9em; font-weight: 600; display: inline-block;">
+                            {{ __('No') }}
+                        </span>
+                    @endif
+                </div>
+                @if($booking->checked_in_at)
+                <div>
+                    <label style="display: block; font-weight: 600; color: #7f8c8d; margin-bottom: 5px; font-size: 0.8em; text-transform: uppercase;">{{ __('Checked In At') }}</label>
+                    <p style="margin: 0; color: #2c3e50; font-size: 1em;">{{ $booking->checked_in_at->format('d/m/Y H:i:s') }}</p>
+                </div>
+                @endif
             </div>
         </div>
 

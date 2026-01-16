@@ -166,6 +166,7 @@ Route::middleware(['auth:web', 'role:admin'])->group(function () {
         Route::get('/', [QrTicketController::class, 'index'])->name('index');
         Route::post('/scan', [QrTicketController::class, 'scan'])->name('scan');
         Route::post('/lookup', [QrTicketController::class, 'lookup'])->name('lookup');
+        Route::get('/recent-scans', [QrTicketController::class, 'recentScans'])->name('recent-scans');
     });
 
     // Admin Vouchers Management

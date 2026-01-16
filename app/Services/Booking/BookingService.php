@@ -348,6 +348,42 @@ class BookingService
     }
 
     /**
+     * Get recent checked-in bookings (for QR scanner history)
+     */
+    public function getRecentScans(int $limit = 10): array
+    {
+        return Booking::with(['user', 'showtime.movie', 'showtime.room', 'seats'])
+            ->where('checked_in', true)
+            ->whereNotNull('checked_in_at')
+            ->orderBy('checked_in_at', 'desc')
+            ->limit($limit)
+            ->get()
+            ->map(function ($booking) {
+                return [
+                    'id' => $booking->id,
+                    'code' => $booking->code,
+                    'status' => $booking->status,
+                    'is_paid' => $booking->is_paid,
+                    'checked_in' => $booking->checked_in,
+                    'checked_in_at' => $booking->checked_in_at ? $booking->checked_in_at->format('d/m/Y H:i') : null,
+                    'user' => $booking->user ? [
+                        'name' => $booking->user->name,
+                        'email' => $booking->user->email,
+                    ] : null,
+                    'showtime' => $booking->showtime ? [
+                        'movie' => $booking->showtime->movie ? [
+                            'title' => $booking->showtime->movie->title,
+                        ] : null,
+                    ] : null,
+                    'seats' => $booking->seats->map(function ($seat) {
+                        return $seat->row . $seat->number;
+                    })->implode(', '),
+                ];
+            })
+            ->toArray();
+    }
+
+    /**
      * Generate unique booking code
      */
     protected function generateBookingCode(): string

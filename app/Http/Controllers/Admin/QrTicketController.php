@@ -167,4 +167,23 @@ class QrTicketController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Get recent scans (checked-in bookings)
+     */
+    public function recentScans(Request $request): JsonResponse
+    {
+        $limit = $request->input('limit', 10);
+        
+        $recentScans = $this->bookingService->getRecentScans($limit);
+
+        return response()->json([
+            'success' => true,
+            'code' => 'RECENT_SCANS_FETCHED_SUCCESS',
+            'message' => __('success.RECENT_SCANS_FETCHED_SUCCESS'),
+            'data' => [
+                'scans' => $recentScans,
+            ],
+        ]);
+    }
 }

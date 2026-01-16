@@ -55,6 +55,7 @@ return [
     'BOOKING_COMPLETED_SUCCESS' => 'Xác nhận vé thành công, đặt vé đã hoàn thành',
     'BOOKING_CHECKED_IN_SUCCESS' => 'Check-in vé thành công',
     'BOOKING_FOUND' => 'Tìm thấy đặt vé',
+    'RECENT_SCANS_FETCHED_SUCCESS' => 'Lấy lịch sử quét thành công',
 
     // Favorite Movie Success
     'FAVORITES_FETCHED_SUCCESS' => 'Lấy danh sách phim yêu thích thành công',

@@ -55,6 +55,7 @@ return [
     'BOOKING_COMPLETED_SUCCESS' => 'Ticket verified and booking completed successfully',
     'BOOKING_CHECKED_IN_SUCCESS' => 'Ticket checked in successfully',
     'BOOKING_FOUND' => 'Booking found',
+    'RECENT_SCANS_FETCHED_SUCCESS' => 'Recent scans fetched successfully',
 
     // Favorite Movie Success
     'FAVORITES_FETCHED_SUCCESS' => 'Favorite movies fetched successfully',
