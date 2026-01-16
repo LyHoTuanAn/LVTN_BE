@@ -53,6 +53,7 @@ return [
 
     // QR Ticket Scanner Success
     'BOOKING_COMPLETED_SUCCESS' => 'Xác nhận vé thành công, đặt vé đã hoàn thành',
+    'BOOKING_CHECKED_IN_SUCCESS' => 'Check-in vé thành công',
     'BOOKING_FOUND' => 'Tìm thấy đặt vé',
 
     // Favorite Movie Success

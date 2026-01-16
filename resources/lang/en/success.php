@@ -53,6 +53,7 @@ return [
 
     // QR Ticket Scanner Success
     'BOOKING_COMPLETED_SUCCESS' => 'Ticket verified and booking completed successfully',
+    'BOOKING_CHECKED_IN_SUCCESS' => 'Ticket checked in successfully',
     'BOOKING_FOUND' => 'Booking found',
 
     // Favorite Movie Success

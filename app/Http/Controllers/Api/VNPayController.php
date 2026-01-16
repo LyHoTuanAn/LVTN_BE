@@ -98,15 +98,15 @@ class VNPayController extends Controller
                 ]);
             }
         } else {
-            // Thanh toán thất bại
+            // Thanh toán thất bại → set status to 'canceled'
             $responseCode = $transactionInfo['response_code'];
             $message = $this->vnpayService->getResponseMessage($responseCode);
 
             $booking->update([
-                'status' => 'payment_failed',
+                'status' => 'canceled',
             ]);
 
-            Log::info("VNPay IPN: Booking #{$bookingCode} payment failed - {$message}");
+            Log::info("VNPay IPN: Booking #{$bookingCode} canceled due to payment failure - {$message}");
         }
 
         return response()->json([

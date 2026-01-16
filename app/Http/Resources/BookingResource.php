@@ -19,6 +19,8 @@ class BookingResource extends JsonResource
             'code' => $this->code,
             'status' => $this->status,
             'is_paid' => $this->is_paid,
+            'checked_in' => (bool) ($this->checked_in ?? false),
+            'checked_in_at' => $this->checked_in_at?->toDateTimeString(),
             'price' => (float) $this->price,
             'total_price' => (float) $this->total_price,
             'voucher_amount' => (float) $this->voucher_amount,

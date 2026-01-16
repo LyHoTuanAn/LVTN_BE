@@ -62,10 +62,6 @@ class StripeWebhookController extends Controller
                 $this->handlePaymentIntentCanceled($event->data->object);
                 break;
 
-            case 'charge.refunded':
-                $this->handleChargeRefunded($event->data->object);
-                break;
-
             default:
                 Log::info('Unhandled Stripe event type: ' . $event->type);
         }
@@ -178,6 +174,7 @@ class StripeWebhookController extends Controller
 
     /**
      * Handle payment_intent.payment_failed event
+     * When payment fails, set booking status to 'canceled'
      *
      * @param \Stripe\PaymentIntent $paymentIntent
      */
@@ -194,10 +191,10 @@ class StripeWebhookController extends Controller
 
         if ($booking && $booking->status === 'pending') {
             $booking->update([
-                'status' => 'payment_failed',
+                'status' => 'canceled',
             ]);
 
-            Log::info("Booking #{$booking->code} payment failed");
+            Log::info("Booking #{$booking->code} canceled due to payment failure");
         }
     }
 
@@ -225,28 +222,4 @@ class StripeWebhookController extends Controller
         }
     }
 
-    /**
-     * Handle charge.refunded event
-     *
-     * @param \Stripe\Charge $charge
-     */
-    protected function handleChargeRefunded($charge)
-    {
-        $paymentIntentId = $charge->payment_intent;
-
-        if (!$paymentIntentId) {
-            return;
-        }
-
-        $booking = Booking::where('payment_intent_id', $paymentIntentId)->first();
-
-        if ($booking) {
-            $booking->update([
-                'status' => 'refunded',
-                'is_paid' => false,
-            ]);
-
-            Log::info("Booking #{$booking->code} refunded via webhook");
-        }
-    }
 }

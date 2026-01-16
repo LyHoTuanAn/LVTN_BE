@@ -74,6 +74,7 @@ return [
     // QR Ticket Scanner errors
     'BOOKING_NOT_FOUND' => 'Không tìm thấy đặt vé',
     'BOOKING_ALREADY_COMPLETED' => 'Vé này đã được sử dụng',
+    'BOOKING_ALREADY_CHECKED_IN' => 'Vé này đã được check-in',
     'BOOKING_CANCELED' => 'Đặt vé này đã bị hủy',
     'BOOKING_NOT_PAID' => 'Đặt vé này chưa được thanh toán',
 

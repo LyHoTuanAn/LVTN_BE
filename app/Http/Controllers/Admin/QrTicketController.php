@@ -25,7 +25,7 @@ class QrTicketController extends Controller
     }
 
     /**
-     * Process the scanned barcode and update booking status to completed
+     * Process the scanned barcode and mark booking as checked in
      */
     public function scan(Request $request): JsonResponse
     {
@@ -46,12 +46,11 @@ class QrTicketController extends Controller
             ], 404);
         }
 
-        // Check if booking is already completed
-        if ($booking->status === 'completed') {
+        if ($booking->checked_in) {
             return response()->json([
                 'success' => false,
-                'code' => 'BOOKING_ALREADY_COMPLETED',
-                'message' => __('errors.BOOKING_ALREADY_COMPLETED'),
+                'code' => 'BOOKING_ALREADY_CHECKED_IN',
+                'message' => __('errors.BOOKING_ALREADY_CHECKED_IN'),
                 'data' => [
                     'booking' => $this->formatBookingData($booking),
                 ],
@@ -82,8 +81,8 @@ class QrTicketController extends Controller
             ], 400);
         }
 
-        // Update booking status to completed
-        $booking->status = 'completed';
+        $booking->checked_in = true;
+        $booking->checked_in_at = now();
         $booking->save();
 
         // Reload booking with relationships
@@ -91,8 +90,8 @@ class QrTicketController extends Controller
 
         return response()->json([
             'success' => true,
-            'code' => 'BOOKING_COMPLETED_SUCCESS',
-            'message' => __('success.BOOKING_COMPLETED_SUCCESS'),
+            'code' => 'BOOKING_CHECKED_IN_SUCCESS',
+            'message' => __('success.BOOKING_CHECKED_IN_SUCCESS'),
             'data' => [
                 'booking' => $this->formatBookingData($booking),
             ],
@@ -109,6 +108,8 @@ class QrTicketController extends Controller
             'code' => $booking->code,
             'status' => $booking->status,
             'is_paid' => $booking->is_paid,
+            'checked_in' => $booking->checked_in ?? false,
+            'checked_in_at' => $booking->checked_in_at ? $booking->checked_in_at->format('d/m/Y H:i') : null,
             'price' => number_format($booking->price, 0, ',', '.') . ' VND',
             'total_price' => number_format($booking->total_price, 0, ',', '.') . ' VND',
             'voucher_amount' => $booking->voucher_amount ? number_format($booking->voucher_amount, 0, ',', '.') . ' VND' : null,

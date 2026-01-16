@@ -74,6 +74,7 @@ return [
     // QR Ticket Scanner errors
     'BOOKING_NOT_FOUND' => 'Booking not found',
     'BOOKING_ALREADY_COMPLETED' => 'This ticket has already been used',
+    'BOOKING_ALREADY_CHECKED_IN' => 'This ticket has already been checked in',
     'BOOKING_CANCELED' => 'This booking has been canceled',
     'BOOKING_NOT_PAID' => 'This booking has not been paid yet',
 

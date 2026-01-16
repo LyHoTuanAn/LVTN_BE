@@ -18,6 +18,8 @@ class Booking extends Model
         'price',
         'total_price',
         'status',
+        'checked_in',
+        'checked_in_at',
         'payment_method',
         'payment_intent_id',
         'paid_at',
@@ -27,9 +29,11 @@ class Booking extends Model
     {
         return [
             'is_paid' => 'boolean',
+            'checked_in' => 'boolean',
             'voucher_amount' => 'decimal:2',
             'price' => 'decimal:2',
             'total_price' => 'decimal:2',
+            'checked_in_at' => 'datetime',
             'paid_at' => 'datetime',
         ];
     }
