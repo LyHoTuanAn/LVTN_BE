@@ -29,7 +29,13 @@ class RoomService
             $query->where('room_type_id', $filters['room_type_id']);
         }
 
-        return $query->orderBy('name')->paginate($filters['per_page'] ?? 15);
+        // Join with cinemas table to sort by cinema name, then by room name
+        $query->join('cinemas', 'rooms.cinema_id', '=', 'cinemas.id')
+              ->select('rooms.*')
+              ->orderBy('cinemas.name')
+              ->orderBy('rooms.name');
+
+        return $query->paginate($filters['per_page'] ?? 15);
     }
 
     /**

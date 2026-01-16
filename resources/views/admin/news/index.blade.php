@@ -34,12 +34,11 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div style="padding: 12px 16px; background: #e8f5e9; color: #2e7d32; border-radius: 6px; margin-bottom: 16px;">
-            {{ session('success') }}
+    @if (session('error'))
+        <div style="padding: 12px 16px; background: #f8d7da; color: #721c24; border-radius: 6px; margin-bottom: 16px; border: 1px solid #f5c6cb;">
+            {{ session('error') }}
         </div>
     @endif
-
 
     <div style="width: 100%; overflow-x: auto;">
         <table class="responsive-table" style="width: 100%; border-collapse: collapse; min-width: 800px;">
